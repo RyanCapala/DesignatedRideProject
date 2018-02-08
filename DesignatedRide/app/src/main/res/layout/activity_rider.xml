@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/activity_bg"
+    tools:context="com.example.awesomeness.designatedride.Activities.RiderActivity">
+
+    <!--<android.support.design.widget.AppBarLayout-->
+        <!--android:id="@+id/appBarLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:theme="@style/AppTheme.AppBarOverlay">-->
+
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/toolbar_user"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:minHeight="?attr/actionBarSize"-->
+            <!--android:theme="@style/AppTheme.PopupOverlay" />-->
+
+    <!--</android.support.design.widget.AppBarLayout>-->
+
+    <ImageView
+        android:id="@+id/ImgViewBG_rider"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_outline"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.181" />
+
+    <!--<ImageView-->
+        <!--android:id="@+id/profileImgView_rider"-->
+        <!--android:layout_width="70dp"-->
+        <!--android:layout_height="70dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:src="@drawable/profile1xm"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/ImgViewBG_rider"-->
+        <!--app:layout_constraintEnd_toEndOf="@+id/ImgViewBG_rider"-->
+        <!--app:layout_constraintStart_toStartOf="@+id/ImgViewBG_rider"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/ImgViewBG_rider" />-->
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profileImgView_rider"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/profile1xm"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/ImgViewBG_rider"
+        app:layout_constraintEnd_toEndOf="@+id/ImgViewBG_rider"
+        app:layout_constraintStart_toStartOf="@+id/ImgViewBG_rider"
+        app:layout_constraintTop_toTopOf="@+id/ImgViewBG_rider" />
+
+
+    <ImageButton
+        android:id="@+id/viewProfileImgBtn_rider"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="15dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/profile2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ImgViewBG_rider"
+        app:layout_constraintVertical_bias="0.003" />
+
+    <TextView
+        android:id="@+id/viewProfileTV_rider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"
+        android:textColor="@color/input_et2"
+        android:text="@string/view_profile"
+        app:layout_constraintEnd_toEndOf="@+id/viewProfileImgBtn_rider"
+        app:layout_constraintStart_toStartOf="@+id/viewProfileImgBtn_rider"
+        app:layout_constraintTop_toBottomOf="@+id/viewProfileImgBtn_rider" />
+
+    <ImageButton
+        android:id="@+id/requestRideImgBtn_rider"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/location"
+        android:layout_marginRight="50dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/viewProfileImgBtn_rider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.945"
+        app:layout_constraintStart_toEndOf="@+id/viewProfileImgBtn_rider"
+        app:layout_constraintTop_toTopOf="@+id/viewProfileImgBtn_rider"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/requestRideTV_rider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/request_ride"
+        android:textColor="@color/input_et2"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/requestRideImgBtn_rider"
+        app:layout_constraintStart_toStartOf="@+id/requestRideImgBtn_rider"
+        app:layout_constraintTop_toBottomOf="@+id/requestRideImgBtn_rider" />
+
+
+    <ImageButton
+        android:id="@+id/calendarImgBtn_rider"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="15dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/calendar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/viewProfileImgBtn_rider"
+        app:layout_constraintTop_toBottomOf="@+id/viewProfileImgBtn_rider"
+        app:layout_constraintVertical_bias="0.261" />
+
+    <TextView
+        android:id="@+id/appointmentTV_rider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/appointment"
+        android:textColor="@color/input_et2"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/calendarImgBtn_rider"
+        app:layout_constraintStart_toStartOf="@+id/calendarImgBtn_rider"
+        app:layout_constraintTop_toBottomOf="@+id/calendarImgBtn_rider" />
+
+
+    <ImageButton
+        android:id="@+id/settingsImgBtn_rider"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="15dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/settings"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/requestRideImgBtn_rider"
+        app:layout_constraintTop_toBottomOf="@+id/requestRideImgBtn_rider"
+        app:layout_constraintVertical_bias="0.261" />
+
+    <TextView
+        android:id="@+id/settingsTV_rider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/settings"
+        android:textColor="@color/input_et2"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/settingsImgBtn_rider"
+        app:layout_constraintStart_toStartOf="@+id/settingsImgBtn_rider"
+        app:layout_constraintTop_toBottomOf="@+id/settingsImgBtn_rider" />
+
+
+
+
+</android.support.constraint.ConstraintLayout>

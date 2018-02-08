@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Designated Ride</string>
+    <string name="loginLinkTV">Login Page</string>
+    <string name="registerLinkTV">Register Page</string>
+    <string name="view_profile">View Profile</string>
+    <string name="request_ride">Request Ride</string>
+    <string name="appointment">Appointment</string>
+    <string name="settings">Settings</string>
+</resources>

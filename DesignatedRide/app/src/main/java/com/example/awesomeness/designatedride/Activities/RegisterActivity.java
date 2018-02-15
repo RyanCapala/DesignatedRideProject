@@ -24,10 +24,19 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
@@ -61,6 +70,11 @@ public class RegisterActivity extends AppCompatActivity {
     private String _Rider = "Rider";
     private String _Driver = "Driver";
     private String _UserEmail = "userEmail";
+    private String _UserFirstName = "userFirstname";
+    private String _UserLastName = "userLastname";
+    private String _UserMode = "userMode";
+    private String _UserEmailVerified = "userEmailVerified";
+    private String _UserId = "userId";
 
     private String uMode;
 
@@ -104,8 +118,10 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        if(TextUtils.isEmpty(userPwd.getText().toString().trim())) { pwdMessage(true,false);}
 
     }
+
 
     private void createNewAccount() {
 
@@ -115,90 +131,128 @@ public class RegisterActivity extends AppCompatActivity {
         final String pwd = userPwd.getText().toString().trim();
         String vPwd = verifyPwd.getText().toString().trim();
 
-
-        if (!TextUtils.isEmpty(fname) && !TextUtils.isEmpty(lname) &&
-                !TextUtils.isEmpty(em) && !TextUtils.isEmpty(pwd) && !TextUtils.isEmpty(vPwd)) {
-            if (pwd.equals(vPwd)) {
-
+        if (fieldChecking(fname,lname,em,pwd,vPwd)) {
+            if(!checkPwd(pwd)) { pwdMessage(true,true); }
+            else if(!checkName(fname,lname)) {;}
+            else if (pwdmatch(pwd,vPwd)) {
                 mProgressDialog.setMessage("Creating Account...");
                 mProgressDialog.show();
                 mAuth.createUserWithEmailAndPassword(em, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
                             String userid = mAuth.getCurrentUser().getUid();
                             String emptyImg = "";
-                            if (isStatus) {
-                                uMode = "Rider";
-                                insertToDatabase(mDatabaseReference, userid, uMode, em, fname,
-                                        lname);
-                                gotoActivity(RiderActivity.class);
-                            } else {
-                                uMode = "Driver";
-                                insertToDatabase(mDatabaseReference, userid, uMode, em, fname,
-                                        lname);
-                                gotoActivity(DriverActivity.class);
-                            }
+                            final FirebaseUser user = mAuth.getCurrentUser();
+                            Map userInfo = new HashMap();
+                            Map drInfo = new HashMap();
 
-                        } else {
+                            if(isStatus)
+                                uMode = "Rider";
+                            else
+                                uMode = "Driver";
+
+                            userInfo.put(_UserId,userid);
+                            userInfo.put(_UserMode,uMode);
+                            userInfo.put(_UserFirstName,fname);
+                            userInfo.put(_UserLastName,lname);
+                            userInfo.put(_UserEmail,em);
+                            userInfo.put(_UserEmailVerified,String.valueOf(user.isEmailVerified()));
+                            drInfo.put(_UserEmail,em);
+                            Map writeInfo = new HashMap();
+                            writeInfo.put( _User + "/" + userid + "/" + _Profile + "/", userInfo);
+
+                            if(uMode.equals(_Driver)) { writeInfo.put(_Driver + "/" + userid + "/", drInfo); }
+                            else { writeInfo.put(_Rider + "/" + userid + "/", drInfo); }
+
+                            mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    if(databaseError != null){
+                                        Log.wtf("Write Error", databaseError.getMessage());
+                                        Toast.makeText(RegisterActivity.this,"An error occurred while creating your account, please try again.",Toast.LENGTH_LONG).show();
+                                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(!task.isSuccessful()) {Log.wtf("Non-Deleted User Account",task.getException().getMessage()); }
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        user.sendEmailVerification();
+                                        Toast.makeText(RegisterActivity.this,"Verification email sent to " + user.getEmail(), Toast.LENGTH_LONG).show();
+                                        if (isStatus) { gotoActivity(RiderActivity.class); }
+                                        else { gotoActivity(DriverActivity.class); }
+                                    }
+
+                                }
+                             });
+                         }
+                        else if (task.getException() instanceof FirebaseAuthUserCollisionException){
                             Toast.makeText(RegisterActivity.this, "Registration Failed. Email exist!", Toast.LENGTH_LONG).show();
                         }
+                        else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            Toast.makeText(RegisterActivity.this, "Registration Failed. Email incorrect!", Toast.LENGTH_LONG).show();
+                            userEmailET.setError("Email address is required");
+                        }
+                        else if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
+                            // This code should never run (Error checking purposes)
+                            Toast.makeText(RegisterActivity.this, "Registration Failed. Weak password!", Toast.LENGTH_LONG).show();
+                            pwdMessage(true,true);
+                        }
+                        else
+                        {Log.wtf("Authentication creation error", task.getException().getMessage());}
 
                         mProgressDialog.dismiss();
                     }
                 });
-
-            } else {
-                Toast.makeText(RegisterActivity.this, "Password doesn't match!",
-                        Toast.LENGTH_LONG).show();
             }
         }
-
     }
 
     //private void insertToDatabase(String userId, DatabaseReference mDatabaseReference, String fname, String lname, Uri resultUri) {
     private void insertToDatabase(DatabaseReference mDatabaseReference, String userId, String mode,
                                   String email, String fname, String lname) {
 
-       // TODO: user profile image.
+        // TODO: user profile image.
 
         /*************************************************************************
-        //when mUser is stored in the DB, it will be the "Profile's" children.
-        // Firebase Data Structure:
-        //  User
-        //      -> userId
-        //                  -> Profile
-        //                              --> userEmail
-        //                              --> userFirstname
-        //                              --> userLastname
-        //                              --> userId
-        //                              --> userImage
-        //                              --> userMode
-        ***************************************************************************/
-        DatabaseReference currentUserDB = mDatabaseReference.child(_User).child(userId);
+         //when mUser is stored in the DB, it will be the "Profile's" children.
+         // Firebase Data Structure:
+         //  User
+         //      -> userId
+         //                  -> Profile
+         //                              --> userEmail
+         //                              --> userFirstname
+         //                              --> userLastname
+         //                              --> userId
+         //                              --> userImage
+         //                              --> userMode
+         ***************************************************************************/
+        DatabaseReference currentUserDB = mDatabaseReference.child(_User).child(userId).child(_Profile);
         User mUser = new User(userId, mode, fname, lname, email);
-        currentUserDB.child(_Profile).setValue(mUser);
+        currentUserDB.setValue(mUser);
+
 
         /***************************************************************************
-        //store an instance of the user to a different node "Rider" or "Driver"
-        //Structure:
-        //  Rider or Driver
-        //                  -> userId
-        //                               --> userEmail:email
-        ****************************************************************************/
+         //store an instance of the user to a different node "Rider" or "Driver"
+         //Structure:
+         //  Rider or Driver
+         //                  -> userId
+         //                               --> userEmail:email
+         ****************************************************************************/
         HashMap<String, String> userInfo = new HashMap<>();
         userInfo.put(_UserEmail, email);
         if (mode.equals(_Driver)) {
-            DatabaseReference currUdB = mDbRef.child(_Driver);
-            currUdB.child(userId).setValue(userInfo);
+            DatabaseReference currUdB = mDbRef.child(_Driver).child(userId);
+            currUdB.setValue(userInfo);
 
         } else {
-            DatabaseReference currUdB = mDbRef.child(_Rider);
-            currUdB.child(userId).setValue(userInfo);
+            DatabaseReference currUdB = mDbRef.child(_Rider).child(userId);
+            currUdB.setValue(userInfo);
         }
-
     }
+
 
     private void gotoActivity(Class activityClass) {
         mProgressDialog.dismiss();
@@ -218,5 +272,57 @@ public class RegisterActivity extends AppCompatActivity {
         toggleButton = (ToggleButton) findViewById(R.id.toggleBtn_log);
     }
 
+    private boolean checkPwd(String pwd){
+        return (pwd.matches("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{3,}") && pwd.length() >= 8);
+    }
+
+    private boolean checkName(String fname, String lname){
+        boolean flag = true;
+        if(fname.matches("(.*[0-9].*)|(.*[@#$%^&+=.{}(),\"].*)|(.*[\\s].*)")){
+            firstName.setError("Name can't include numbers ,special characters, or spaces");
+            flag = false;
+        }
+        if(lname.matches("(.*[0-9].*)|(.*[@#$%^&+={}(),\"].*)|(.*[\\s].*)")) {
+            lastName.setError("Name can't include numbers ,special characters or spaces");
+            flag = false;
+        }
+
+        return flag;
+    }
+
+    private void pwdMessage(boolean userpwd, boolean vpwd) {
+        String errorMsg = "Password must be at least 8 characters " +
+                "containing at least one of each: lower case (a-z), upper case (A-Z), number (0-9)";
+
+        if(userpwd) {
+            userPwd.setError(errorMsg);
+        }
+        if(vpwd) {
+            verifyPwd.setError(errorMsg);
+        }
+
+    }
+
+    private boolean pwdmatch(String pwd, String vpwd){
+        if(!pwd.equals(vpwd)) {
+            userPwd.setError("Passwords don't match!");
+            verifyPwd.setError("Passwords don't match!");
+            return false;
+        }
+        else
+            return true;
+    }
+
+    private boolean fieldChecking(String fname, String lname, String em, String pwd, String vpwd){
+        boolean flag = true;
+
+        if(fname.isEmpty()) { firstName.setError("First name is required"); flag = false;}
+        if(lname.isEmpty()) { lastName.setError("Last name is required"); flag = false;}
+        if(em.isEmpty()) { userEmailET.setError("Email address is required"); flag = false;}
+        if(pwd.isEmpty()) { pwdMessage(true,false); flag = false;}
+        if(vpwd.isEmpty()) { pwdMessage(false,true); flag = false;}
+
+        return flag;
+    }
 
 }

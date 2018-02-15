@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText userPwd;
     private Button loginBtn;
     private TextView registerLinkTV;
+    private TextView forgotPassword;
     private ProgressDialog mProgressDialog;
 
     //Database Child names
@@ -51,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     private String modeDriver = "Driver";
 
 
-    //Golabl Var
+    //Global Var
     private String uid;
     private String mode;
 
@@ -101,6 +102,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 gotoActivity(RegisterActivity.class, true);
 
+            }
+        });
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoActivity(ForgotPasswordActivity.class, true);
             }
         });
 
@@ -188,6 +196,7 @@ public class LoginActivity extends AppCompatActivity {
         userPwd = (EditText) findViewById(R.id.userPassET_log);
         loginBtn = (Button) findViewById(R.id.userLoginBtn_log);
         registerLinkTV = (TextView) findViewById(R.id.registerLinkTV_log);
+        forgotPassword = (TextView) findViewById(R.id.forgotPassword_log);
         mProgressDialog = new ProgressDialog(this);
     }
 

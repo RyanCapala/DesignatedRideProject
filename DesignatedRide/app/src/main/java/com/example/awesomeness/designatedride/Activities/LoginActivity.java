@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText userPwd;
     private Button loginBtn;
     private TextView registerLinkTV;
-    private TextView forgotPassword;
+    private TextView forgotPasswordTV;
     private ProgressDialog mProgressDialog;
 
     //Database Child names
@@ -89,11 +89,18 @@ public class LoginActivity extends AppCompatActivity {
                 String email = userEmail.getText().toString().trim();
                 String pwd = userPwd.getText().toString().trim();
 
-                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd)) {
-                    mProgressDialog.setMessage("Logging in...");
-                    mProgressDialog.show();
-                    loginUser(email, pwd);
+                if (fieldChecking(email,pwd)) {
+                        mProgressDialog.setMessage("Logging in...");
+                        mProgressDialog.show();
+                        loginUser(email, pwd);
                 }
+            }
+        });
+
+        forgotPasswordTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoActivity(ForgotPasswordActivity.class, true);
             }
         });
 
@@ -104,14 +111,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gotoActivity(ForgotPasswordActivity.class, true);
-            }
-        });
-
 
 
     }//End of onCreate
@@ -133,60 +132,63 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser(String email, String pwd) {
-
+        final String testpwd = pwd;
         mAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(this, new
                 OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            if (!checkPwd(testpwd)) {
+                                gotoActivity(ChangePasswordActivity.class, false);
+                            }
+                            else {
+                                mUser = mAuth.getCurrentUser();
+                                uid = mUser.getUid();
+                                Log.d(TAG, "onComplete: <<<< Signed In >>>>");
 
-                            mUser = mAuth.getCurrentUser();
-                            uid = mUser.getUid();
-                            Log.d(TAG, "onComplete: <<<< Signed In >>>>");
+                                //Check user mode if "Rider" or "Driver"
+                                //then, send user to each specific page.
+                                mDatabaseReference.
+                                        child(cUser).
+                                        child(uid).
+                                        child(cProfile).
+                                        child(cUserMode).
+                                        addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                mode = dataSnapshot.getValue(String.class);
+                                                if (mode.equals(modeDriver)) {
 
-                            //Check user mode if "Rider" or "Driver"
-                            //then, send user to each specific page.
-                            mDatabaseReference.
-                                    child(cUser).
-                                    child(uid).
-                                    child(cProfile).
-                                    child(cUserMode).
-                                    addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    mode = dataSnapshot.getValue(String.class);
+                                                    gotoActivity(DriverActivity.class, true);
+                                                    clearEditText();
 
-                                    if (mode.equals(modeDriver)) {
+                                                } else if (mode.equals(modeRider)) {
 
-                                        gotoActivity(DriverActivity.class, true);
-                                        clearEditText();
+                                                    gotoActivity(RiderActivity.class, true);
+                                                    clearEditText();
 
-                                    } else if (mode.equals(modeRider)) {
+                                                } else {
+                                                    Toast.makeText(LoginActivity.this,
+                                                            "Credentials Not Valid!",
+                                                            Toast.LENGTH_LONG).show();
+                                                    clearEditText();
+                                                }
 
-                                        gotoActivity(RiderActivity.class, true);
-                                        clearEditText();
+                                            }
 
-                                    } else {
-                                        Toast.makeText(LoginActivity.this,
-                                                "Credentials Not Valid!",
-                                                Toast.LENGTH_LONG).show();
-                                        clearEditText();
-                                    }
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
 
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
-                        } else {
+                                            }
+                                        });
+                            }
+                        }else {
                             Toast.makeText(LoginActivity.this, "Failed Sign In!",
                                     Toast.LENGTH_LONG).show();
                             mProgressDialog.dismiss();
                             clearEditText();
                         }
+
                     }
                 });
     }//End of loginUser
@@ -196,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
         userPwd = (EditText) findViewById(R.id.userPassET_log);
         loginBtn = (Button) findViewById(R.id.userLoginBtn_log);
         registerLinkTV = (TextView) findViewById(R.id.registerLinkTV_log);
-        forgotPassword = (TextView) findViewById(R.id.forgotPassword_log);
+        forgotPasswordTV = (TextView) findViewById(R.id.forgotPasswordTV_log);
         mProgressDialog = new ProgressDialog(this);
     }
 
@@ -212,5 +214,17 @@ public class LoginActivity extends AppCompatActivity {
         }
         startActivity(new Intent(LoginActivity.this, activityClass));
         finish();
+    }
+
+    private boolean fieldChecking(String email ,String pwd){
+        boolean flag = true;
+
+        if(email.isEmpty()) { userEmail.setError("Email address is required."); flag = false;}
+        if(pwd.isEmpty()) {userPwd.setError("Password is required."); flag = false;}
+        return flag;
+    }
+
+    private boolean checkPwd(String pwd){
+        return (pwd.matches("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{3,}") && pwd.length() >= 8);
     }
 }

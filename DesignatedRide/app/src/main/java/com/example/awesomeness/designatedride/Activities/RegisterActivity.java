@@ -171,6 +171,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     if(databaseError != null){
                                         Log.wtf("Write Error", databaseError.getMessage());
                                         Toast.makeText(RegisterActivity.this,"An error occurred while creating your account, please try again.",Toast.LENGTH_LONG).show();
+                                        clearEditText();
                                         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
@@ -272,6 +273,14 @@ public class RegisterActivity extends AppCompatActivity {
         toggleButton = (ToggleButton) findViewById(R.id.toggleBtn_log);
     }
 
+    private void clearEditText() {
+        firstName.setText("");
+        lastName.setText("");
+        userEmailET.setText("");
+        userPwd.setText("");
+        verifyPwd.setText("");
+    }
+
     private boolean checkPwd(String pwd){
         return (pwd.matches("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{3,}") && pwd.length() >= 8);
     }
@@ -326,3 +335,4 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 }
+

@@ -95,6 +95,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                 gotoActivity(LoginActivity.class,true);
                             }
                             else {
+                                mProgressDialog.dismiss();
                                 if (task.getException() instanceof FirebaseAuthInvalidUserException) {
                                     Log.e("Password reset not sent", task.getException().getMessage());
                                     Toast.makeText(ForgotPasswordActivity.this, "Email address doesn't exist!", Toast.LENGTH_LONG).show();

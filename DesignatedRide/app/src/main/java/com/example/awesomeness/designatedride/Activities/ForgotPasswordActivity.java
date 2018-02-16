@@ -35,9 +35,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     public static final String TAG = "ForgotPasswordActivity";
 
     //Widgets
-    private EditText userEmail;
+    private EditText userEmailET;
     private Button loginBtn;
     private ProgressDialog mProgressDialog;
+    private TextView loginLinkTV, registerLinkTV;
 
     //Firebase
     private FirebaseAuth mAuth;
@@ -49,7 +50,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private String _UserEmail = "userEmail";
     private String _Profile = "Profile";
 
-    // TODO: change button, to say Submit rather than login. And a back button to go to home page.
+    // TODO: change button, to say Submit rather than login.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,17 +59,33 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         initWidgets();
 
+        loginLinkTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoActivity(LoginActivity.class);
+            }
+        });
+
+        registerLinkTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoActivity(RegisterActivity.class);
+            }
+        });
+
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference();
 
-        if(TextUtils.isEmpty(userEmail.getText().toString().trim())) { userEmail.setError("Enter email address");}
+        if(TextUtils.isEmpty(userEmailET.getText().toString().trim())) { userEmailET.setError("Enter email address");}
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String email = userEmail.getText().toString().trim();
+                final String email = userEmailET.getText().toString().trim();
+                mProgressDialog.setMessage("Sending Password Reset Email ...");
 
-                if (!email.isEmpty()) {
+                if (fieldChecking(email)) {
+                    mProgressDialog.show();
                     mAuth = FirebaseAuth.getInstance();
                     mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -91,8 +109,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         }
                     });
                 }
-                else
-                    userEmail.setError("Email address is required.");
             }
         });
 
@@ -100,13 +116,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }//End of onCreate
 
     private void initWidgets() {
-        userEmail = (EditText) findViewById(R.id.userEmailET_log);
+        userEmailET = (EditText) findViewById(R.id.userEmailET_log);
         loginBtn = (Button) findViewById(R.id.userLoginBtn_log);
         mProgressDialog = new ProgressDialog(this);
+        loginLinkTV = (TextView) findViewById(R.id.loginLinkTV_log);
+        registerLinkTV = (TextView) findViewById(R.id.registerLinkTV_log);
     }
 
     private void clearEditText() {
-        userEmail.setText("");
+        userEmailET.setText("");
     }
 
     private void gotoActivity(Class activityClass, boolean isDismiss) {
@@ -117,4 +135,17 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         startActivity(new Intent(ForgotPasswordActivity.this, activityClass));
         finish();
     }
+    private void gotoActivity(Class activityClass) {
+        startActivity(new Intent(ForgotPasswordActivity.this, activityClass));
+        finish();
+    }
+
+    private boolean fieldChecking(String email){
+        boolean flag = true;
+
+        if(email.isEmpty()) { userEmailET.setError("Email address is required"); flag = false;}
+
+        return flag;
+    }
 }
+

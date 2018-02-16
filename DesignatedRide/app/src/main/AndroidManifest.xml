@@ -34,6 +34,9 @@
         <activity
             android:name=".Activities.ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Activities.ChangePasswordActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

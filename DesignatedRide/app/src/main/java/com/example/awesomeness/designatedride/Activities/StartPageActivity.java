@@ -1,6 +1,8 @@
 package com.example.awesomeness.designatedride.Activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +16,7 @@ import com.example.awesomeness.designatedride.R;
 public class StartPageActivity extends AppCompatActivity {
 
     private TextView loginLink, registerLink;
+    private final int ACCESS_FINE_LOCATION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,7 @@ public class StartPageActivity extends AppCompatActivity {
 
         initWidgets();
 
+        ActivityCompat.requestPermissions(StartPageActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},ACCESS_FINE_LOCATION);
 
         loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,4 +52,12 @@ public class StartPageActivity extends AppCompatActivity {
         startActivity(new Intent(StartPageActivity.this, activityClass));
         finish();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if(!(grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+            finish();
+        }
+    }
+
 }

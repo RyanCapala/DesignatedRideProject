@@ -60,6 +60,9 @@
         <activity
             android:name=".Activities.RiderMapActivity"
             android:label="@string/title_activity_rider_map"></activity>
+        <activity
+            android:name=".Activities.DriverMapActivity"
+            android:label="@string/title_activity_rider_map"></activity>
     </application>
 
 </manifest>

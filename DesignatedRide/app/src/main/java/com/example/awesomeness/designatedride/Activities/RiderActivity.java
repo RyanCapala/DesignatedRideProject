@@ -150,7 +150,7 @@ public class RiderActivity extends AppCompatActivity {
         requestrideBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                gotoActivity(RiderMapActivity.class);
             }
         });
 

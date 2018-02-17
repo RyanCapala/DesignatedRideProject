@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -27,6 +29,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RiderMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
@@ -44,11 +51,31 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private LocationManager locationManager;
     private FusedLocationProviderClient mapFusedLocationProviderClient;
 
+    //FireBase
+    private DatabaseReference mDatabaseReference;
+    private DatabaseReference mDbRef;
+    private FirebaseDatabase mDatabase;
+    private FirebaseAuth mAuth;
+    private String userid;
+
+    //Database children
+    private String _Rider = "Rider";
+    private String _GeoLocation = "GeoLocation";
+
+    //GeoFire
+    private GeoFire mGeo;
+    private String key = _Rider + "/";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_map);
-
+        mDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mDatabase.getReference();
+        mGeo = new GeoFire(mDatabaseReference);
+        mAuth = FirebaseAuth.getInstance();
+        userid = mAuth.getCurrentUser().getUid();
+        key = key + userid + "/";
         getLocationPermissions();
     }
 
@@ -147,6 +174,15 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                             Log.d(TAG, "onComplete: found location.");
                             Location currentLocation = (Location) task.getResult();
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+
+                            mGeo.setLocation(key + _GeoLocation, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
+                                @Override
+                                public void onComplete(String key, DatabaseError error) {
+                                    if(error != null){
+                                        Log.wtf("Geolocation error",error.getMessage());
+                                    }
+                                }
+                            });
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");

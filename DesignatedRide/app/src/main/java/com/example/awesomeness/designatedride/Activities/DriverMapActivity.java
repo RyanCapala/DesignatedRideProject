@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.core.GeoHash;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -35,6 +36,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "DriverMapActivity";
@@ -51,19 +56,24 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private LocationManager locationManager;
     private FusedLocationProviderClient mapFusedLocationProviderClient;
 
-    //FireBase
     private DatabaseReference mDatabaseReference;
     private FirebaseDatabase mDatabase;
     private FirebaseAuth mAuth;
     private String userid;
 
     //Database children
-    private String _Driver = "Driver";
     private String _GeoLocation = "GeoLocation";
+    private String _g = "g";
+    private String _l = "l";
+    private String _Driver = "Driver";
+    private String key = _Driver + "/";
 
     //GeoFire
-    private GeoFire mGeo;
-    private String key = _Driver + "/";
+    private GeoHash mGeoHash;
+    private Map geoInfo;
+    private Map writeInfo;
+    private final double longitude = 0;
+    private final double latitude = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +81,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         setContentView(R.layout.activity_rider_map);
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference();
-        mGeo = new GeoFire(mDatabaseReference);
+        geoInfo = new HashMap();
+        writeInfo = new HashMap();
+        mGeoHash = new GeoHash(new GeoLocation(latitude,longitude));
         mAuth = FirebaseAuth.getInstance();
         userid = mAuth.getCurrentUser().getUid();
         key = key + userid + "/";
@@ -81,14 +93,22 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        mGeo.setLocation(key + _GeoLocation, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+
+        geoInfo = new HashMap();
+        writeInfo = new HashMap();
+        geoInfo.put(_g , mGeoHash.getGeoHashString());
+        geoInfo.put(_l, Arrays.asList(location.getLatitude(),location.getLongitude()));
+        writeInfo.put(key + _GeoLocation + "/",geoInfo);
+
+        mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
             @Override
-            public void onComplete(String key, DatabaseError error) {
-                if(error != null){
-                    Log.wtf("Geolocation error",error.getMessage());
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Log.wtf("Write Error", databaseError.getMessage());
                 }
             }
         });
+
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         mMap.animateCamera(cameraUpdate);
@@ -183,11 +203,17 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             Location currentLocation = (Location) task.getResult();
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
 
-                            mGeo.setLocation(key + _GeoLocation, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
+                            geoInfo = new HashMap();
+                            writeInfo = new HashMap();
+                            geoInfo.put(_g, mGeoHash.getGeoHashString());
+                            geoInfo.put(_l, Arrays.asList(currentLocation.getLatitude(),currentLocation.getLongitude()));
+                            writeInfo.put(key + _GeoLocation + "/",geoInfo);
+
+                            mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
                                 @Override
-                                public void onComplete(String key, DatabaseError error) {
-                                    if(error != null){
-                                        Log.wtf("Geolocation error",error.getMessage());
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    if (databaseError != null) {
+                                        Log.wtf("Geolocation Write Error", databaseError.getMessage());
                                     }
                                 }
                             });
@@ -226,3 +252,4 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 }
+

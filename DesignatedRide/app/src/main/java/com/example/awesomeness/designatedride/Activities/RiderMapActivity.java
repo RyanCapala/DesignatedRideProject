@@ -53,7 +53,6 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
     //FireBase
     private DatabaseReference mDatabaseReference;
-    private DatabaseReference mDbRef;
     private FirebaseDatabase mDatabase;
     private FirebaseAuth mAuth;
     private String userid;
@@ -82,6 +81,15 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        mGeo.setLocation(key + _GeoLocation, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+                if(error != null){
+                    Log.wtf("Geolocation error",error.getMessage());
+                }
+            }
+        });
+        
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         mMap.animateCamera(cameraUpdate);
         locationManager.removeUpdates(this);
@@ -218,3 +226,4 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         }
     }
 }
+

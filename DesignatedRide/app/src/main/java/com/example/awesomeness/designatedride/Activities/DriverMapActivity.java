@@ -32,9 +32,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -66,7 +68,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private String _g = "g";
     private String _l = "l";
     private String _Driver = "Driver";
-    private String key = _Driver + "/";
+    private String key = "";
+    private String _geoKey = "geoKey";
 
     //GeoFire
     private GeoHash mGeoHash;
@@ -86,7 +89,17 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mGeoHash = new GeoHash(new GeoLocation(latitude,longitude));
         mAuth = FirebaseAuth.getInstance();
         userid = mAuth.getCurrentUser().getUid();
-        key = key + userid + "/";
+        mDatabaseReference.child(_Driver).child(userid).child(_geoKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                key = dataSnapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         getLocationPermissions();
     }
 
@@ -98,7 +111,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         writeInfo = new HashMap();
         geoInfo.put(_g , mGeoHash.getGeoHashString());
         geoInfo.put(_l, Arrays.asList(location.getLatitude(),location.getLongitude()));
-        writeInfo.put(key + _GeoLocation + "/",geoInfo);
+        writeInfo.put(_GeoLocation + "/" + key + "/",geoInfo);
 
         mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
             @Override
@@ -207,7 +220,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             writeInfo = new HashMap();
                             geoInfo.put(_g, mGeoHash.getGeoHashString());
                             geoInfo.put(_l, Arrays.asList(currentLocation.getLatitude(),currentLocation.getLongitude()));
-                            writeInfo.put(key + _GeoLocation + "/",geoInfo);
+                            writeInfo.put(_GeoLocation + "/" + key + "/",geoInfo);
 
                             mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
                                 @Override

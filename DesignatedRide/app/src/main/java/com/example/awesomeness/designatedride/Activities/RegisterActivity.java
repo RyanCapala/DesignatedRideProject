@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -57,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
     private DatabaseReference mDbRef;
     private FirebaseDatabase mDatabase;
     private FirebaseAuth mAuth;
+    private String mPushKey;
     private ProgressDialog mProgressDialog;
     private Uri resultUri = null;
     private boolean isStatus;   // toggle position for rider or driver
@@ -75,6 +77,10 @@ public class RegisterActivity extends AppCompatActivity {
     private String _UserMode = "userMode";
     private String _UserEmailVerified = "userEmailVerified";
     private String _UserId = "userId";
+    private String _GeoKey = "geoKey";
+    private String _GeoLocation = "GeoLocation";
+    private String _g = "g";
+    private String _l = "l";
 
     private String uMode;
 
@@ -146,6 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
                             final FirebaseUser user = mAuth.getCurrentUser();
                             Map userInfo = new HashMap();
                             Map drInfo = new HashMap();
+                            Map geoInfo = new HashMap();
 
                             if(isStatus)
                                 uMode = "Rider";
@@ -159,11 +166,26 @@ public class RegisterActivity extends AppCompatActivity {
                             userInfo.put(_UserEmail,em);
                             userInfo.put(_UserEmailVerified,String.valueOf(user.isEmailVerified()));
                             drInfo.put(_UserEmail,em);
+                            geoInfo.put(_g , "");
+                            geoInfo.put(_l, Arrays.asList("",""));
                             Map writeInfo = new HashMap();
                             writeInfo.put( _User + "/" + userid + "/" + _Profile + "/", userInfo);
 
-                            if(uMode.equals(_Driver)) { writeInfo.put(_Driver + "/" + userid + "/", drInfo); }
-                            else { writeInfo.put(_Rider + "/" + userid + "/", drInfo); }
+
+
+                            if(uMode.equals(_Driver)) {
+                                mPushKey = FirebaseDatabase.getInstance().getReference(_Driver + "/" + userid + "/").push().getKey();
+                                drInfo.put(_GeoKey,mPushKey);
+                                writeInfo.put(_GeoLocation + "/" + mPushKey + "/",geoInfo);
+                                writeInfo.put(_Driver + "/" + userid + "/", drInfo);
+                            }
+                            else {
+                                writeInfo.put(_Rider + "/" + userid + "/", drInfo);
+                                mPushKey = FirebaseDatabase.getInstance().getReference(_Rider + "/" + userid + "/").push().getKey();
+                                drInfo.put(_GeoKey,mPushKey);
+                                writeInfo.put(_GeoLocation + "/" + mPushKey + "/",geoInfo);
+                                writeInfo.put(_Rider + "/" + userid + "/",drInfo);
+                            }
 
                             mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
                                 @Override
@@ -187,8 +209,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
 
                                 }
-                             });
-                         }
+                            });
+                        }
                         else if (task.getException() instanceof FirebaseAuthUserCollisionException){
                             Toast.makeText(RegisterActivity.this, "Registration Failed. Email exist!", Toast.LENGTH_LONG).show();
                         }

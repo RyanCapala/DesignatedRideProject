@@ -38,7 +38,8 @@
         </activity>
         <activity
             android:name=".Activities.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".Activities.ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />

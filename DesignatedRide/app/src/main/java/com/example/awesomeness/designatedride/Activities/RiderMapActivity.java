@@ -12,6 +12,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -58,6 +60,9 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private LocationManager locationManager;
     private FusedLocationProviderClient mapFusedLocationProviderClient;
 
+    //Widgets
+    Button setPickupBtn;
+
     //FireBase
     private DatabaseReference mDatabaseReference;
     private DataSnapshot mDataSnapshot;
@@ -84,6 +89,8 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_map);
+        initWidgets();
+
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference();
         geoInfo = new HashMap();
@@ -234,7 +241,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(RiderMapActivity.this, "Unabled to get current location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RiderMapActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -265,5 +272,16 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
+    private void initWidgets()
+    {
+        setPickupBtn = (Button) findViewById(R.id.setPickupBtn_ridermap);
+        setPickupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(RiderMapActivity.this, "Requested a ride!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
 

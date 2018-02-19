@@ -99,13 +99,7 @@
                     android:layout_height="60dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="30dp"
-                    android:background="@drawable/buttonstyleselector"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="@string/login_page_login_button_text"
-                    android:textAllCaps="false"
-                    android:textColor="@color/helpTextColor"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:text="@string/login_page_login_button_text" />
             </LinearLayout>
 
             <RelativeLayout

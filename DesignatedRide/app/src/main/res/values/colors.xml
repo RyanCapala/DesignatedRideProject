@@ -6,10 +6,9 @@
     <color name="textBoxBackground">#f5fbf1</color>
     <color name="forgotPassText">#fff4d9</color>
     <color name="titleFontColor" >#c52929</color>
-
-    <color name="helpTextColor">@color/titleFontColor</color>
-    <color name="buttonTextDefault">@color/helpTextColor</color>
-    <color name="buttonBorderColor">@color/helpTextColor</color>
+    <color name="helpTextColor">@color/colorAccent</color>
+    <color name="buttonTextDefault">@color/titleFontColor</color>
+    <color name="buttonBorderColor">@color/titleFontColor</color>
     <color name="buttonInnerColor">@color/colorAccent</color>
 
     <color name="input_et">#F5FBEF</color>

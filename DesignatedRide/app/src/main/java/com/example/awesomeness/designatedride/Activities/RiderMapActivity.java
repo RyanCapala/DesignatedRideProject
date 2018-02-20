@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.firebase.geofire.core.GeoHash;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -72,30 +74,37 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
     //Database children
     private String _GeoLocation = "GeoLocation";
-    private String _g = "g";
-    private String _l = "l";
+    private String _AvaliableGeoLocation = "AvaliableGeoLocation";
     private String _Rider = "Rider";
     private String key = "";
     private String _geoKey = "geoKey";
 
     //GeoFire
-    private GeoHash mGeoHash;
-    private Map geoInfo;
-    private Map writeInfo;
-    private final double longitude = 0;
-    private final double latitude = 0;
+    private GeoQuery mGeoQuery;
+    private GeoFire mAvaliableGeoFire;
+    private GeoFire mGeoFire;
+    private DatabaseReference mAvaliableGeoLocationRef;
+    private DatabaseReference mGeoLocationRef;
+    private DatabaseReference mChildAvaliable;
+    private DatabaseReference mChildLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_map);
         initWidgets();
-
         mDatabase = FirebaseDatabase.getInstance();
+
         mDatabaseReference = mDatabase.getReference();
-        geoInfo = new HashMap();
-        writeInfo = new HashMap();
-        mGeoHash = new GeoHash(new GeoLocation(latitude,longitude));
+        mChildLocation = mDatabase.getReference();
+        mChildAvaliable = mDatabase.getReference();
+
+        mAvaliableGeoLocationRef = mChildAvaliable.child(_AvaliableGeoLocation);
+        mGeoLocationRef = mChildLocation.child(_GeoLocation);
+
+        mAvaliableGeoFire = new GeoFire(mAvaliableGeoLocationRef);
+        mGeoFire = new GeoFire(mGeoLocationRef);
+
         mAuth = FirebaseAuth.getInstance();
         userid = mAuth.getCurrentUser().getUid();
         mDatabaseReference.child(_Rider).child(userid).child(_geoKey).addValueEventListener(new ValueEventListener() {
@@ -109,6 +118,39 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
             }
         });
+
+        setPickupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(RiderMapActivity.this, "Requested a ride!", Toast.LENGTH_SHORT).show();
+                mGeoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+                    @Override
+                    public void onKeyEntered(String key, GeoLocation location) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)));
+                    }
+
+                    @Override
+                    public void onKeyExited(String key) {
+
+                    }
+
+                    @Override
+                    public void onKeyMoved(String key, GeoLocation location) {
+
+                    }
+
+                    @Override
+                    public void onGeoQueryReady() {
+
+                    }
+
+                    @Override
+                    public void onGeoQueryError(DatabaseError error) {
+                        Log.e(TAG, error.getMessage());
+                    }
+                });
+            }
+        });
         getLocationPermissions();
     }
 
@@ -116,18 +158,10 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        geoInfo = new HashMap();
-        writeInfo = new HashMap();
-        geoInfo.put(_g , mGeoHash.getGeoHashString());
-        geoInfo.put(_l, Arrays.asList(location.getLatitude(),location.getLongitude()));
-        writeInfo.put(_GeoLocation + "/" + key + "/",geoInfo);
-
-        mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
+        mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
             @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError != null) {
-                    Log.wtf("Write Error", databaseError.getMessage());
-                }
+            public void onComplete(String key, DatabaseError error) {
+
             }
         });
 
@@ -223,22 +257,13 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                             Log.d(TAG, "onComplete: found location.");
                             Location currentLocation = (Location) task.getResult();
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
-
-                            geoInfo = new HashMap();
-                            writeInfo = new HashMap();
-                            geoInfo.put(_g , mGeoHash.getGeoHashString());
-                            geoInfo.put(_l, Arrays.asList(currentLocation.getLatitude(),currentLocation.getLongitude()));
-                            writeInfo.put(_GeoLocation + "/" + key + "/",geoInfo);;
-
-                            mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
+                            mGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
                                 @Override
-                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                    if (databaseError != null) {
-                                        Log.wtf("Write Error", databaseError.getMessage());
-                                    }
+                                public void onComplete(String key, DatabaseError error) {
+
                                 }
                             });
-
+                            mGeoQuery = mAvaliableGeoFire.queryAtLocation(new GeoLocation(currentLocation.getLatitude(),currentLocation.getLongitude()),0.5);
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(RiderMapActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
@@ -275,13 +300,6 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private void initWidgets()
     {
         setPickupBtn = (Button) findViewById(R.id.setPickupBtn_ridermap);
-        setPickupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(RiderMapActivity.this, "Requested a ride!", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 }
-

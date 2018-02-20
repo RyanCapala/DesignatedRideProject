@@ -4,35 +4,126 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/activity_bg"
     tools:context="com.example.awesomeness.designatedride.Activities.DriverActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_user"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/medicabtoolbar"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
+    <ImageView
+        android:id="@+id/ImgViewBG_driver"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="Driver Page"
-        android:textSize="24dp"
+        android:background="@drawable/input_outline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.181" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profileImgView_driver"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/profile1xm"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/ImgViewBG_driver"
+        app:layout_constraintEnd_toEndOf="@+id/ImgViewBG_driver"
+        app:layout_constraintStart_toStartOf="@+id/ImgViewBG_driver"
+        app:layout_constraintTop_toTopOf="@+id/ImgViewBG_driver" />
+
+    <ImageButton
+        android:id="@+id/viewProfileImgBtn_driver"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="15dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/profile2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ImgViewBG_driver"
+        app:layout_constraintVertical_bias="0.003"
+        />
+
+    <TextView
+        android:id="@+id/viewProfileTV_driver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"
+        android:textColor="@color/input_et2"
+        android:text="@string/view_profile"
+        app:layout_constraintEnd_toEndOf="@+id/viewProfileImgBtn_driver"
+        app:layout_constraintStart_toStartOf="@+id/viewProfileImgBtn_driver"
+        app:layout_constraintTop_toBottomOf="@+id/viewProfileImgBtn_driver" />
+
+    <ImageButton
+        android:id="@+id/pickupRiderImgBtn_driver"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/location"
+        android:layout_marginRight="50dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/viewProfileImgBtn_driver"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.945"
+        app:layout_constraintStart_toEndOf="@+id/viewProfileImgBtn_driver"
+        app:layout_constraintTop_toTopOf="@+id/viewProfileImgBtn_driver"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/pickupRiderTV_driver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/pickup_rider"
+        android:textColor="@color/input_et2"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/pickupRiderImgBtn_driver"
+        app:layout_constraintStart_toStartOf="@+id/pickupRiderImgBtn_driver"
+        app:layout_constraintTop_toBottomOf="@+id/pickupRiderImgBtn_driver" />
+
+    <ImageButton
+        android:id="@+id/settingsImgBtn_driver"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/settings"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/pickupRiderImgBtn_driver"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintStart_toEndOf="@+id/viewProfileImgBtn_driver"
+        app:layout_constraintTop_toBottomOf="@+id/viewProfileTV_driver"
+        app:layout_constraintVertical_bias="0.045" />
+
+    <TextView
+        android:id="@+id/settingsTV_driver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/settings"
+        android:textColor="@color/input_et2"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/settingsImgBtn_driver"
+        app:layout_constraintStart_toStartOf="@+id/settingsImgBtn_driver"
+        app:layout_constraintTop_toBottomOf="@+id/settingsImgBtn_driver" />
 </android.support.constraint.ConstraintLayout>

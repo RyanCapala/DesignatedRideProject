@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryDataEventListener;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.firebase.geofire.core.GeoHash;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -29,6 +30,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.example.awesomeness.designatedride.R;
@@ -75,9 +77,12 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     //Database children
     private String _GeoLocation = "GeoLocation";
     private String _AvaliableGeoLocation = "AvaliableGeoLocation";
+    private String _Driver = "Driver";
     private String _Rider = "Rider";
-    private String key = "";
     private String _geoKey = "geoKey";
+    private String _userRating = "userRating";
+    private String key = "";
+    private String rating = "";
 
     //GeoFire
     private GeoQuery mGeoQuery;
@@ -119,23 +124,31 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
             }
         });
 
+        getLocationPermissions();
+
         setPickupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(RiderMapActivity.this, "Requested a ride!", Toast.LENGTH_SHORT).show();
-                mGeoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+                mGeoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
                     @Override
-                    public void onKeyEntered(String key, GeoLocation location) {
-                        mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)));
+                    public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
+                        rating = dataSnapshot.child(_userRating).getValue(String.class);
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)).title(rating));
                     }
 
                     @Override
-                    public void onKeyExited(String key) {
+                    public void onDataExited(DataSnapshot dataSnapshot) {
 
                     }
 
                     @Override
-                    public void onKeyMoved(String key, GeoLocation location) {
+                    public void onDataMoved(DataSnapshot dataSnapshot, GeoLocation location) {
+
+                    }
+
+                    @Override
+                    public void onDataChanged(DataSnapshot dataSnapshot, GeoLocation location) {
 
                     }
 
@@ -146,13 +159,14 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
                     @Override
                     public void onGeoQueryError(DatabaseError error) {
-                        Log.e(TAG, error.getMessage());
+
                     }
                 });
             }
         });
-        getLocationPermissions();
+
     }
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -198,7 +212,9 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                             != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
+
             mMap.setMyLocationEnabled(true);
+
             //mMap.getUiSettings().setMyLocationButtonEnabled(false); // Hides the "locate me" button
         }
     }
@@ -303,3 +319,4 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     }
 
 }
+

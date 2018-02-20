@@ -19,6 +19,8 @@ import android.widget.ToggleButton;
 
 import com.example.awesomeness.designatedride.Model.User;
 import com.example.awesomeness.designatedride.R;
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -65,7 +67,6 @@ public class RegisterActivity extends AppCompatActivity {
     //private StorageReference mFirebaseStorage; //will be used for image storage
     //public static final int GALLERY_CODE = 1; //will be used for images
 
-
     //Strings below needs to be exact same as the database child
     private String _User = "User";
     private String _Profile = "Profile";
@@ -78,9 +79,8 @@ public class RegisterActivity extends AppCompatActivity {
     private String _UserEmailVerified = "userEmailVerified";
     private String _UserId = "userId";
     private String _GeoKey = "geoKey";
-    private String _GeoLocation = "GeoLocation";
-    private String _g = "g";
-    private String _l = "l";
+    private String _IsAvaliable = "isAvaliable";
+    private String _UserRating = "userRating";
 
     private String uMode;
 
@@ -152,7 +152,6 @@ public class RegisterActivity extends AppCompatActivity {
                             final FirebaseUser user = mAuth.getCurrentUser();
                             Map userInfo = new HashMap();
                             Map drInfo = new HashMap();
-                            Map geoInfo = new HashMap();
 
                             if(isStatus)
                                 uMode = "Rider";
@@ -166,24 +165,22 @@ public class RegisterActivity extends AppCompatActivity {
                             userInfo.put(_UserEmail,em);
                             userInfo.put(_UserEmailVerified,String.valueOf(user.isEmailVerified()));
                             drInfo.put(_UserEmail,em);
-                            geoInfo.put(_g , "");
-                            geoInfo.put(_l, Arrays.asList("",""));
+                            drInfo.put(_UserRating,"No Feedback");
                             Map writeInfo = new HashMap();
-                            writeInfo.put( _User + "/" + userid + "/" + _Profile + "/", userInfo);
+                            writeInfo.put(  _User + "/" + userid + "/" + _Profile + "/", userInfo);
 
 
 
                             if(uMode.equals(_Driver)) {
                                 mPushKey = FirebaseDatabase.getInstance().getReference(_Driver + "/" + userid + "/").push().getKey();
                                 drInfo.put(_GeoKey,mPushKey);
-                                writeInfo.put(_GeoLocation + "/" + mPushKey + "/",geoInfo);
+                                drInfo.put(_IsAvaliable,"false");
                                 writeInfo.put(_Driver + "/" + userid + "/", drInfo);
                             }
                             else {
                                 writeInfo.put(_Rider + "/" + userid + "/", drInfo);
                                 mPushKey = FirebaseDatabase.getInstance().getReference(_Rider + "/" + userid + "/").push().getKey();
                                 drInfo.put(_GeoKey,mPushKey);
-                                writeInfo.put(_GeoLocation + "/" + mPushKey + "/",geoInfo);
                                 writeInfo.put(_Rider + "/" + userid + "/",drInfo);
                             }
 
@@ -202,8 +199,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         });
                                     }
                                     else {
-                                        user.sendEmailVerification();
-                                        Toast.makeText(RegisterActivity.this,"Verification email sent to " + user.getEmail(), Toast.LENGTH_LONG).show();
+                                        user.sendEmailVerification();Toast.makeText(RegisterActivity.this,"Verification email sent to " + user.getEmail(), Toast.LENGTH_LONG).show();
                                         if (isStatus) { gotoActivity(RiderActivity.class); }
                                         else { gotoActivity(DriverActivity.class); }
                                     }
@@ -357,4 +353,3 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 }
-

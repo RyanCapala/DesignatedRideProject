@@ -82,6 +82,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_map);
+
+        mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference();
         geoInfo = new HashMap();
@@ -141,7 +144,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(this, "Map is ready", Toast.LENGTH_SHORT).show();
         mMap = googleMap;
-
+        padGoogleMap();
         // Add a marker in Sydney and move the camera (Default thing from google maps)
         //LatLng sydney = new LatLng(-34, 151);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -203,15 +206,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void getDeviceLocation() {
-        mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
         try {
             if (mapLocationPermissionsGranted) {
                 Task location = mapFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful() && task.getResult() != null) {
                             Log.d(TAG, "onComplete: found location.");
                             Location currentLocation = (Location) task.getResult();
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
@@ -263,6 +264,18 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         } else {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
+    }
+
+    // Pad map appropriately to not obscure google logo/copyright info
+    // This is a generic function, wont look nice on most devices
+    // probably needs some math to calculate padding size (its in pixels)
+    private void padGoogleMap(){
+        //    //int[] locationOnScreen; // [x, y]
+        //    //findViewById(R.id.setPickupBtn_ridermap).getLocationOnScreen(locationOnScreen);
+
+        //    // left, top, right, bottom
+        mMap.setPadding(0,0, 0,150);
+
     }
 }
 

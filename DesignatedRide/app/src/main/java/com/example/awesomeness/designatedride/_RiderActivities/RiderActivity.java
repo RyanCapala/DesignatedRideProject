@@ -171,9 +171,6 @@ public class RiderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //tempoaray location for the logout
-                signOutUser();
-
             }
         });
 
@@ -193,6 +190,33 @@ public class RiderActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_user, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    //----------------------------------------------------------------------------------------------
     private void saveProfileImage(Uri imgUri) {
 
         if (imgUri != null) {
@@ -231,32 +255,7 @@ public class RiderActivity extends AppCompatActivity {
 
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_user, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
+    //----------------------------------------------------------------------------------------------
     private void initWidgets() {
         //profileImage = (ImageView) findViewById(R.id.profileImgView_rider);
         profileImage = (CircleImageView) findViewById(R.id.profileImgView_rider);
@@ -267,11 +266,13 @@ public class RiderActivity extends AppCompatActivity {
         mProgress = new ProgressDialog(this);
     }
 
+    //----------------------------------------------------------------------------------------------
     private void gotoActivity(Class activityClass) {
         startActivity(new Intent(RiderActivity.this, activityClass));
        // finish();
     }
 
+    //----------------------------------------------------------------------------------------------
     private void signOutUser() {
         if (mUser != null && mAuth != null) {
             mAuth.signOut();
@@ -279,8 +280,7 @@ public class RiderActivity extends AppCompatActivity {
         }
     }
 
-
-
+    //----------------------------------------------------------------------------------------------
     private void getProfileImage() {
         uid = mUser.getUid();
         mDbRef2.
@@ -310,7 +310,7 @@ public class RiderActivity extends AppCompatActivity {
         });
     }
 
-    //----------------
+    //----------------------------------------------------------------------------------------------
     private void createPopupDialog() {
 
         dialogBuilder = new AlertDialog.Builder(this);
@@ -359,7 +359,7 @@ public class RiderActivity extends AppCompatActivity {
 
     }//End of createPopupDialog
 
-    //----------------
+    //----------------------------------------------------------------------------------------------
     private void showConfirmationDialog() {
 
         final AlertDialog _dialog;
@@ -377,11 +377,7 @@ public class RiderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (mUser != null && mAuth != null) {
-                    mAuth.signOut();
-                    dialog.dismiss();
-                    gotoActivity(LoginActivity.class);
-                }
+                signOutUser();
 
             }
         });

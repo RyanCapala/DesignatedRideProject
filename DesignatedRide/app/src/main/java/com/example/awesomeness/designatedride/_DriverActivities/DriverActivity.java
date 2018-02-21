@@ -166,12 +166,8 @@ public class DriverActivity extends AppCompatActivity {
         settingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 2/17/18 set location for the signout
-                //temporary location for signout
-                if (mUser != null && mAuth != null) {
-                    mAuth.signOut();
-                    gotoActivity(LoginActivity.class);
-                }
+
+
             }
         });
 
@@ -285,11 +281,7 @@ public class DriverActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (mUser != null && mAuth != null) {
-                    mAuth.signOut();
-                    dialog.dismiss();
-                    gotoActivity(LoginActivity.class);
-                }
+                signOutUser();
 
             }
         });
@@ -304,4 +296,13 @@ public class DriverActivity extends AppCompatActivity {
         });
 
     }//End of showConfirmationDialog
+
+
+    //----------------------------------------------------------------------------------------------
+    private void signOutUser() {
+        if (mUser != null && mAuth != null) {
+            mAuth.signOut();
+            gotoActivity(LoginActivity.class);
+        }
+    }
 }

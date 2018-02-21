@@ -57,6 +57,8 @@
             android:background="@drawable/edittextstyle"
             android:hint="@string/login_page_email_hint"
             android:inputType="textEmailAddress"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:cursorVisible="true"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" />
 
@@ -69,6 +71,8 @@
             android:background="@drawable/edittextstyle"
             android:hint="@string/login_page_password_hint"
             android:inputType="textPassword"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:cursorVisible="true"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" />
 

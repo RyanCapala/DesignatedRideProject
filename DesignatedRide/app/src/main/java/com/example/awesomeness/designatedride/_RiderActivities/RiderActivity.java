@@ -1,18 +1,22 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.Activities.LoginActivity;
@@ -66,7 +70,11 @@ public class RiderActivity extends AppCompatActivity {
 
     private ProgressDialog mProgress;
 
-
+    //----------
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private Button updateProfileBtn, logoutBtn, yesButton, noButton;
+    private TextView cancelTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +130,9 @@ public class RiderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                createPopupDialog();
+
+                /*********************************************************
                 DatabaseReference databaseReference = mDbRef2.child(cUser).child(uid).child(cProfile).child(cUserImage);
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -137,7 +148,7 @@ public class RiderActivity extends AppCompatActivity {
 
                     }
                 });
-
+                *********************************************************/
 
             }
         });
@@ -298,4 +309,94 @@ public class RiderActivity extends AppCompatActivity {
                     }
         });
     }
+
+    //----------------
+    private void createPopupDialog() {
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.driver_profile_dialog_popup, null);
+
+        updateProfileBtn = (Button) view.findViewById(R.id.btn_updateProfile_drvrPopup);
+        logoutBtn = (Button) view.findViewById(R.id.btn_logout_drvrPopup);
+        cancelTV = (TextView) view.findViewById(R.id.tv_cancelLink_drvrPopup);
+
+        dialogBuilder.setView(view);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        //-----------
+        updateProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        //-----------
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+                //will delay the next dialog
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showConfirmationDialog();
+                    }
+                }, 100);
+
+            }
+        });
+
+        //-----------
+        cancelTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+    }//End of createPopupDialog
+
+    //----------------
+    private void showConfirmationDialog() {
+
+        final AlertDialog _dialog;
+        AlertDialog.Builder _dialogBuilder;
+        View view = getLayoutInflater().inflate(R.layout.confirmation_dialog, null);
+        _dialogBuilder = new AlertDialog.Builder(this);
+        yesButton = (Button) view.findViewById(R.id.yesButton);
+        noButton = (Button) view.findViewById(R.id.noButton);
+
+        _dialogBuilder.setView(view);
+        _dialog = _dialogBuilder.create();
+        _dialog.show();
+
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mUser != null && mAuth != null) {
+                    mAuth.signOut();
+                    dialog.dismiss();
+                    gotoActivity(LoginActivity.class);
+                }
+
+            }
+        });
+
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                _dialog.dismiss();
+
+            }
+        });
+
+    }//End of showConfirmationDialog
+
+
+
 }

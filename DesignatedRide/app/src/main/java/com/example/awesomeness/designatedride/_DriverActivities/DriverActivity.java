@@ -1,14 +1,18 @@
 
 package com.example.awesomeness.designatedride._DriverActivities;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.location.Location;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.Activities.LoginActivity;
@@ -61,6 +65,12 @@ public class DriverActivity extends AppCompatActivity {
 
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
+    //----------
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private Button updateProfileBtn, logoutBtn, yesButton, noButton;
+    private TextView cancelTV;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +94,7 @@ public class DriverActivity extends AppCompatActivity {
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                createPopupDialog();
             }
         });
 
@@ -175,10 +185,12 @@ public class DriverActivity extends AppCompatActivity {
         finish();
     }
 
+    //----------------------------------------------------------------------------------------------
     private void gotoActivityWithArrowBack(Class activityClass) {
         startActivity(new Intent(DriverActivity.this, activityClass));
     }
 
+    //----------------------------------------------------------------------------------------------
     private void initWidgets(){
         profileImage = (CircleImageView) findViewById(R.id.profileImgView_driver);
         profileBtn = (ImageButton) findViewById(R.id.viewProfileImgBtn_driver);
@@ -186,6 +198,7 @@ public class DriverActivity extends AppCompatActivity {
         settingsBtn = (ImageButton) findViewById(R.id.settingsImgBtn_driver);
     }
 
+    //----------------------------------------------------------------------------------------------
     public boolean isServicesOk() {
         Log.d(TAG, "isServicesOk: Checking google services version");
 
@@ -204,4 +217,91 @@ public class DriverActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    //----------------------------------------------------------------------------------------------
+    private void createPopupDialog() {
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.driver_profile_dialog_popup, null);
+
+        updateProfileBtn = (Button) view.findViewById(R.id.btn_updateProfile_drvrPopup);
+        logoutBtn = (Button) view.findViewById(R.id.btn_logout_drvrPopup);
+        cancelTV = (TextView) view.findViewById(R.id.tv_cancelLink_drvrPopup);
+
+        dialogBuilder.setView(view);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        //-----------
+        updateProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        //-----------
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+                //will delay the next dialog
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showConfirmationDialog();
+                    }
+                }, 100);
+
+            }
+        });
+
+        //-----------
+        cancelTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+    }//End of createPopupDialog
+
+    //----------------------------------------------------------------------------------------------
+    private void showConfirmationDialog() {
+
+        final AlertDialog _dialog;
+        AlertDialog.Builder _dialogBuilder;
+        View view = getLayoutInflater().inflate(R.layout.confirmation_dialog, null);
+        _dialogBuilder = new AlertDialog.Builder(this);
+        yesButton = (Button) view.findViewById(R.id.yesButton);
+        noButton = (Button) view.findViewById(R.id.noButton);
+
+        _dialogBuilder.setView(view);
+        _dialog = _dialogBuilder.create();
+        _dialog.show();
+
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mUser != null && mAuth != null) {
+                    mAuth.signOut();
+                    dialog.dismiss();
+                    gotoActivity(LoginActivity.class);
+                }
+
+            }
+        });
+
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                _dialog.dismiss();
+
+            }
+        });
+
+    }//End of showConfirmationDialog
 }

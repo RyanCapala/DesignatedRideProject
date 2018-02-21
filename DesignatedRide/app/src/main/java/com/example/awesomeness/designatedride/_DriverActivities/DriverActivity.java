@@ -1,19 +1,17 @@
 
-package com.example.awesomeness.designatedride.Activities;
+package com.example.awesomeness.designatedride._DriverActivities;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.awesomeness.designatedride.Activities.LoginActivity;
 import com.example.awesomeness.designatedride.R;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;

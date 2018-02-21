@@ -1,9 +1,8 @@
-package com.example.awesomeness.designatedride.Activities;
+package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -12,14 +11,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.awesomeness.designatedride.Activities.LoginActivity;
 import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +32,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

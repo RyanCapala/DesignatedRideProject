@@ -1,12 +1,10 @@
-package com.example.awesomeness.designatedride.Activities;
+package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.Manifest;
-import android.content.Context;
 import android.util.Log;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -20,8 +18,6 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryDataEventListener;
-import com.firebase.geofire.GeoQueryEventListener;
-import com.firebase.geofire.core.GeoHash;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -35,19 +31,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RiderMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 

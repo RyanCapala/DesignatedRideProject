@@ -22,10 +22,10 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".Activities.RiderActivity"
+            android:name="._RiderActivities.RiderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.DriverActivity"
+            android:name="._DriverActivities.DriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.StartPageActivity"
@@ -59,10 +59,10 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Activities.RiderMapActivity"
+            android:name="._RiderActivities.RiderMapActivity"
             android:label="@string/title_activity_rider_map"></activity>
         <activity
-            android:name=".Activities.DriverMapActivity"
+            android:name="._DriverActivities.DriverMapActivity"
             android:label="@string/title_activity_rider_map"></activity>
     </application>
 

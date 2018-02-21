@@ -19,14 +19,12 @@ import android.widget.ToggleButton;
 
 import com.example.awesomeness.designatedride.Model.User;
 import com.example.awesomeness.designatedride.R;
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
+import com.example.awesomeness.designatedride._DriverActivities.DriverActivity;
+import com.example.awesomeness.designatedride._RiderActivities.RiderActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
@@ -35,11 +33,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";

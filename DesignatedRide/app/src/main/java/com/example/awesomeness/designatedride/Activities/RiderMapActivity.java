@@ -64,6 +64,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private Boolean mapLocationPermissionsGranted = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mapFusedLocationProviderClient;
+    private Marker marker;
 
     //Widgets
     Button setPickupBtn;
@@ -82,8 +83,10 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private String _Rider = "Rider";
     private String _geoKey = "geoKey";
     private String _userRating = "userRating";
+    private String _isAvaliable = "isAvaliable";
     private String key = "";
     private String rating = "";
+    private String driverKey = "";
 
     //GeoFire
     private GeoQuery mGeoQuery;
@@ -134,11 +137,21 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onClick(View view) {
                 Toast.makeText(RiderMapActivity.this, "Requested a ride!", Toast.LENGTH_SHORT).show();
+                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        driverKey = (String)marker.getTag();
+                        mDatabaseReference.child(_AvaliableGeoLocation).child(driverKey).child(_isAvaliable).setValue("false");
+                        return false;
+                    }
+                });
+
                 mGeoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
                     @Override
                     public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
                         rating = dataSnapshot.child(_userRating).getValue(String.class);
-                        mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)).title(rating));
+                        marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)).title(rating));
+                        marker.setTag(dataSnapshot.getKey());
                     }
 
                     @Override
@@ -273,18 +286,18 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful() && task.getResult() != null) {
 
-                                Location currentLocation = (Location) task.getResult();
-                                Log.d(TAG, "onComplete: found location. ");
-                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+                            Location currentLocation = (Location) task.getResult();
+                            Log.d(TAG, "onComplete: found location. ");
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
 
-                                mGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
-                                    @Override
-                                    public void onComplete(String key, DatabaseError error) {
+                            mGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
+                                @Override
+                                public void onComplete(String key, DatabaseError error) {
 
-                                    }
-                                });
-                                mGeoQuery = mAvaliableGeoFire.queryAtLocation(new GeoLocation(currentLocation.getLatitude(),currentLocation.getLongitude()),0.5);
-                            }
+                                }
+                            });
+                            mGeoQuery = mAvaliableGeoFire.queryAtLocation(new GeoLocation(currentLocation.getLatitude(),currentLocation.getLongitude()),0.5);
+                        }
                         else {
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(RiderMapActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
@@ -328,13 +341,12 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     // This is a generic function, wont look nice on most devices
     // probably needs some math to calculate padding size (its in pixels)
     private void padGoogleMap(){
-    //    //int[] locationOnScreen; // [x, y]
-    //    //findViewById(R.id.setPickupBtn_ridermap).getLocationOnScreen(locationOnScreen);
+        //    //int[] locationOnScreen; // [x, y]
+        //    //findViewById(R.id.setPickupBtn_ridermap).getLocationOnScreen(locationOnScreen);
 
-    //    // left, top, right, bottom
+        //    // left, top, right, bottom
         mMap.setPadding(0,0, 0,150);
 
     }
 
 }
-

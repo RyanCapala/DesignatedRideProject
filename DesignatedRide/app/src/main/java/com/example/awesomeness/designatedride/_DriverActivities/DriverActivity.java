@@ -17,18 +17,11 @@ import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.Activities.LoginActivity;
 import com.example.awesomeness.designatedride.R;
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -42,18 +35,6 @@ public class DriverActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseReference;
     private FirebaseDatabase mDatabase;
-
-    private String _Driver = "Driver";
-    private String _isAvaliable = "isAvaliable";
-    private String userid;
-    private String _AvaliableGeolocation = "AvaliableGeoLocation";
-    private String _geoKey = "geoKey";
-    private String key = "";
-
-    private GeoFire mGeoFire;
-    private DatabaseReference mGeoLocationRef;
-
-    private FusedLocationProviderClient mLocation;
 
     private String cUserProfileImage = "userImage";
 
@@ -82,11 +63,8 @@ public class DriverActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        userid = mAuth.getCurrentUser().getUid();
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference();
-        mGeoLocationRef = FirebaseDatabase.getInstance().getReference().child(_AvaliableGeolocation);
-        mGeoFire = new GeoFire(mGeoLocationRef);
         mDatabaseReference.keepSynced(true);
 
 
@@ -103,61 +81,7 @@ public class DriverActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (isServicesOk()) {
-                    //temporary using this button as a trigger to make the Driver avaliable for queries for RiderMapActivity.
-                    mDatabaseReference.child(_Driver).child(userid).child(_geoKey).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            key = dataSnapshot.getValue(String.class);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-                    mLocation = LocationServices.getFusedLocationProviderClient(DriverActivity.this);
-                    mLocation.getLastLocation().addOnSuccessListener(DriverActivity.this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
-                                @Override
-                                public void onComplete(String key, DatabaseError error) {
-                                    mDatabaseReference.child(_AvaliableGeolocation).child(key).child(_isAvaliable).setValue("true");
-                                }
-                            });
-                        }
-                    });
-
-                    mDatabaseReference.child(_AvaliableGeolocation).child(key).addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            if(dataSnapshot.getKey().equals(_isAvaliable)) {
-                                mDatabaseReference.child(_AvaliableGeolocation).child(key).removeValue();
-                                gotoActivity(DriverMapActivity.class);
-                            }
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+                    gotoActivityWithArrowBack(DriverMapActivity.class);
                 }
             }
         });

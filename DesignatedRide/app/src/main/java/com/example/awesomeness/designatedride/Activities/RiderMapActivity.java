@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -59,9 +60,9 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private static final String COURSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final float DEFAULT_ZOOM = 15f;
 
+    // Maps
     private Boolean mapLocationPermissionsGranted = false;
     private GoogleMap mMap;
-    private LocationManager locationManager;
     private FusedLocationProviderClient mapFusedLocationProviderClient;
 
     //Widgets
@@ -98,6 +99,9 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_map);
         initWidgets();
+
+        mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         mDatabase = FirebaseDatabase.getInstance();
 
         mDatabaseReference = mDatabase.getReference();
@@ -167,7 +171,6 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
     }
 
-
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -181,7 +184,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         mMap.animateCamera(cameraUpdate);
-        locationManager.removeUpdates(this);
+
     }
 
     /**
@@ -197,7 +200,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(this, "Map is ready", Toast.LENGTH_SHORT).show();
         mMap = googleMap;
-
+        padGoogleMap();
         // Add a marker in Sydney and move the camera (Default thing from google maps)
         //LatLng sydney = new LatLng(-34, 151);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -261,26 +264,28 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     private void getDeviceLocation() {
-        mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         try {
             if (mapLocationPermissionsGranted) {
-                Task location = mapFusedLocationProviderClient.getLastLocation();
+                final Task location = mapFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: found location.");
-                            Location currentLocation = (Location) task.getResult();
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
-                            mGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
-                                @Override
-                                public void onComplete(String key, DatabaseError error) {
+                        if (task.isSuccessful() && task.getResult() != null) {
 
-                                }
-                            });
-                            mGeoQuery = mAvaliableGeoFire.queryAtLocation(new GeoLocation(currentLocation.getLatitude(),currentLocation.getLongitude()),0.5);
-                        } else {
+                                Location currentLocation = (Location) task.getResult();
+                                Log.d(TAG, "onComplete: found location. ");
+                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+
+                                mGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
+                                    @Override
+                                    public void onComplete(String key, DatabaseError error) {
+
+                                    }
+                                });
+                                mGeoQuery = mAvaliableGeoFire.queryAtLocation(new GeoLocation(currentLocation.getLatitude(),currentLocation.getLongitude()),0.5);
+                            }
+                        else {
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(RiderMapActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
                         }
@@ -290,6 +295,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         } catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
+
     }
 
     private void moveCamera(LatLng latLng, float zoom) {
@@ -316,6 +322,18 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private void initWidgets()
     {
         setPickupBtn = (Button) findViewById(R.id.setPickupBtn_ridermap);
+    }
+
+    // Pad map appropriately to not obscure google logo/copyright info
+    // This is a generic function, wont look nice on most devices
+    // probably needs some math to calculate padding size (its in pixels)
+    private void padGoogleMap(){
+    //    //int[] locationOnScreen; // [x, y]
+    //    //findViewById(R.id.setPickupBtn_ridermap).getLocationOnScreen(locationOnScreen);
+
+    //    // left, top, right, bottom
+        mMap.setPadding(0,0, 0,150);
+
     }
 
 }

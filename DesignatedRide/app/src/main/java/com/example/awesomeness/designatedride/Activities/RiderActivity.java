@@ -263,7 +263,7 @@ public class RiderActivity extends AppCompatActivity {
 
     private void gotoActivity(Class activityClass) {
         startActivity(new Intent(RiderActivity.this, activityClass));
-        finish();
+       // finish();
     }
 
     private void signOutUser() {

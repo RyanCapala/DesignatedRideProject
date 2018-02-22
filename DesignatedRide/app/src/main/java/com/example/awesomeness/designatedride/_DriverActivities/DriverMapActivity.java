@@ -18,6 +18,9 @@ import android.widget.Toast;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,8 +43,8 @@ import com.google.firebase.database.ValueEventListener;
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "DriverMapActivity";
-    private static final long MIN_TIME = 500;
-    private static final float MIN_DISTANCE = 500;
+    private static final long DES_TIME = 10000; //milliseconds
+    private static final long EXP_TIME = 5000;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -50,8 +53,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private Boolean mapLocationPermissionsGranted = false;
     private GoogleMap mMap;
-    private LocationManager locationManager;
     private FusedLocationProviderClient mapFusedLocationProviderClient;
+    private LocationRequest mLocationRequest;
+    private LocationManager locationManager;
+    private LocationCallback mLocationCallback;
 
     private DatabaseReference mDatabaseReference;
     private FirebaseDatabase mDatabase;
@@ -84,7 +89,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private DatabaseReference mChildAvaliable;
     private DatabaseReference mChildLocation;
 
-
+    //ToDo: Kill location updates at some point 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +97,39 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         initWidgets();
 
         mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        mLocationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult){
+                Location location = locationResult.getLastLocation();
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                if(isOn && exchange) {
+                    mAvaliableGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+
+                        }
+                    });
+                }
+                else if(!exchange){
+                    mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+
+                        }
+                    });
+                }
+
+                //ToDo: Fix camera
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+                mMap.animateCamera(cameraUpdate);
+
+                //ToDo: Remove? It was removed on RiderMapActivity.
+                //locationManager.removeUpdates(this);
+
+            }
+        };
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -151,8 +189,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
-    // TODO: Figure out why onLocationChanged stopped working.
-
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -167,7 +203,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 }
             });
         }
-        else {
+        else if(!exchange){
            mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
                @Override
                public void onComplete(String key, DatabaseError error) {
@@ -176,7 +212,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             });
         }
 
-
+        //ToDo: Fix Camera
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         mMap.animateCamera(cameraUpdate);
         locationManager.removeUpdates(this);
@@ -261,6 +297,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private void getDeviceLocation() {
         try {
             if (mapLocationPermissionsGranted) {
+                //TODO: Fix times? Documentation says to use these times but, the overhead seems insane.
+                mLocationRequest = new LocationRequest();
+                mLocationRequest.setInterval(DES_TIME);
+                mLocationRequest.setFastestInterval(EXP_TIME);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+                mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest,mLocationCallback,null);
+
                 Task location = mapFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
@@ -363,5 +407,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 }
+
+
 
 

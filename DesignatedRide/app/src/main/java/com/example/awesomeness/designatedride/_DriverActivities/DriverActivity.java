@@ -4,7 +4,6 @@ package com.example.awesomeness.designatedride._DriverActivities;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -19,12 +18,10 @@ import com.example.awesomeness.designatedride.Activities.LoginActivity;
 import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -142,7 +139,7 @@ public class DriverActivity extends AppCompatActivity {
     private void createPopupDialog() {
 
         dialogBuilder = new AlertDialog.Builder(this);
-        View view = getLayoutInflater().inflate(R.layout.driver_profile_dialog_popup, null);
+        View view = getLayoutInflater().inflate(R.layout.profile_dialog_popup, null);
 
         updateProfileBtn = (Button) view.findViewById(R.id.btn_updateProfile_drvrPopup);
         logoutBtn = (Button) view.findViewById(R.id.btn_logout_drvrPopup);

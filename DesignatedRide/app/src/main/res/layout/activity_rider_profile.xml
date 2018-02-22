@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@mipmap/shapes1"
+    tools:context="com.example.awesomeness.designatedride._RiderActivities.RiderProfileActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/firstNameET_rdUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/register_page_first_name_hint"
+            android:inputType="textCapWords"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.011" />
+
+        <EditText
+            android:id="@+id/lastNameET_rdUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/register_page_last_name_hint"
+            android:inputType="textCapWords"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/firstNameET_rdUpdate"
+            app:layout_constraintVertical_bias="0.024" />
+
+        <EditText
+            android:id="@+id/emailET_rdUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/register_page_email_hint"
+            android:inputType="textEmailAddress"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lastNameET_rdUpdate"
+            app:layout_constraintVertical_bias="0.033" />
+
+        <EditText
+            android:id="@+id/passwrodET_rdUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/register_page_password_hint"
+            android:inputType="textPassword"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailET_rdUpdate"
+            app:layout_constraintVertical_bias="0.053" />
+
+        <EditText
+            android:id="@+id/verifyPwdET_rdUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/register_page_verify_password_hint"
+            android:inputType="textPassword"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/passwrodET_rdUpdate"
+            app:layout_constraintVertical_bias="0.069" />
+
+
+        <Button
+            android:id="@+id/updateProfileBtn_rdUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/borders"
+            android:text="@string/update_profile"
+            android:textAllCaps="false"
+            android:textColor="@color/input_et"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/verifyPwdET_rdUpdate"
+            app:layout_constraintVertical_bias="0.112" />
+
+    </LinearLayout>
+
+</ScrollView>

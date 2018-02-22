@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.Activities.LoginActivity;
+import com.example.awesomeness.designatedride.Model.ProfileDialogHelper;
 import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -130,7 +130,15 @@ public class RiderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                createPopupDialog();
+                //createPopupDialog();
+                View profile_dialog_view = getLayoutInflater().inflate(R.layout
+                        .profile_dialog_popup, null);
+                View confirm_dialog_view = getLayoutInflater().inflate(R.layout
+                        .confirmation_dialog, null);
+                ProfileDialogHelper profileDialogHelper = new ProfileDialogHelper(RiderActivity
+                        .this, profile_dialog_view, confirm_dialog_view, mAuth, mUser,
+                        RiderProfileActivity.class, LoginActivity.class);
+                profileDialogHelper.createPopupDialog();
 
                 /*********************************************************
                 DatabaseReference databaseReference = mDbRef2.child(cUser).child(uid).child(cProfile).child(cUserImage);
@@ -310,11 +318,13 @@ public class RiderActivity extends AppCompatActivity {
         });
     }
 
+    /**
+    //createPopupDialog() & showConfirmationDialog() are moved to ProfileDialogHelper.
     //----------------------------------------------------------------------------------------------
     private void createPopupDialog() {
 
         dialogBuilder = new AlertDialog.Builder(this);
-        View view = getLayoutInflater().inflate(R.layout.driver_profile_dialog_popup, null);
+        View view = getLayoutInflater().inflate(R.layout.profile_dialog_popup, null);
 
         updateProfileBtn = (Button) view.findViewById(R.id.btn_updateProfile_drvrPopup);
         logoutBtn = (Button) view.findViewById(R.id.btn_logout_drvrPopup);
@@ -393,6 +403,7 @@ public class RiderActivity extends AppCompatActivity {
 
     }//End of showConfirmationDialog
 
+     **/
 
 
 }

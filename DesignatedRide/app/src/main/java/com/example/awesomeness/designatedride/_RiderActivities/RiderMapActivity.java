@@ -1,6 +1,7 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.Manifest;
+import android.os.Looper;
 import android.util.Log;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -19,6 +20,9 @@ import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryDataEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,8 +46,8 @@ import com.google.firebase.database.ValueEventListener;
 public class RiderMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "RiderMapActivity";
-    private static final long MIN_TIME = 500;
-    private static final float MIN_DISTANCE = 500;
+    private static final long DES_TIME = 10000; //milliseconds
+    private static final long EXP_TIME = 5000;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -54,6 +58,8 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private Boolean mapLocationPermissionsGranted = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mapFusedLocationProviderClient;
+    private LocationRequest mLocationRequest;
+    private LocationCallback mLocationCallback;
     private Marker marker;
 
     //Widgets
@@ -87,6 +93,8 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private DatabaseReference mChildAvaliable;
     private DatabaseReference mChildLocation;
 
+    //ToDo: Kill location updates at some point (Don't run this code on a phone.  As it will keep running updates even if app closes)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +102,25 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         initWidgets();
 
         mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        mLocationCallback = new LocationCallback(){
+          @Override
+          public void onLocationResult(LocationResult locationResult){
+              Location location = locationResult.getLastLocation();
+              LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+              mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                  @Override
+                  public void onComplete(String key, DatabaseError error) {
+
+                  }
+              });
+
+              CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+              mMap.animateCamera(cameraUpdate);
+
+          }
+        };
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -180,6 +207,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
     }
 
+
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -191,6 +219,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
             }
         });
 
+        //ToDo: Fix camera
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         mMap.animateCamera(cameraUpdate);
 
@@ -217,7 +246,6 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
         if (mapLocationPermissionsGranted) {
             getDeviceLocation();
-
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -276,6 +304,15 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
         try {
             if (mapLocationPermissionsGranted) {
+
+                //TODO: Fix times? Documentation says to use these times but, the overhead seems insane.
+                mLocationRequest = new LocationRequest();
+                mLocationRequest.setInterval(DES_TIME);
+                mLocationRequest.setFastestInterval(EXP_TIME);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+                mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest,mLocationCallback,null);
+
                 final Task location = mapFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override

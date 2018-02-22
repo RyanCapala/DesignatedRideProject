@@ -124,7 +124,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         getLocationPermissions();
 
         // TODO: Need dialog box to request drop off location.
-
+        // TODO: Store location in database.  Put location as map marker.
         setPickupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,7 +180,6 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
     }
 
-    // TODO: Figure out why onLocationChanged stopped working.
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -282,7 +281,6 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful() && task.getResult() != null) {
-
                             Location currentLocation = (Location) task.getResult();
                             Log.d(TAG, "onComplete: found location. ");
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);

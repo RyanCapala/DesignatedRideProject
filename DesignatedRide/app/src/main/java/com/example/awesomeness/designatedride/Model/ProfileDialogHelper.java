@@ -32,6 +32,8 @@ public class ProfileDialogHelper {
     private Class profileActivityClass;
     private Class loginActivityClass;
 
+    private String INTENT_KEY = "userid";
+
     public ProfileDialogHelper(Context ctx, View profilePopupView, View confirmationView, FirebaseAuth mAuth, FirebaseUser mUser, Class profileActivityClass, Class loginActivityClass) {
         this.ctx = ctx;
         this.profilePopupView = profilePopupView;
@@ -56,7 +58,11 @@ public class ProfileDialogHelper {
         updateProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToActivity(profileActivityClass);
+                //goToActivity(profileActivityClass);
+                Intent intent = new Intent(ctx, profileActivityClass);
+                intent.putExtra(INTENT_KEY, mUser.getUid());
+                ctx.startActivity(intent);
+                ((Activity)ctx).finish();
             }
         });
 

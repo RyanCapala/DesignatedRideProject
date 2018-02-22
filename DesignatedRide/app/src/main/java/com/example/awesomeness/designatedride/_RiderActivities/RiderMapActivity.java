@@ -123,6 +123,8 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
         getLocationPermissions();
 
+        // TODO: Need dialog box to request drop off location.
+
         setPickupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,15 +132,19 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
+                        // TODO: Create a dialog box asking if user wants to accept this person as a driver.
+                        // TODO: If they accept delete all other markers.
                         driverKey = (String)marker.getTag();
                         mDatabaseReference.child(_AvaliableGeoLocation).child(driverKey).child(_isAvaliable).setValue("false");
                         return false;
                     }
                 });
 
+                // TODO: Stop a race condition.
                 mGeoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
                     @Override
                     public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
+                        // TODO: Need to store markers within some storage space for deletion.
                         rating = dataSnapshot.child(_userRating).getValue(String.class);
                         marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)).title(rating));
                         marker.setTag(dataSnapshot.getKey());
@@ -174,6 +180,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
     }
 
+    // TODO: Figure out why onLocationChanged stopped working.
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());

@@ -11,10 +11,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
-import com.firebase.geofire.core.GeoHash;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -28,15 +30,12 @@ import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
@@ -59,33 +58,53 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private FirebaseAuth mAuth;
     private String userid;
 
+    private boolean isOn = false;
+    private boolean exchange = true;
+
+    //Widgets
+    Button setPickupBtn;
+
     //Database children
     private String _GeoLocation = "GeoLocation";
-    private String _g = "g";
-    private String _l = "l";
+    private String _AvaliableGeoLocation = "AvaliableGeoLocation";
     private String _Driver = "Driver";
-    private String key = "";
     private String _geoKey = "geoKey";
+    private String _userRating = "userRating";
+    private String _riderKey = "riderKey";
+    private String _isAvaliable = "isAvaliable";
+    private String key = "";
+    private String riderKey = "";
+    private String rating = "";
 
     //GeoFire
-    private GeoHash mGeoHash;
-    private Map geoInfo;
-    private Map writeInfo;
-    private final double longitude = 0;
-    private final double latitude = 0;
+    private GeoFire mAvaliableGeoFire;
+    private GeoFire mGeoFire;
+    private DatabaseReference mAvaliableGeoLocationRef;
+    private DatabaseReference mGeoLocationRef;
+    private DatabaseReference mChildAvaliable;
+    private DatabaseReference mChildLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_map);
+        initWidgets();
 
         mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         mDatabase = FirebaseDatabase.getInstance();
+
         mDatabaseReference = mDatabase.getReference();
-        geoInfo = new HashMap();
-        writeInfo = new HashMap();
-        mGeoHash = new GeoHash(new GeoLocation(latitude,longitude));
+        mChildLocation = mDatabase.getReference();
+        mChildAvaliable = mDatabase.getReference();
+
+        mAvaliableGeoLocationRef = mChildAvaliable.child(_AvaliableGeoLocation);
+        mGeoLocationRef = mChildLocation.child(_GeoLocation);
+
+        mAvaliableGeoFire = new GeoFire(mAvaliableGeoLocationRef);
+        mGeoFire = new GeoFire(mGeoLocationRef);
+
         mAuth = FirebaseAuth.getInstance();
         userid = mAuth.getCurrentUser().getUid();
         mDatabaseReference.child(_Driver).child(userid).child(_geoKey).addValueEventListener(new ValueEventListener() {
@@ -99,27 +118,63 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
             }
         });
+
+        mDatabaseReference.child(_Driver).child(userid).child(_userRating).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                rating = dataSnapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         getLocationPermissions();
+
+        // TODO: change button, Need toggle button to determine if Driver can give out rides.
+
+        setPickupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isOn) {
+                    isOn = false;
+                    mDatabaseReference.child(_AvaliableGeoLocation).child(key).removeValue();
+                }
+                else{
+                    isOn = true;
+                    getDeviceLocation();
+                }
+            }
+        });
+
     }
+
+    // TODO: Figure out why onLocationChanged stopped working.
 
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        geoInfo = new HashMap();
-        writeInfo = new HashMap();
-        geoInfo.put(_g , mGeoHash.getGeoHashString());
-        geoInfo.put(_l, Arrays.asList(location.getLatitude(),location.getLongitude()));
-        writeInfo.put(_GeoLocation + "/" + key + "/",geoInfo);
+        Toast.makeText(DriverMapActivity.this,"" + location.getLatitude(),Toast.LENGTH_LONG).show();
 
-        mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError != null) {
-                    Log.wtf("Write Error", databaseError.getMessage());
+        if(isOn && exchange) {
+            mAvaliableGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                @Override
+                public void onComplete(String key, DatabaseError error) {
+
                 }
-            }
-        });
+            });
+        }
+        else {
+           mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+               @Override
+               public void onComplete(String key, DatabaseError error) {
+
+               }
+            });
+        }
 
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
@@ -201,6 +256,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
     }
 
+
+    // TODO: Add code to prevent race condition.
     private void getDeviceLocation() {
         try {
             if (mapLocationPermissionsGranted) {
@@ -212,21 +269,50 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             Log.d(TAG, "onComplete: found location.");
                             Location currentLocation = (Location) task.getResult();
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+                            if(isOn && exchange){
+                                mAvaliableGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
+                                    @Override
+                                    public void onComplete(String key, DatabaseError error) {
 
-                            geoInfo = new HashMap();
-                            writeInfo = new HashMap();
-                            geoInfo.put(_g, mGeoHash.getGeoHashString());
-                            geoInfo.put(_l, Arrays.asList(currentLocation.getLatitude(),currentLocation.getLongitude()));
-                            writeInfo.put(_GeoLocation + "/" + key + "/",geoInfo);
-
-                            mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                    if (databaseError != null) {
-                                        Log.wtf("Geolocation Write Error", databaseError.getMessage());
                                     }
-                                }
-                            });
+                                });
+                                mDatabaseReference.child(_AvaliableGeoLocation).child(key).child(_isAvaliable).setValue("true");
+                                mDatabaseReference.child(_AvaliableGeoLocation).child(key).child(_userRating).setValue(rating);
+                                mDatabaseReference.child(_AvaliableGeoLocation).child(key).addChildEventListener(new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                        if(dataSnapshot.getKey().equals(_riderKey)){
+                                            riderKey = dataSnapshot.getValue(String.class);
+                                            exchange = false;
+                                            mDatabaseReference.child(_GeoLocation).child(key).child(_riderKey).setValue(key);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                        if(dataSnapshot.getKey().equals(_isAvaliable)) {
+                                            mDatabaseReference.child(_AvaliableGeoLocation).child(key).removeValue();
+                                        }
+                                    }
+
+                                    @Override
+
+                                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                    }
+
+                                    @Override
+                                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            }
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
@@ -262,6 +348,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 
+    private void initWidgets()
+    {setPickupBtn = (Button) findViewById(R.id.setPickupBtn_ridermap);}
+
     // Pad map appropriately to not obscure google logo/copyright info
     // This is a generic function, wont look nice on most devices
     // probably needs some math to calculate padding size (its in pixels)
@@ -274,4 +363,5 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 }
+
 

@@ -43,6 +43,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RiderMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "RiderMapActivity";
@@ -65,6 +68,12 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     //Widgets
     Button setPickupBtn;
 
+    //List
+    ArrayList<Marker> availableDrivers;
+
+    //Marker
+    Marker driver;
+
     //FireBase
     private DatabaseReference mDatabaseReference;
     private DataSnapshot mDataSnapshot;
@@ -74,23 +83,24 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
     //Database children
     private String _GeoLocation = "GeoLocation";
-    private String _AvaliableGeoLocation = "AvaliableGeoLocation";
+    private String _AvailableGeoLocation = "AvailableGeoLocation";
     private String _Driver = "Driver";
     private String _Rider = "Rider";
     private String _geoKey = "geoKey";
     private String _userRating = "userRating";
-    private String _isAvaliable = "isAvaliable";
+    private String _isAvailable = "isAvailable";
+    private String _Location = "Location";
     private String key = "";
     private String rating = "";
     private String driverKey = "";
 
     //GeoFire
     private GeoQuery mGeoQuery;
-    private GeoFire mAvaliableGeoFire;
+    private GeoFire mAvailableGeoFire;
     private GeoFire mGeoFire;
-    private DatabaseReference mAvaliableGeoLocationRef;
+    private DatabaseReference mAvailableGeoLocationRef;
     private DatabaseReference mGeoLocationRef;
-    private DatabaseReference mChildAvaliable;
+    private DatabaseReference mChildAvailable;
     private DatabaseReference mChildLocation;
 
     //ToDo: Kill location updates at some point (Don't run this code on a phone.  As it will keep running updates even if app closes)
@@ -116,8 +126,8 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                   }
               });
 
-              CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-              mMap.animateCamera(cameraUpdate);
+              //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+              //mMap.animateCamera(cameraUpdate);
 
           }
         };
@@ -126,16 +136,19 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
         mDatabaseReference = mDatabase.getReference();
         mChildLocation = mDatabase.getReference();
-        mChildAvaliable = mDatabase.getReference();
+        mChildAvailable = mDatabase.getReference();
 
-        mAvaliableGeoLocationRef = mChildAvaliable.child(_AvaliableGeoLocation);
+        mAvailableGeoLocationRef = mChildAvailable.child(_AvailableGeoLocation);
         mGeoLocationRef = mChildLocation.child(_GeoLocation);
 
-        mAvaliableGeoFire = new GeoFire(mAvaliableGeoLocationRef);
+        mAvailableGeoFire = new GeoFire(mAvailableGeoLocationRef);
         mGeoFire = new GeoFire(mGeoLocationRef);
 
         mAuth = FirebaseAuth.getInstance();
         userid = mAuth.getCurrentUser().getUid();
+
+        availableDrivers = new ArrayList<>();
+
         mDatabaseReference.child(_Rider).child(userid).child(_geoKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -160,9 +173,13 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         // TODO: Create a dialog box asking if user wants to accept this person as a driver.
-                        // TODO: If they accept delete all other markers.
+                        // TODO: If they accept delete all markers.
                         driverKey = (String)marker.getTag();
-                        mDatabaseReference.child(_AvaliableGeoLocation).child(driverKey).child(_isAvaliable).setValue("false");
+                        mDatabaseReference.child(_Location).child(driverKey).child(_isAvailable).setValue("false");
+                        for(int i = 0; i < availableDrivers.size(); i++){
+                            driver = availableDrivers.get(i);
+                            driver.remove();
+                        }
                         return false;
                     }
                 });
@@ -171,10 +188,21 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                 mGeoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
                     @Override
                     public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
-                        // TODO: Need to store markers within some storage space for deletion.
-                        rating = dataSnapshot.child(_userRating).getValue(String.class);
+                        driverKey = dataSnapshot.getKey();
+                        mDatabaseReference.child(_Location).child(driverKey).child(_userRating).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                rating = dataSnapshot.getValue(String.class);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                         marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude,location.longitude)).title(rating));
                         marker.setTag(dataSnapshot.getKey());
+                        availableDrivers.add(marker);
                     }
 
                     @Override
@@ -220,8 +248,8 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         });
 
         //ToDo: Fix camera
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-        mMap.animateCamera(cameraUpdate);
+        //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+        //mMap.animateCamera(cameraUpdate);
 
     }
 
@@ -328,7 +356,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
                                 }
                             });
-                            mGeoQuery = mAvaliableGeoFire.queryAtLocation(new GeoLocation(currentLocation.getLatitude(),currentLocation.getLongitude()),0.5);
+                            mGeoQuery = mAvailableGeoFire.queryAtLocation(new GeoLocation(currentLocation.getLatitude(),currentLocation.getLongitude()),0.5);
                         }
                         else {
                             Log.d(TAG, "onComplete: current location is null");

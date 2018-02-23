@@ -74,7 +74,6 @@ public class RegisterActivity extends AppCompatActivity {
     private String _UserEmailVerified = "userEmailVerified";
     private String _UserId = "userId";
     private String _GeoKey = "geoKey";
-    private String _IsAvaliable = "isAvaliable";
     private String _UserRating = "userRating";
 
     private String uMode;
@@ -169,7 +168,6 @@ public class RegisterActivity extends AppCompatActivity {
                             if(uMode.equals(_Driver)) {
                                 mPushKey = FirebaseDatabase.getInstance().getReference(_Driver + "/" + userid + "/").push().getKey();
                                 drInfo.put(_GeoKey,mPushKey);
-                                drInfo.put(_IsAvaliable,"false");
                                 writeInfo.put(_Driver + "/" + userid + "/", drInfo);
                             }
                             else {
@@ -348,3 +346,4 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 }
+

@@ -30,7 +30,7 @@ public class RiderProfileActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String userid = intent.getStringExtra(INTENT_KEY);
-        Toast.makeText(this, userid, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, userid + "\nRider Profile", Toast.LENGTH_LONG).show();
 
         /**
          * Todo: populate editText with the user infor using the userId that was passed by intent.

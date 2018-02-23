@@ -65,8 +65,13 @@
             android:name="._DriverActivities.DriverMapActivity"
             android:label="@string/title_activity_rider_map" />
         <activity
+            android:label="@string/rider_profile"
             android:name="._RiderActivities.RiderProfileActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:label="@string/driver_profile"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="._DriverActivities.DriverProfileActivity"/>
     </application>
 
 </manifest>

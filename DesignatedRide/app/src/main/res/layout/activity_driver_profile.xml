@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@mipmap/shapes1"
+    tools:context="com.example.awesomeness.designatedride._DriverActivities.DriverProfileActivity">
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/firstNameET_drUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/register_page_first_name_hint"
+            android:inputType="textCapWords"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"/>
+
+        <EditText
+            android:id="@+id/lastNameET_drUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/register_page_last_name_hint"
+            android:inputType="textCapWords"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"/>
+
+        <EditText
+            android:id="@+id/emailET_drUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/register_page_email_hint"
+            android:inputType="textCapWords"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"/>
+
+        <EditText
+            android:id="@+id/passwordET_drUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/register_page_password_hint"
+            android:inputType="textCapWords"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"/>
+
+        <EditText
+            android:id="@+id/verifyPwdET_drUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/register_page_verify_password_hint"
+            android:inputType="textCapWords"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"/>
+
+        <Button
+            android:id="@+id/updateProfileBtn_drUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/borders"
+            android:text="@string/update_profile"
+            android:textAllCaps="false"
+            android:textColor="@color/input_et"
+            android:textSize="24sp"/>
+
+
+    </LinearLayout>
+
+</ScrollView>

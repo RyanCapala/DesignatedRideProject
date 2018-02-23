@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.Activities.LoginActivity;
+import com.example.awesomeness.designatedride.Model.ProfileDialogHelper;
 import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -69,7 +69,11 @@ public class DriverActivity extends AppCompatActivity {
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createPopupDialog();
+                //createPopupDialog();
+                View profile_dialog_view = getLayoutInflater().inflate(R.layout.profile_dialog_popup, null);
+                View confirm_dialog_view = getLayoutInflater().inflate(R.layout.confirmation_dialog, null);
+                ProfileDialogHelper profileDialogHelper = new ProfileDialogHelper(DriverActivity.this, profile_dialog_view, confirm_dialog_view, mAuth, mUser, DriverProfileActivity.class, LoginActivity.class);
+                profileDialogHelper.createPopupDialog();
             }
         });
 
@@ -135,6 +139,15 @@ public class DriverActivity extends AppCompatActivity {
         return false;
     }
 
+    //----------------------------------------------------------------------------------------------
+    private void signOutUser() {
+        if (mUser != null && mAuth != null) {
+            mAuth.signOut();
+            gotoActivity(LoginActivity.class);
+        }
+    }
+
+    /***
     //----------------------------------------------------------------------------------------------
     private void createPopupDialog() {
 
@@ -217,13 +230,7 @@ public class DriverActivity extends AppCompatActivity {
         });
 
     }//End of showConfirmationDialog
+    ***/
 
 
-    //----------------------------------------------------------------------------------------------
-    private void signOutUser() {
-        if (mUser != null && mAuth != null) {
-            mAuth.signOut();
-            gotoActivity(LoginActivity.class);
-        }
-    }
 }

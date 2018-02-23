@@ -40,6 +40,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "DriverMapActivity";
@@ -71,25 +74,29 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     //Database children
     private String _GeoLocation = "GeoLocation";
-    private String _AvaliableGeoLocation = "AvaliableGeoLocation";
+    private String _AvailableGeoLocation = "AvailableGeoLocation";
     private String _Driver = "Driver";
     private String _geoKey = "geoKey";
     private String _userRating = "userRating";
     private String _riderKey = "riderKey";
-    private String _isAvaliable = "isAvaliable";
+    private String _isAvailable = "isAvailable";
+    private String _Location = "Location";
     private String key = "";
     private String riderKey = "";
     private String rating = "";
 
+    //Hash Table
+    private Map writeInfo;
+    private Map exchangeInfo;
+
     //GeoFire
-    private GeoFire mAvaliableGeoFire;
+    private GeoFire mAvailableGeoFire;
     private GeoFire mGeoFire;
-    private DatabaseReference mAvaliableGeoLocationRef;
+    private DatabaseReference mAvailableGeoLocationRef;
     private DatabaseReference mGeoLocationRef;
-    private DatabaseReference mChildAvaliable;
+    private DatabaseReference mChildAvailable;
     private DatabaseReference mChildLocation;
 
-    //ToDo: Kill location updates at some point 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +112,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
                 if(isOn && exchange) {
-                    mAvaliableGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                    mAvailableGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
                         @Override
                         public void onComplete(String key, DatabaseError error) {
 
@@ -122,8 +129,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 }
 
                 //ToDo: Fix camera
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-                mMap.animateCamera(cameraUpdate);
+                //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+                //mMap.animateCamera(cameraUpdate);
 
                 //ToDo: Remove? It was removed on RiderMapActivity.
                 //locationManager.removeUpdates(this);
@@ -135,12 +142,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         mDatabaseReference = mDatabase.getReference();
         mChildLocation = mDatabase.getReference();
-        mChildAvaliable = mDatabase.getReference();
+        mChildAvailable = mDatabase.getReference();
 
-        mAvaliableGeoLocationRef = mChildAvaliable.child(_AvaliableGeoLocation);
+        mAvailableGeoLocationRef = mChildAvailable.child(_AvailableGeoLocation);
         mGeoLocationRef = mChildLocation.child(_GeoLocation);
 
-        mAvaliableGeoFire = new GeoFire(mAvaliableGeoLocationRef);
+        mAvailableGeoFire = new GeoFire(mAvailableGeoLocationRef);
         mGeoFire = new GeoFire(mGeoLocationRef);
 
         mAuth = FirebaseAuth.getInstance();
@@ -178,7 +185,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             public void onClick(View view) {
                 if(isOn) {
                     isOn = false;
-                    mDatabaseReference.child(_AvaliableGeoLocation).child(key).removeValue();
+                    mDatabaseReference.child(_AvailableGeoLocation).child(key).removeValue();
+                    mDatabaseReference.child(_Location).child(key).removeValue();
+                    mapFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
                 }
                 else{
                     isOn = true;
@@ -196,7 +205,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         Toast.makeText(DriverMapActivity.this,"" + location.getLatitude(),Toast.LENGTH_LONG).show();
 
         if(isOn && exchange) {
-            mAvaliableGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+            mAvailableGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
                 @Override
                 public void onComplete(String key, DatabaseError error) {
 
@@ -213,8 +222,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         }
 
         //ToDo: Fix Camera
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-        mMap.animateCamera(cameraUpdate);
+        //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+        //mMap.animateCamera(cameraUpdate);
         locationManager.removeUpdates(this);
     }
 
@@ -314,28 +323,40 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             Location currentLocation = (Location) task.getResult();
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
                             if(isOn && exchange){
-                                mAvaliableGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
+                                mAvailableGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
                                     @Override
                                     public void onComplete(String key, DatabaseError error) {
 
                                     }
                                 });
-                                mDatabaseReference.child(_AvaliableGeoLocation).child(key).child(_isAvaliable).setValue("true");
-                                mDatabaseReference.child(_AvaliableGeoLocation).child(key).child(_userRating).setValue(rating);
-                                mDatabaseReference.child(_AvaliableGeoLocation).child(key).addChildEventListener(new ChildEventListener() {
+
+                                exchangeInfo = new HashMap();
+                                writeInfo = new HashMap();
+
+                                exchangeInfo.put(_isAvailable,"true");
+                                exchangeInfo.put(_userRating, rating);
+                                writeInfo.put(_Location + "/" + key + "/", exchangeInfo);
+
+                                mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                        if(databaseError != null){
+                                            Log.wtf(TAG, databaseError.getMessage());
+                                            Toast.makeText(DriverMapActivity.this,"An error occurred while creating your account, please try again.",Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+
+                                mDatabaseReference.child(_Location).child(key).addChildEventListener(new ChildEventListener() {
                                     @Override
                                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                        if(dataSnapshot.getKey().equals(_riderKey)){
-                                            riderKey = dataSnapshot.getValue(String.class);
-                                            exchange = false;
-                                            mDatabaseReference.child(_GeoLocation).child(key).child(_riderKey).setValue(key);
-                                        }
                                     }
 
                                     @Override
                                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                                        if(dataSnapshot.getKey().equals(_isAvaliable)) {
-                                            mDatabaseReference.child(_AvaliableGeoLocation).child(key).removeValue();
+                                        if(dataSnapshot.getKey().equals(_isAvailable)) {
+                                            mDatabaseReference.child(_AvailableGeoLocation).child(key).removeValue();
+                                            exchange = false;
                                         }
                                     }
 
@@ -407,6 +428,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 }
+
 
 
 

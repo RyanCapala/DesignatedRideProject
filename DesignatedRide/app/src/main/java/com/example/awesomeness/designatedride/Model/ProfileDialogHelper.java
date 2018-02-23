@@ -34,7 +34,9 @@ public class ProfileDialogHelper {
 
     private String INTENT_KEY = "userid";
 
-    public ProfileDialogHelper(Context ctx, View profilePopupView, View confirmationView, FirebaseAuth mAuth, FirebaseUser mUser, Class profileActivityClass, Class loginActivityClass) {
+    public ProfileDialogHelper(Context ctx, View profilePopupView, View confirmationView,
+                               FirebaseAuth mAuth, FirebaseUser mUser,
+                               Class profileActivityClass, Class loginActivityClass) {
         this.ctx = ctx;
         this.profilePopupView = profilePopupView;
         this.confirmationView = confirmationView;

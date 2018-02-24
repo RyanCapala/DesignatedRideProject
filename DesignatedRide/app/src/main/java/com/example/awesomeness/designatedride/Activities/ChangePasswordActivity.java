@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
+import com.example.awesomeness.designatedride.Util.Constants;
 import com.example.awesomeness.designatedride._DriverActivities.DriverActivity;
 import com.example.awesomeness.designatedride._RiderActivities.RiderActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,12 +32,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private Button loginBtn;
     private ProgressDialog mProgressDialog;
 
-    //Database Child names
-    private String cUserMode = "userMode";
-    private String cUser = "User";
-    private String cProfile = "Profile";
-    private String modeRider = "Rider";
-    private String modeDriver = "Driver";
 
     //Firebase
     private FirebaseAuth mAuth;
@@ -85,20 +80,20 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         //Check user mode if "Rider" or "Driver"
                         //then, send user to each specific page.
                         mDatabaseReference.
-                                child(cUser).
+                                child(Constants.USER).
                                 child(uid).
-                                child(cProfile).
-                                child(cUserMode).
+                                child(Constants.PROFILE).
+                                child(Constants.USERMODE).
                                 addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         mode = dataSnapshot.getValue(String.class);
-                                        if (mode.equals(modeDriver)) {
+                                        if (mode.equals(Constants.DRIVER)) {
 
                                             gotoActivity(DriverActivity.class, true);
                                             clearEditText();
 
-                                        } else if (mode.equals(modeRider)) {
+                                        } else if (mode.equals(Constants.RIDER)) {
 
                                             gotoActivity(RiderActivity.class, true);
                                             clearEditText();

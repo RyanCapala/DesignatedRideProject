@@ -19,6 +19,7 @@ import android.widget.ToggleButton;
 
 import com.example.awesomeness.designatedride.Model.User;
 import com.example.awesomeness.designatedride.R;
+import com.example.awesomeness.designatedride.Util.Constants;
 import com.example.awesomeness.designatedride._DriverActivities.DriverActivity;
 import com.example.awesomeness.designatedride._RiderActivities.RiderActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -62,19 +63,6 @@ public class RegisterActivity extends AppCompatActivity {
     //private StorageReference mFirebaseStorage; //will be used for image storage
     //public static final int GALLERY_CODE = 1; //will be used for images
 
-    //Strings below needs to be exact same as the database child
-    private String _User = "User";
-    private String _Profile = "Profile";
-    private String _Rider = "Rider";
-    private String _Driver = "Driver";
-    private String _UserEmail = "userEmail";
-    private String _UserFirstName = "userFirstname";
-    private String _UserLastName = "userLastname";
-    private String _UserMode = "userMode";
-    private String _UserEmailVerified = "userEmailVerified";
-    private String _UserId = "userId";
-    private String _GeoKey = "geoKey";
-    private String _UserRating = "userRating";
 
     private String uMode;
 
@@ -152,29 +140,31 @@ public class RegisterActivity extends AppCompatActivity {
                             else
                                 uMode = "Driver";
 
-                            userInfo.put(_UserId,userid);
-                            userInfo.put(_UserMode,uMode);
-                            userInfo.put(_UserFirstName,fname);
-                            userInfo.put(_UserLastName,lname);
-                            userInfo.put(_UserEmail,em);
-                            userInfo.put(_UserEmailVerified,String.valueOf(user.isEmailVerified()));
-                            drInfo.put(_UserEmail,em);
-                            drInfo.put(_UserRating,"No Feedback");
+                            userInfo.put(Constants.USERID,userid);
+                            userInfo.put(Constants.USERMODE,uMode);
+                            userInfo.put(Constants.FIRSTNAME,fname);
+                            userInfo.put(Constants.LASTNAME,lname);
+                            userInfo.put(Constants.EMAIL,em);
+                            userInfo.put(Constants.USEREMAILVERIFIED,String.valueOf(user.isEmailVerified()));
+                            drInfo.put(Constants.EMAIL,em);
+                            drInfo.put(Constants.USER_RATING,"No Feedback");
                             Map writeInfo = new HashMap();
-                            writeInfo.put(  _User + "/" + userid + "/" + _Profile + "/", userInfo);
+                            writeInfo.put(  Constants.USER + "/" +
+                                            userid + "/" +
+                                            Constants.PROFILE + "/", userInfo);
 
 
 
-                            if(uMode.equals(_Driver)) {
-                                mPushKey = FirebaseDatabase.getInstance().getReference(_Driver + "/" + userid + "/").push().getKey();
-                                drInfo.put(_GeoKey,mPushKey);
-                                writeInfo.put(_Driver + "/" + userid + "/", drInfo);
+                            if(uMode.equals(Constants.DRIVER)) {
+                                mPushKey = FirebaseDatabase.getInstance().getReference(Constants.DRIVER + "/" + userid + "/").push().getKey();
+                                drInfo.put(Constants.GEOKEY,mPushKey);
+                                writeInfo.put(Constants.DRIVER + "/" + userid + "/", drInfo);
                             }
                             else {
-                                writeInfo.put(_Rider + "/" + userid + "/", drInfo);
-                                mPushKey = FirebaseDatabase.getInstance().getReference(_Rider + "/" + userid + "/").push().getKey();
-                                drInfo.put(_GeoKey,mPushKey);
-                                writeInfo.put(_Rider + "/" + userid + "/",drInfo);
+                                writeInfo.put(Constants.RIDER + "/" + userid + "/", drInfo);
+                                mPushKey = FirebaseDatabase.getInstance().getReference(Constants.RIDER + "/" + userid + "/").push().getKey();
+                                drInfo.put(Constants.GEOKEY,mPushKey);
+                                writeInfo.put(Constants.RIDER + "/" + userid + "/",drInfo);
                             }
 
                             mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
@@ -241,7 +231,7 @@ public class RegisterActivity extends AppCompatActivity {
          //                              --> userImage
          //                              --> userMode
          ***************************************************************************/
-        DatabaseReference currentUserDB = mDatabaseReference.child(_User).child(userId).child(_Profile);
+        DatabaseReference currentUserDB = mDatabaseReference.child(Constants.USER).child(Constants.USERID).child(Constants.PROFILE);
         User mUser = new User(userId, mode, fname, lname, email);
         currentUserDB.setValue(mUser);
 
@@ -254,13 +244,13 @@ public class RegisterActivity extends AppCompatActivity {
          //                               --> userEmail:email
          ****************************************************************************/
         HashMap<String, String> userInfo = new HashMap<>();
-        userInfo.put(_UserEmail, email);
-        if (mode.equals(_Driver)) {
-            DatabaseReference currUdB = mDbRef.child(_Driver).child(userId);
+        userInfo.put(Constants.EMAIL, email);
+        if (mode.equals(Constants.DRIVER)) {
+            DatabaseReference currUdB = mDbRef.child(Constants.DRIVER).child(userId);
             currUdB.setValue(userInfo);
 
         } else {
-            DatabaseReference currUdB = mDbRef.child(_Rider).child(userId);
+            DatabaseReference currUdB = mDbRef.child(Constants.RIDER).child(userId);
             currUdB.setValue(userInfo);
         }
     }

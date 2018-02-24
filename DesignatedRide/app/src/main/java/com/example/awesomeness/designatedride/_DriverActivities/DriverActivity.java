@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.Activities.LoginActivity;
-import com.example.awesomeness.designatedride.Model.ProfileDialogHelper;
+import com.example.awesomeness.designatedride.Util.ProfileDialogHelper;
 import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -33,7 +33,6 @@ public class DriverActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReference;
     private FirebaseDatabase mDatabase;
 
-    private String cUserProfileImage = "userImage";
 
     //---
     CircleImageView profileImage;

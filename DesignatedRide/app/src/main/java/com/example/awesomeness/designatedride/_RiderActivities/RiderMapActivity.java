@@ -1,20 +1,21 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.Manifest;
-import android.os.Looper;
-import android.util.Log;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.awesomeness.designatedride.R;
+import com.example.awesomeness.designatedride.Util.Constants;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -24,7 +25,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,8 +32,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,7 +42,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RiderMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
@@ -81,15 +78,6 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private FirebaseAuth mAuth;
     private String userid;
 
-    //Database children
-    private String _GeoLocation = "GeoLocation";
-    private String _AvailableGeoLocation = "AvailableGeoLocation";
-    private String _Driver = "Driver";
-    private String _Rider = "Rider";
-    private String _geoKey = "geoKey";
-    private String _userRating = "userRating";
-    private String _isAvailable = "isAvailable";
-    private String _Location = "Location";
     private String key = "";
     private String rating = "";
     private String driverKey = "";
@@ -138,8 +126,8 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         mChildLocation = mDatabase.getReference();
         mChildAvailable = mDatabase.getReference();
 
-        mAvailableGeoLocationRef = mChildAvailable.child(_AvailableGeoLocation);
-        mGeoLocationRef = mChildLocation.child(_GeoLocation);
+        mAvailableGeoLocationRef = mChildAvailable.child(Constants.AVAILABLE_GEOLOCATION);
+        mGeoLocationRef = mChildLocation.child(Constants.GEO_LOCATION);
 
         mAvailableGeoFire = new GeoFire(mAvailableGeoLocationRef);
         mGeoFire = new GeoFire(mGeoLocationRef);
@@ -149,7 +137,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
         availableDrivers = new ArrayList<>();
 
-        mDatabaseReference.child(_Rider).child(userid).child(_geoKey).addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.GEOKEY).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 key = dataSnapshot.getValue(String.class);
@@ -175,7 +163,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                         // TODO: Create a dialog box asking if user wants to accept this person as a driver.
                         // TODO: If they accept delete all markers.
                         driverKey = (String)marker.getTag();
-                        mDatabaseReference.child(_Location).child(driverKey).child(_isAvailable).setValue("false");
+                        mDatabaseReference.child(Constants.LOCATION).child(driverKey).child(Constants.IS_AVAILABLE).setValue("false");
                         for(int i = 0; i < availableDrivers.size(); i++){
                             driver = availableDrivers.get(i);
                             driver.remove();
@@ -189,7 +177,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                     @Override
                     public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
                         driverKey = dataSnapshot.getKey();
-                        mDatabaseReference.child(_Location).child(driverKey).child(_userRating).addValueEventListener(new ValueEventListener() {
+                        mDatabaseReference.child(Constants.LOCATION).child(driverKey).child(Constants.USER_RATING).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 rating = dataSnapshot.getValue(String.class);

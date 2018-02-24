@@ -9,6 +9,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RiderProfileActivity extends AppCompatActivity {
     private static final String TAG = "RiderProfileActivity";
@@ -22,6 +26,13 @@ public class RiderProfileActivity extends AppCompatActivity {
     private EditText rPassword;
     private EditText rVPassword;
     private Button rUpdateProfileBtn;
+
+    //--firebase
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mDatabaseReference;
+    private FirebaseUser mUser;
+    private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

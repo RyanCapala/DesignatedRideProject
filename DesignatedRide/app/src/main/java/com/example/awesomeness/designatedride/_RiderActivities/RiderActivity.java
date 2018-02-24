@@ -19,7 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.Activities.LoginActivity;
-import com.example.awesomeness.designatedride.Model.ProfileDialogHelper;
+import com.example.awesomeness.designatedride.Util.Constants;
+import com.example.awesomeness.designatedride.Util.ProfileDialogHelper;
 import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,10 +56,10 @@ public class RiderActivity extends AppCompatActivity {
 
     private String uid;
     private String email;
-    private String profileImg = "profileImage";
-    private String cUser = "User";
-    private String cProfile = "Profile";
-    private String cUserImage = "userImage";
+//    private String profileImg = "profileImage";
+//    private String cUser = "User";
+//    private String cProfile = "Profile";
+//    private String cUserImage = "userImage";
 
     //
     private CircleImageView profileImage;
@@ -93,7 +94,7 @@ public class RiderActivity extends AppCompatActivity {
         mDbRef2 = mDatabase.getReference();
         mUser = mAuth.getCurrentUser();
         mDbRef.keepSynced(true);
-        mStorage = FirebaseStorage.getInstance().getReference().child(profileImg);
+        mStorage = FirebaseStorage.getInstance().getReference().child(Constants.PROFILE_IMAGE);
 
 
 
@@ -111,7 +112,7 @@ public class RiderActivity extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged: ===>>uid: " + uid);
                     email = mUser.getEmail();
 
-                    mDbRef.child("Rider").child(uid).child("Profile");
+                    mDbRef.child(Constants.RIDER).child(uid).child(Constants.PROFILE);
                 }
             }
         };
@@ -248,8 +249,8 @@ public class RiderActivity extends AppCompatActivity {
                     mProgress.dismiss();
                     mImageUri = taskSnapshot.getDownloadUrl();
                     Log.d(TAG, "onSuccess: >>>> URL: " + mImageUri.toString());
-                    DatabaseReference databaseReference = mDbRef2.child(cUser).child(uid).child(cProfile);
-                    databaseReference.child(cUserImage).setValue(mImageUri.toString());
+                    DatabaseReference databaseReference = mDbRef2.child(Constants.USER).child(uid).child(Constants.PROFILE);
+                    databaseReference.child(Constants.USERIMAGE).setValue(mImageUri.toString());
                     Picasso.with(RiderActivity.this).load(mImageUri).into(profileImage);
                     Toast.makeText(RiderActivity.this, "Upload finish", Toast.LENGTH_LONG).show();
 
@@ -292,10 +293,10 @@ public class RiderActivity extends AppCompatActivity {
     private void getProfileImage() {
         uid = mUser.getUid();
         mDbRef2.
-                child(cUser).
+                child(Constants.USER).
                 child(uid).
-                child(cProfile).
-                child(cUserImage)
+                child(Constants.PROFILE).
+                child(Constants.USERIMAGE)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

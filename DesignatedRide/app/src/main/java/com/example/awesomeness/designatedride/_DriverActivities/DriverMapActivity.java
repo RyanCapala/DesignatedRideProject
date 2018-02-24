@@ -1,20 +1,22 @@
 package com.example.awesomeness.designatedride._DriverActivities;
 
 import android.Manifest;
-import android.util.Log;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.awesomeness.designatedride.R;
+import com.example.awesomeness.designatedride.Util.Constants;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -22,14 +24,11 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-
-import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -72,15 +71,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     //Widgets
     Button setPickupBtn;
 
-    //Database children
-    private String _GeoLocation = "GeoLocation";
-    private String _AvailableGeoLocation = "AvailableGeoLocation";
-    private String _Driver = "Driver";
-    private String _geoKey = "geoKey";
-    private String _userRating = "userRating";
-    private String _riderKey = "riderKey";
-    private String _isAvailable = "isAvailable";
-    private String _Location = "Location";
     private String key = "";
     private String riderKey = "";
     private String rating = "";
@@ -144,15 +134,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mChildLocation = mDatabase.getReference();
         mChildAvailable = mDatabase.getReference();
 
-        mAvailableGeoLocationRef = mChildAvailable.child(_AvailableGeoLocation);
-        mGeoLocationRef = mChildLocation.child(_GeoLocation);
+        mAvailableGeoLocationRef = mChildAvailable.child(Constants.AVAILABLE_GEOLOCATION);
+        mGeoLocationRef = mChildLocation.child(Constants.GEO_LOCATION);
 
         mAvailableGeoFire = new GeoFire(mAvailableGeoLocationRef);
         mGeoFire = new GeoFire(mGeoLocationRef);
 
         mAuth = FirebaseAuth.getInstance();
         userid = mAuth.getCurrentUser().getUid();
-        mDatabaseReference.child(_Driver).child(userid).child(_geoKey).addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 key = dataSnapshot.getValue(String.class);
@@ -164,7 +154,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
-        mDatabaseReference.child(_Driver).child(userid).child(_userRating).addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.USER_RATING).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 rating = dataSnapshot.getValue(String.class);
@@ -185,8 +175,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             public void onClick(View view) {
                 if(isOn) {
                     isOn = false;
-                    mDatabaseReference.child(_AvailableGeoLocation).child(key).removeValue();
-                    mDatabaseReference.child(_Location).child(key).removeValue();
+                    mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
+                    mDatabaseReference.child(Constants.LOCATION).child(key).removeValue();
                     mapFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
                 }
                 else{
@@ -333,9 +323,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                 exchangeInfo = new HashMap();
                                 writeInfo = new HashMap();
 
-                                exchangeInfo.put(_isAvailable,"true");
-                                exchangeInfo.put(_userRating, rating);
-                                writeInfo.put(_Location + "/" + key + "/", exchangeInfo);
+                                exchangeInfo.put(Constants.IS_AVAILABLE,"true");
+                                exchangeInfo.put(Constants.USER_RATING, rating);
+                                writeInfo.put(Constants.LOCATION + "/" + key + "/", exchangeInfo);
 
                                 mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
                                     @Override
@@ -347,15 +337,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                     }
                                 });
 
-                                mDatabaseReference.child(_Location).child(key).addChildEventListener(new ChildEventListener() {
+                                mDatabaseReference.child(Constants.LOCATION).child(key).addChildEventListener(new ChildEventListener() {
                                     @Override
                                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                                     }
 
                                     @Override
                                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                                        if(dataSnapshot.getKey().equals(_isAvailable)) {
-                                            mDatabaseReference.child(_AvailableGeoLocation).child(key).removeValue();
+                                        if(dataSnapshot.getKey().equals(Constants.IS_AVAILABLE)) {
+                                            mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
                                             exchange = false;
                                         }
                                     }

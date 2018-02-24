@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
+import com.example.awesomeness.designatedride.Util.Constants;
 
 public class DriverProfileActivity extends AppCompatActivity {
 
@@ -19,7 +20,7 @@ public class DriverProfileActivity extends AppCompatActivity {
     private EditText passwordET;
     private EditText verifyPwdET;
     private Button updateProfileBtn;
-    private String INTENT_KEY = "userid";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,7 @@ public class DriverProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_driver_profile);
 
         Intent intent = getIntent();
-        String userid = intent.getStringExtra(INTENT_KEY);
+        String userid = intent.getStringExtra(Constants.INTENT_KEY);
         Toast.makeText(this, userid + "\nDriver Profile", Toast.LENGTH_LONG).show();
 
         /**

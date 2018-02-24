@@ -1,4 +1,4 @@
-package com.example.awesomeness.designatedride.Model;
+package com.example.awesomeness.designatedride.Util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -63,11 +63,7 @@ public class ProfileDialogHelper {
         updateProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //goToActivity(profileActivityClass);
-                Intent intent = new Intent(ctx, profileActivityClass);
-                intent.putExtra(INTENT_KEY, mUser.getUid());
-                ctx.startActivity(intent);
-                ((Activity)ctx).finish();
+                goToProfileActivity(profileActivityClass);
             }
         });
 
@@ -118,12 +114,19 @@ public class ProfileDialogHelper {
     private void signOutUser() {
         if (mUser != null && mAuth != null) {
             mAuth.signOut();
-            goToActivity(loginActivityClass);
+            gotoLoginActivity(loginActivityClass);
 
         }
     }
 
-    private void goToActivity(Class activityClass) {
+    private void goToProfileActivity(Class activityClass) {
+        Intent intent = new Intent(ctx, activityClass);
+        intent.putExtra(INTENT_KEY, mUser.getUid());
+        ctx.startActivity(intent);
+        ((Activity)ctx).finish();
+    }
+
+    private void gotoLoginActivity(Class activityClass) {
         Intent intent = new Intent(ctx, activityClass);
         ctx.startActivity(intent);
         ((Activity)ctx).finish();

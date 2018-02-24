@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -55,6 +57,7 @@ public class ProfileDialogHelper {
 
         dialogBuilder.setView(profilePopupView);
         dialog = dialogBuilder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
         updateProfileBtn.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +96,7 @@ public class ProfileDialogHelper {
 
         _dialogBuilder.setView(confirmationView);
         confirmationDialog = _dialogBuilder.create();
+        confirmationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         confirmationDialog.show();
 
         yesButton.setOnClickListener(new View.OnClickListener() {

@@ -111,7 +111,7 @@ public class DriverActivity extends AppCompatActivity {
     }
 
     //----------------------------------------------------------------------------------------------
-    private void initWidgets(){
+    private void initWidgets() {
         profileImage = (CircleImageView) findViewById(R.id.profileImgView_driver);
         profileBtn = (ImageButton) findViewById(R.id.viewProfileImgBtn_driver);
         pickupRiderBtn = (ImageButton) findViewById(R.id.pickupRiderImgBtn_driver);
@@ -147,89 +147,83 @@ public class DriverActivity extends AppCompatActivity {
     }
 
     /***
-    //----------------------------------------------------------------------------------------------
-    private void createPopupDialog() {
+     //----------------------------------------------------------------------------------------------
+     private void createPopupDialog() {
 
-        dialogBuilder = new AlertDialog.Builder(this);
-        View view = getLayoutInflater().inflate(R.layout.profile_dialog_popup, null);
+     dialogBuilder = new AlertDialog.Builder(this);
+     View view = getLayoutInflater().inflate(R.layout.profile_dialog_popup, null);
 
-        updateProfileBtn = (Button) view.findViewById(R.id.btn_updateProfile_drvrPopup);
-        logoutBtn = (Button) view.findViewById(R.id.btn_logout_drvrPopup);
-        cancelTV = (TextView) view.findViewById(R.id.tv_cancelLink_drvrPopup);
+     updateProfileBtn = (Button) view.findViewById(R.id.btn_updateProfile_drvrPopup);
+     logoutBtn = (Button) view.findViewById(R.id.btn_logout_drvrPopup);
+     cancelTV = (TextView) view.findViewById(R.id.tv_cancelLink_drvrPopup);
 
-        dialogBuilder.setView(view);
-        dialog = dialogBuilder.create();
-        dialog.show();
+     dialogBuilder.setView(view);
+     dialog = dialogBuilder.create();
+     dialog.show();
 
-        //-----------
-        updateProfileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+     //-----------
+     updateProfileBtn.setOnClickListener(new View.OnClickListener() {
+    @Override public void onClick(View v) {
 
-            }
-        });
+    }
+    });
 
-        //-----------
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
+     //-----------
+     logoutBtn.setOnClickListener(new View.OnClickListener() {
+    @Override public void onClick(View v) {
+    dialog.dismiss();
 
-                //will delay the next dialog
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        showConfirmationDialog();
-                    }
-                }, 100);
+    //will delay the next dialog
+    new Handler().postDelayed(new Runnable() {
+    @Override public void run() {
+    showConfirmationDialog();
+    }
+    }, 100);
 
-            }
-        });
+    }
+    });
 
-        //-----------
-        cancelTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+     //-----------
+     cancelTV.setOnClickListener(new View.OnClickListener() {
+    @Override public void onClick(View v) {
+    dialog.dismiss();
+    }
+    });
 
-    }//End of createPopupDialog
+     }//End of createPopupDialog
 
-    //----------------------------------------------------------------------------------------------
-    private void showConfirmationDialog() {
+     //----------------------------------------------------------------------------------------------
+     private void showConfirmationDialog() {
 
-        final AlertDialog _dialog;
-        AlertDialog.Builder _dialogBuilder;
-        View view = getLayoutInflater().inflate(R.layout.confirmation_dialog, null);
-        _dialogBuilder = new AlertDialog.Builder(this);
-        yesButton = (Button) view.findViewById(R.id.yesButton);
-        noButton = (Button) view.findViewById(R.id.noButton);
+     final AlertDialog _dialog;
+     AlertDialog.Builder _dialogBuilder;
+     View view = getLayoutInflater().inflate(R.layout.confirmation_dialog, null);
+     _dialogBuilder = new AlertDialog.Builder(this);
+     yesButton = (Button) view.findViewById(R.id.yesButton);
+     noButton = (Button) view.findViewById(R.id.noButton);
 
-        _dialogBuilder.setView(view);
-        _dialog = _dialogBuilder.create();
-        _dialog.show();
+     _dialogBuilder.setView(view);
+     _dialog = _dialogBuilder.create();
+     _dialog.show();
 
-        yesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+     yesButton.setOnClickListener(new View.OnClickListener() {
+    @Override public void onClick(View v) {
 
-                signOutUser();
+    signOutUser();
 
-            }
-        });
+    }
+    });
 
-        noButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+     noButton.setOnClickListener(new View.OnClickListener() {
+    @Override public void onClick(View v) {
 
-                _dialog.dismiss();
+    _dialog.dismiss();
 
-            }
-        });
+    }
+    });
 
-    }//End of showConfirmationDialog
-    ***/
+     }//End of showConfirmationDialog
+     ***/
 
 
 }

@@ -84,10 +84,10 @@ public class LoginActivity extends AppCompatActivity {
                 String email = userEmail.getText().toString().trim();
                 String pwd = userPwd.getText().toString().trim();
 
-                if (fieldChecking(email,pwd)) {
-                        mProgressDialog.setMessage("Logging in...");
-                        mProgressDialog.show();
-                        loginUser(email, pwd);
+                if (fieldChecking(email, pwd)) {
+                    mProgressDialog.setMessage("Logging in...");
+                    mProgressDialog.show();
+                    loginUser(email, pwd);
                 }
             }
         });
@@ -109,7 +109,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }//End of onCreate
-
 
 
     @Override
@@ -135,8 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             if (!checkPwd(testpwd)) {
                                 gotoActivity(ChangePasswordActivity.class, false);
-                            }
-                            else {
+                            } else {
                                 mUser = mAuth.getCurrentUser();
                                 uid = mUser.getUid();
                                 Log.d(TAG, "onComplete: <<<< Signed In >>>>");
@@ -148,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
                                 UserDataHelper.saveUserInfo(getApplicationContext(), email, pwd, mode);
 
                             }
-                        }else {
+                        } else {
                             Toast.makeText(LoginActivity.this, "Failed Sign In!",
                                     Toast.LENGTH_LONG).show();
                             mProgressDialog.dismiss();
@@ -196,6 +194,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
         return mode;
     }
+
     private void initWidgets() {
         userEmail = (EditText) findViewById(R.id.userEmailET_log);
         userPwd = (EditText) findViewById(R.id.userPassET_log);
@@ -219,15 +218,21 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private boolean fieldChecking(String email ,String pwd){
+    private boolean fieldChecking(String email, String pwd) {
         boolean flag = true;
 
-        if(email.isEmpty()) { userEmail.setError("Email address is required."); flag = false;}
-        if(pwd.isEmpty()) {userPwd.setError("Password is required."); flag = false;}
+        if (email.isEmpty()) {
+            userEmail.setError("Email address is required.");
+            flag = false;
+        }
+        if (pwd.isEmpty()) {
+            userPwd.setError("Password is required.");
+            flag = false;
+        }
         return flag;
     }
 
-    private boolean checkPwd(String pwd){
+    private boolean checkPwd(String pwd) {
         return (pwd.matches("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{3,}") && pwd.length() >= 8);
     }
 }

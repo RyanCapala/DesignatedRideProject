@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Created by awesome on 2/22/18.
- *
+ * <p>
  * This class provides dialog functions for Rider and Driver profile so
  * we dont have to write the same functions on both profiles.
  */
@@ -100,6 +100,8 @@ public class ProfileDialogHelper {
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                confirmationDialog.dismiss();
+                confirmationDialog = null;
                 signOutUser();
             }
         });
@@ -107,6 +109,8 @@ public class ProfileDialogHelper {
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                confirmationDialog.dismiss();
+                confirmationDialog = null;
                 confirmationDialog.dismiss();
             }
         });
@@ -125,13 +129,13 @@ public class ProfileDialogHelper {
         Intent intent = new Intent(ctx, activityClass);
         intent.putExtra(INTENT_KEY, mUser.getUid());
         ctx.startActivity(intent);
-        ((Activity)ctx).finish();
+        ((Activity) ctx).finish();
     }
 
     private void gotoLoginActivity(Class activityClass) {
         Intent intent = new Intent(ctx, activityClass);
         ctx.startActivity(intent);
-        ((Activity)ctx).finish();
+        ((Activity) ctx).finish();
     }
 
 

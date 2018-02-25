@@ -107,7 +107,9 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        if(TextUtils.isEmpty(userPwd.getText().toString().trim())) { pwdMessage(true,false);}
+        if (TextUtils.isEmpty(userPwd.getText().toString().trim())) {
+            pwdMessage(true, false);
+        }
 
     }
 
@@ -120,10 +122,12 @@ public class RegisterActivity extends AppCompatActivity {
         final String pwd = userPwd.getText().toString().trim();
         String vPwd = verifyPwd.getText().toString().trim();
 
-        if (fieldChecking(fname,lname,em,pwd,vPwd)) {
-            if(!checkPwd(pwd)) { pwdMessage(true,true); }
-            else if(!checkName(fname,lname)) {;}
-            else if (pwdmatch(pwd,vPwd)) {
+        if (fieldChecking(fname, lname, em, pwd, vPwd)) {
+            if (!checkPwd(pwd)) {
+                pwdMessage(true, true);
+            } else if (!checkName(fname, lname)) {
+                ;
+            } else if (pwdmatch(pwd, vPwd)) {
                 mProgressDialog.setMessage("Creating Account...");
                 mProgressDialog.show();
                 mAuth.createUserWithEmailAndPassword(em, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -136,76 +140,76 @@ public class RegisterActivity extends AppCompatActivity {
                             Map userInfo = new HashMap();
                             Map drInfo = new HashMap();
 
-                            if(isStatus)
+                            if (isStatus)
                                 uMode = "Rider";
                             else
                                 uMode = "Driver";
 
-                            userInfo.put(Constants.USERID,userid);
-                            userInfo.put(Constants.USERMODE,uMode);
-                            userInfo.put(Constants.FIRSTNAME,fname);
-                            userInfo.put(Constants.LASTNAME,lname);
-                            userInfo.put(Constants.EMAIL,em);
-                            userInfo.put(Constants.USEREMAILVERIFIED,String.valueOf(user.isEmailVerified()));
-                            drInfo.put(Constants.EMAIL,em);
-                            drInfo.put(Constants.USER_RATING,"No Feedback");
+                            userInfo.put(Constants.USERID, userid);
+                            userInfo.put(Constants.USERMODE, uMode);
+                            userInfo.put(Constants.FIRSTNAME, fname);
+                            userInfo.put(Constants.LASTNAME, lname);
+                            userInfo.put(Constants.EMAIL, em);
+                            userInfo.put(Constants.USEREMAILVERIFIED, String.valueOf(user.isEmailVerified()));
+                            drInfo.put(Constants.EMAIL, em);
+                            drInfo.put(Constants.USER_RATING, "No Feedback");
                             Map writeInfo = new HashMap();
-                            writeInfo.put(  Constants.USER + "/" +
-                                            userid + "/" +
-                                            Constants.PROFILE + "/", userInfo);
+                            writeInfo.put(Constants.USER + "/" +
+                                    userid + "/" +
+                                    Constants.PROFILE + "/", userInfo);
 
 
-
-                            if(uMode.equals(Constants.DRIVER)) {
+                            if (uMode.equals(Constants.DRIVER)) {
                                 mPushKey = FirebaseDatabase.getInstance().getReference(Constants.DRIVER + "/" + userid + "/").push().getKey();
-                                drInfo.put(Constants.GEOKEY,mPushKey);
+                                drInfo.put(Constants.GEOKEY, mPushKey);
                                 writeInfo.put(Constants.DRIVER + "/" + userid + "/", drInfo);
-                            }
-                            else {
+                            } else {
                                 writeInfo.put(Constants.RIDER + "/" + userid + "/", drInfo);
                                 mPushKey = FirebaseDatabase.getInstance().getReference(Constants.RIDER + "/" + userid + "/").push().getKey();
-                                drInfo.put(Constants.GEOKEY,mPushKey);
-                                writeInfo.put(Constants.RIDER + "/" + userid + "/",drInfo);
+                                drInfo.put(Constants.GEOKEY, mPushKey);
+                                writeInfo.put(Constants.RIDER + "/" + userid + "/", drInfo);
                             }
 
                             mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                    if(databaseError != null){
+                                    if (databaseError != null) {
                                         Log.wtf("Write Error", databaseError.getMessage());
-                                        Toast.makeText(RegisterActivity.this,"An error occurred while creating your account, please try again.",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(RegisterActivity.this, "An error occurred while creating your account, please try again.", Toast.LENGTH_LONG).show();
                                         clearEditText();
                                         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                if(!task.isSuccessful()) {Log.wtf("Non-Deleted User Account",task.getException().getMessage()); }
+                                                if (!task.isSuccessful()) {
+                                                    Log.wtf("Non-Deleted User Account", task.getException().getMessage());
+                                                }
                                             }
                                         });
-                                    }
-                                    else {
-                                        user.sendEmailVerification();Toast.makeText(RegisterActivity.this,"Verification email sent to " + user.getEmail(), Toast.LENGTH_LONG).show();
+                                    } else {
+                                        user.sendEmailVerification();
+                                        Toast.makeText(RegisterActivity.this, "Verification email sent to " + user.getEmail(), Toast.LENGTH_LONG).show();
                                         UserDataHelper.saveUserInfo(getApplicationContext(), user.getEmail(), pwd, uMode);
-                                        if (isStatus) { gotoActivity(RiderActivity.class); }
-                                        else { gotoActivity(DriverActivity.class); }
+                                        if (isStatus) {
+                                            gotoActivity(RiderActivity.class);
+                                        } else {
+                                            gotoActivity(DriverActivity.class);
+                                        }
                                     }
 
                                 }
                             });
-                        }
-                        else if (task.getException() instanceof FirebaseAuthUserCollisionException){
+                        } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                             Toast.makeText(RegisterActivity.this, "Registration Failed. Email exist!", Toast.LENGTH_LONG).show();
-                        }
-                        else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                        } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                             Toast.makeText(RegisterActivity.this, "Registration Failed. Email incorrect!", Toast.LENGTH_LONG).show();
                             userEmailET.setError("Email address is required");
-                        }
-                        else if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
+                        } else if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
                             // This code should never run (Error checking purposes)
                             Toast.makeText(RegisterActivity.this, "Registration Failed. Weak password!", Toast.LENGTH_LONG).show();
-                            pwdMessage(true,true);
+                            pwdMessage(true, true);
+                        } else {
+                            Log.wtf("Authentication creation error", task.getException().getMessage());
                         }
-                        else
-                        {Log.wtf("Authentication creation error", task.getException().getMessage());}
 
                         mProgressDialog.dismiss();
                     }
@@ -284,17 +288,17 @@ public class RegisterActivity extends AppCompatActivity {
         verifyPwd.setText("");
     }
 
-    private boolean checkPwd(String pwd){
+    private boolean checkPwd(String pwd) {
         return (pwd.matches("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{3,}") && pwd.length() >= 8);
     }
 
-    private boolean checkName(String fname, String lname){
+    private boolean checkName(String fname, String lname) {
         boolean flag = true;
-        if(fname.matches("(.*[0-9].*)|(.*[@#$%^&+=.{}(),\"].*)|(.*[\\s].*)")){
+        if (fname.matches("(.*[0-9].*)|(.*[@#$%^&+=.{}(),\"].*)|(.*[\\s].*)")) {
             firstName.setError("Name can't include numbers ,special characters, or spaces");
             flag = false;
         }
-        if(lname.matches("(.*[0-9].*)|(.*[@#$%^&+={}(),\"].*)|(.*[\\s].*)")) {
+        if (lname.matches("(.*[0-9].*)|(.*[@#$%^&+={}(),\"].*)|(.*[\\s].*)")) {
             lastName.setError("Name can't include numbers ,special characters or spaces");
             flag = false;
         }
@@ -306,33 +310,47 @@ public class RegisterActivity extends AppCompatActivity {
         String errorMsg = "Password must be at least 8 characters " +
                 "containing at least one of each: lower case (a-z), upper case (A-Z), number (0-9)";
 
-        if(userpwd) {
+        if (userpwd) {
             userPwd.setError(errorMsg);
         }
-        if(vpwd) {
+        if (vpwd) {
             verifyPwd.setError(errorMsg);
         }
 
     }
 
-    private boolean pwdmatch(String pwd, String vpwd){
-        if(!pwd.equals(vpwd)) {
+    private boolean pwdmatch(String pwd, String vpwd) {
+        if (!pwd.equals(vpwd)) {
             userPwd.setError("Passwords don't match!");
             verifyPwd.setError("Passwords don't match!");
             return false;
-        }
-        else
+        } else
             return true;
     }
 
-    private boolean fieldChecking(String fname, String lname, String em, String pwd, String vpwd){
+    private boolean fieldChecking(String fname, String lname, String em, String pwd, String vpwd) {
         boolean flag = true;
 
-        if(fname.isEmpty()) { firstName.setError("First name is required"); flag = false;}
-        if(lname.isEmpty()) { lastName.setError("Last name is required"); flag = false;}
-        if(em.isEmpty()) { userEmailET.setError("Email address is required"); flag = false;}
-        if(pwd.isEmpty()) { pwdMessage(true,false); flag = false;}
-        if(vpwd.isEmpty()) { pwdMessage(false,true); flag = false;}
+        if (fname.isEmpty()) {
+            firstName.setError("First name is required");
+            flag = false;
+        }
+        if (lname.isEmpty()) {
+            lastName.setError("Last name is required");
+            flag = false;
+        }
+        if (em.isEmpty()) {
+            userEmailET.setError("Email address is required");
+            flag = false;
+        }
+        if (pwd.isEmpty()) {
+            pwdMessage(true, false);
+            flag = false;
+        }
+        if (vpwd.isEmpty()) {
+            pwdMessage(false, true);
+            flag = false;
+        }
 
         return flag;
     }

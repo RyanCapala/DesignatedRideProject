@@ -47,7 +47,7 @@ public class StartPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_page);
-        
+
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance();
@@ -85,10 +85,11 @@ public class StartPageActivity extends AppCompatActivity {
         startActivity(new Intent(StartPageActivity.this, activityClass));
         finish();
     }
-    private void checkForSavedState(){
+
+    private void checkForSavedState() {
         UserDataHelper.AccountInfoContainer container = UserDataHelper.loadLocalUser(getApplicationContext());
-        Log.d(TAG, "checkForSavedState: USERINFO:" +container.email + container.password + container.userType);
-        if(container.containsInvalidData()) {
+        Log.d(TAG, "checkForSavedState: USERINFO:" + container.email + container.password + container.userType);
+        if (container.containsInvalidData()) {
             Log.d(TAG, "checkForSavedState: Did not find saved state");
             return;
         }
@@ -99,7 +100,7 @@ public class StartPageActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if(!(grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+        if (!(grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
             finish();
         }
     }
@@ -111,14 +112,14 @@ public class StartPageActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                                mUser = mAuth.getCurrentUser();
-                                uid = mUser.getUid();
-                                Log.d(TAG, "onComplete: <<<< Signed In >>>>");
+                            mUser = mAuth.getCurrentUser();
+                            uid = mUser.getUid();
+                            Log.d(TAG, "onComplete: <<<< Signed In >>>>");
 
-                                //Check user mode if "Rider" or "Driver"
-                                //then, send user to each specific page.
-                                GetUserType();
-                        }else {
+                            //Check user mode if "Rider" or "Driver"
+                            //then, send user to each specific page.
+                            GetUserType();
+                        } else {
                             Log.d(TAG, "onComplete: No previous state loaded");
                         }
 

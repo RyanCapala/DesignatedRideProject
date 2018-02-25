@@ -1,7 +1,10 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -12,8 +15,9 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import android.app.AlertDialog;
 import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.Util.Constants;
 import com.firebase.geofire.GeoFire;
@@ -42,6 +46,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RiderMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
@@ -64,6 +70,10 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
     //Widgets
     Button setPickupBtn;
+    Button yesButton;
+    Button noButton;
+    TextView txt;
+    View confirm_dialog_view;
 
     //List
     ArrayList<Marker> availableDrivers;
@@ -82,6 +92,14 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private String rating = "";
     private String driverKey = "";
 
+    //Alert Box
+    AlertDialog.Builder confirmation;
+    AlertDialog dialogBox;
+
+    //Map
+    private Map writeInfo;
+    private Map exchangeInfo;
+
     //GeoFire
     private GeoQuery mGeoQuery;
     private GeoFire mAvailableGeoFire;
@@ -91,8 +109,6 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private DatabaseReference mChildAvailable;
     private DatabaseReference mChildLocation;
 
-    //ToDo: Kill location updates at some point (Don't run this code on a phone.  As it will keep running updates even if app closes)
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,25 +117,9 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
         mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        mLocationCallback = new LocationCallback(){
-          @Override
-          public void onLocationResult(LocationResult locationResult){
-              Location location = locationResult.getLastLocation();
-              LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        confirmation = new AlertDialog.Builder(RiderMapActivity.this);
 
-              mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
-                  @Override
-                  public void onComplete(String key, DatabaseError error) {
-
-                  }
-              });
-              Log.d(TAG, "onLocationResult: Received location: " + latLng.toString());
-
-              //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-              //mMap.animateCamera(cameraUpdate);
-
-          }
-        };
+        callBack();
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -137,6 +137,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         userid = mAuth.getCurrentUser().getUid();
 
         availableDrivers = new ArrayList<>();
+
 
         mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.GEOKEY).addValueEventListener(new ValueEventListener() {
             @Override
@@ -161,14 +162,38 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
-                        // TODO: Create a dialog box asking if user wants to accept this person as a driver.
-                        // TODO: If they accept delete all markers.
                         driverKey = (String)marker.getTag();
-                        mDatabaseReference.child(Constants.LOCATION).child(driverKey).child(Constants.IS_AVAILABLE).setValue("false");
-                        for(int i = 0; i < availableDrivers.size(); i++){
-                            driver = availableDrivers.get(i);
-                            driver.remove();
-                        }
+                        String message = "User Rating:" + rating + "\n" + "Choose this Driver?";
+                        txt.setText(message);
+                        confirmation.setView(confirm_dialog_view);
+                        dialogBox = confirmation.create();
+                        dialogBox.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialogBox.show();
+
+                        exchangeInfo = new HashMap();
+                        writeInfo = new HashMap();
+
+                        yesButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                exchangeInfo.put(Constants.IS_AVAILABLE,"false");
+                                exchangeInfo.put(Constants.RIDER_KEY, key);
+                                writeInfo.put(Constants.LOCATION + "/" + driverKey + "/", exchangeInfo);
+                                for(int j = 0; j < availableDrivers.size(); j++) {
+                                    driver = availableDrivers.get(j);
+                                    driver.remove();
+                                }
+                                dialogBox.dismiss();
+                            }
+                        });
+
+                        noButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogBox.dismiss();
+                            }
+                        });
+
                         return false;
                     }
                 });
@@ -224,6 +249,30 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getDeviceLocation();
+    }
+    // Prevent battery drain when activity is not in focus
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    private void stopLocationUpdates() {
+        Log.d(TAG, "stopLocationUpdates: STOPPED LOCATION UPDATES");
+        mapFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+    }
+    private void startLocationUpdates() {
+        try {
+            Log.d(TAG, "startLocationUpdates: STARTED LOCATION UPDATES");
+            mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+        }catch (SecurityException e){
+            Log.d(TAG, "startLocationUpdates: " + e.getMessage());
+        }
+    }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -239,7 +288,6 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         //ToDo: Fix camera
         //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         //mMap.animateCamera(cameraUpdate);
-        moveCamera(latLng, DEFAULT_ZOOM);
 
     }
 
@@ -317,45 +365,18 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-    
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getDeviceLocation();
-    }
-    // Prevent battery drain when activity is not in focus
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stopLocationUpdates();
-    }
-
-    private void stopLocationUpdates() {
-        Log.d(TAG, "stopLocationUpdates: STOPPED LOCATION UPDATES");
-        mapFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-    }
-    private void startLocationUpdates() {
-        try {
-            Log.d(TAG, "startLocationUpdates: STARTED LOCATION UPDATES");
-            mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-        }catch (SecurityException e){
-            Log.d(TAG, "startLocationUpdates: " + e.getMessage());
-        }
-    }
 
     private void getDeviceLocation() {
 
         try {
             if (mapLocationPermissionsGranted) {
 
-                //TODO: Fix times? Documentation says to use these times but, the overhead seems insane.
                 mLocationRequest = new LocationRequest();
                 mLocationRequest.setInterval(DES_TIME);
                 mLocationRequest.setFastestInterval(EXP_TIME);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-                //mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest,mLocationCallback,null);
-                startLocationUpdates();
+                mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest,mLocationCallback,null);
 
                 final Task location = mapFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
@@ -411,12 +432,16 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private void initWidgets()
     {
         setPickupBtn = (Button) findViewById(R.id.setPickupBtn_ridermap);
+        confirm_dialog_view = getLayoutInflater().inflate(R.layout
+                .confirmation_dialog, null);
+        yesButton = (Button)confirm_dialog_view.findViewById(R.id.yesButton);
+        noButton = (Button)confirm_dialog_view.findViewById(R.id.noButton);
+        txt = (TextView)confirm_dialog_view.findViewById(R.id.textAlert);
     }
 
     // Pad map appropriately to not obscure google logo/copyright info
     // This is a generic function, wont look nice on most devices
     // probably needs some math to calculate padding size (its in pixels)
-    // TODO: 2/24/2018 Calculate padding. Should be done after final UI design 
     private void padGoogleMap(){
         //    //int[] locationOnScreen; // [x, y]
         //    //findViewById(R.id.setPickupBtn_ridermap).getLocationOnScreen(locationOnScreen);
@@ -426,4 +451,25 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
     }
 
+    private void callBack(){
+        mLocationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult){
+                Location location = locationResult.getLastLocation();
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
+
+                    }
+                });
+
+                //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+                //mMap.animateCamera(cameraUpdate);
+
+            }
+        };
+    }
 }
+

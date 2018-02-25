@@ -29,6 +29,7 @@ public class Constants {
 
     public static final String LOCATION = "Location";
     public static final String IS_AVAILABLE = "isAvailable";
+    public static final String CONFIRMATION = "confirmation";
     public static final String GEO_LOCATION = "GeoLocation";
     public static final String AVAILABLE_GEOLOCATION = "AvailableGeoLocation";
     public static final String RIDER_KEY = "riderKey";
@@ -39,3 +40,4 @@ public class Constants {
 
 
 }
+

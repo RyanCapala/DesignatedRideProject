@@ -1,6 +1,7 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -8,12 +9,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +42,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +52,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RiderMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
@@ -92,14 +98,16 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     private String rating = "";
     private String driverKey = "";
 
+
     //Alert Box
     AlertDialog.Builder confirmation;
     AlertDialog dialogBox;
+    private ProgressDialog mProgressDialog;
+    Timer timer;
 
     //Map
     private Map writeInfo;
     private Map exchangeInfo;
-
     //GeoFire
     private GeoQuery mGeoQuery;
     private GeoFire mAvailableGeoFire;
@@ -170,26 +178,65 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                         dialogBox.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         dialogBox.show();
 
-                        exchangeInfo = new HashMap();
-                        writeInfo = new HashMap();
 
                         yesButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                exchangeInfo.put(Constants.IS_AVAILABLE,"false");
-                                exchangeInfo.put(Constants.RIDER_KEY, key);
-                                writeInfo.put(Constants.LOCATION + "/" + driverKey + "/", exchangeInfo);
-                                for(int j = 0; j < availableDrivers.size(); j++) {
-                                    driver = availableDrivers.get(j);
-                                    driver.remove();
-                                }
-                                dialogBox.dismiss();
+                                mDatabaseReference.child(Constants.LOCATION).child(driverKey).child(Constants.IS_AVAILABLE).setValue("false");
+                                mProgressDialog.setMessage("Confirming Driver Availability...");
+                                mProgressDialog.show();
+                                timer = new Timer();
+                                timer.schedule(new TimerTask(){
+                                    @Override
+                                    public void run(){
+                                        mProgressDialog.dismiss();
+                                        dialogBox.dismiss();
+                                        timer.cancel();
+                                    }
+                                },10000);
+
+                                mDatabaseReference.child(Constants.LOCATION).child(driverKey).addChildEventListener(new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                    }
+
+                                    @Override
+                                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                        if(dataSnapshot.getKey().equals(Constants.CONFIRMATION)){
+                                            mDatabaseReference.child(Constants.LOCATION).child(driverKey).child(Constants.RIDER_KEY).setValue(key);
+                                            setPickupBtn.setVisibility(View.GONE);
+                                            for(int j = 0; j < availableDrivers.size(); j++) {
+                                                driver = availableDrivers.get(j);
+                                                driver.remove();
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+
+                                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                    }
+
+                                    @Override
+                                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
                         });
 
                         noButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                if(confirm_dialog_view.getParent() != null){
+                                    ((ViewGroup)confirm_dialog_view.getParent()).removeView(confirm_dialog_view);
+                                }
                                 dialogBox.dismiss();
                             }
                         });
@@ -437,6 +484,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         yesButton = (Button)confirm_dialog_view.findViewById(R.id.yesButton);
         noButton = (Button)confirm_dialog_view.findViewById(R.id.noButton);
         txt = (TextView)confirm_dialog_view.findViewById(R.id.textAlert);
+        mProgressDialog = new ProgressDialog(RiderMapActivity.this);
     }
 
     // Pad map appropriately to not obscure google logo/copyright info
@@ -472,4 +520,3 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         };
     }
 }
-

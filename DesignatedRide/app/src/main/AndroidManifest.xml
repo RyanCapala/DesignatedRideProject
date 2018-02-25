@@ -30,11 +30,11 @@
         <activity
             android:name=".Activities.StartPageActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".Activities.LoginActivity"
@@ -65,13 +65,21 @@
             android:name="._DriverActivities.DriverMapActivity"
             android:label="@string/title_activity_rider_map" />
         <activity
-            android:label="@string/rider_profile"
             android:name="._RiderActivities.RiderProfileActivity"
+            android:label="@string/rider_profile"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
+            android:name="._DriverActivities.DriverProfileActivity"
             android:label="@string/driver_profile"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:name="._DriverActivities.DriverProfileActivity"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".Activities.StartLogoActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

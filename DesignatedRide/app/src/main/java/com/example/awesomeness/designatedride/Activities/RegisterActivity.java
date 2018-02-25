@@ -20,6 +20,7 @@ import android.widget.ToggleButton;
 import com.example.awesomeness.designatedride.Model.User;
 import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.Util.Constants;
+import com.example.awesomeness.designatedride.Util.UserDataHelper;
 import com.example.awesomeness.designatedride._DriverActivities.DriverActivity;
 import com.example.awesomeness.designatedride._RiderActivities.RiderActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -183,6 +184,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                     else {
                                         user.sendEmailVerification();Toast.makeText(RegisterActivity.this,"Verification email sent to " + user.getEmail(), Toast.LENGTH_LONG).show();
+                                        UserDataHelper.saveUserInfo(getApplicationContext(), user.getEmail(), pwd, uMode);
                                         if (isStatus) { gotoActivity(RiderActivity.class); }
                                         else { gotoActivity(DriverActivity.class); }
                                     }

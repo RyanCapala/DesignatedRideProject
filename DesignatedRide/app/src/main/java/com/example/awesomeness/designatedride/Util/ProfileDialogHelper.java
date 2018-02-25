@@ -2,6 +2,7 @@ package com.example.awesomeness.designatedride.Util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -70,6 +71,7 @@ public class ProfileDialogHelper {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UserDataHelper.deleteLocalUser(ctx);
                 dialog.dismiss();
                 showConfirmationDialog();
             }

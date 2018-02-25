@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.Util.Constants;
+import com.example.awesomeness.designatedride.Util.UserDataHelper;
 import com.example.awesomeness.designatedride._DriverActivities.DriverActivity;
 import com.example.awesomeness.designatedride._RiderActivities.RiderActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -125,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void loginUser(String email, String pwd) {
+    private void loginUser(final String email, final String pwd) {
         final String testpwd = pwd;
         mAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(this, new
                 OnCompleteListener<AuthResult>() {
@@ -140,41 +141,12 @@ public class LoginActivity extends AppCompatActivity {
                                 uid = mUser.getUid();
                                 Log.d(TAG, "onComplete: <<<< Signed In >>>>");
 
+
                                 //Check user mode if "Rider" or "Driver"
                                 //then, send user to each specific page.
-                                mDatabaseReference.
-                                        child(Constants.USER).
-                                        child(uid).
-                                        child(Constants.PROFILE).
-                                        child(Constants.USERMODE).
-                                        addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                mode = dataSnapshot.getValue(String.class);
-                                                if (mode.equals(Constants.DRIVER)) {
+                                GetUserType();
+                                UserDataHelper.saveUserInfo(getApplicationContext(), email, pwd, mode);
 
-                                                    gotoActivity(DriverActivity.class, true);
-                                                    clearEditText();
-
-                                                } else if (mode.equals(Constants.RIDER)) {
-
-                                                    gotoActivity(RiderActivity.class, true);
-                                                    clearEditText();
-
-                                                } else {
-                                                    Toast.makeText(LoginActivity.this,
-                                                            "Credentials Not Valid!",
-                                                            Toast.LENGTH_LONG).show();
-                                                    clearEditText();
-                                                }
-
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
                             }
                         }else {
                             Toast.makeText(LoginActivity.this, "Failed Sign In!",
@@ -187,6 +159,43 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }//End of loginUser
 
+    private String GetUserType() {
+        mDatabaseReference.
+                child(Constants.USER).
+                child(uid).
+                child(Constants.PROFILE).
+                child(Constants.USERMODE).
+                addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mode = dataSnapshot.getValue(String.class);
+                        if (mode.equals(Constants.DRIVER)) {
+
+                            gotoActivity(DriverActivity.class, true);
+
+                            clearEditText();
+
+                        } else if (mode.equals(Constants.RIDER)) {
+
+                            gotoActivity(RiderActivity.class, true);
+                            clearEditText();
+
+                        } else {
+                            Toast.makeText(LoginActivity.this,
+                                    "Credentials Not Valid!",
+                                    Toast.LENGTH_LONG).show();
+                            clearEditText();
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        return mode;
+    }
     private void initWidgets() {
         userEmail = (EditText) findViewById(R.id.userEmailET_log);
         userPwd = (EditText) findViewById(R.id.userPassET_log);

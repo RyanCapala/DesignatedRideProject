@@ -85,9 +85,6 @@ public class RiderActivity extends AppCompatActivity {
 //        Toolbar userToolbar = (Toolbar) findViewById(R.id.toolbar_user);
 //        setSupportActionBar(userToolbar);
 
-
-
-
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
         mDbRef = mDatabase.getReference();
@@ -95,9 +92,6 @@ public class RiderActivity extends AppCompatActivity {
         mUser = mAuth.getCurrentUser();
         mDbRef.keepSynced(true);
         mStorage = FirebaseStorage.getInstance().getReference().child(Constants.PROFILE_IMAGE);
-
-
-
 
         initWidgets();
         getProfileImage();

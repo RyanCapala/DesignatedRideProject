@@ -113,6 +113,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
 
                   }
               });
+              Log.d(TAG, "onLocationResult: Received location: " + latLng.toString());
 
               //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
               //mMap.animateCamera(cameraUpdate);
@@ -238,6 +239,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         //ToDo: Fix camera
         //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         //mMap.animateCamera(cameraUpdate);
+        moveCamera(latLng, DEFAULT_ZOOM);
 
     }
 
@@ -315,6 +317,31 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getDeviceLocation();
+    }
+    // Prevent battery drain when activity is not in focus
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    private void stopLocationUpdates() {
+        Log.d(TAG, "stopLocationUpdates: STOPPED LOCATION UPDATES");
+        mapFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+    }
+    private void startLocationUpdates() {
+        try {
+            Log.d(TAG, "startLocationUpdates: STARTED LOCATION UPDATES");
+            mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+        }catch (SecurityException e){
+            Log.d(TAG, "startLocationUpdates: " + e.getMessage());
+        }
+    }
 
     private void getDeviceLocation() {
 
@@ -327,7 +354,8 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
                 mLocationRequest.setFastestInterval(EXP_TIME);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-                mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest,mLocationCallback,null);
+                //mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest,mLocationCallback,null);
+                startLocationUpdates();
 
                 final Task location = mapFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
@@ -388,6 +416,7 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
     // Pad map appropriately to not obscure google logo/copyright info
     // This is a generic function, wont look nice on most devices
     // probably needs some math to calculate padding size (its in pixels)
+    // TODO: 2/24/2018 Calculate padding. Should be done after final UI design 
     private void padGoogleMap(){
         //    //int[] locationOnScreen; // [x, y]
         //    //findViewById(R.id.setPickupBtn_ridermap).getLocationOnScreen(locationOnScreen);

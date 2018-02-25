@@ -1,11 +1,15 @@
 package com.example.awesomeness.designatedride._DriverActivities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -13,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
@@ -66,10 +71,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private String userid;
 
     private boolean isOn = false;
+    private boolean chosen = false;
     private boolean exchange = true;
 
     //Widgets
     Button setPickupBtn;
+    Button yesButton;
+    Button noButton;
+    TextView txt;
+    View confirm_dialog_view;
 
     private String key = "";
     private String riderKey = "";
@@ -87,46 +97,22 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private DatabaseReference mChildAvailable;
     private DatabaseReference mChildLocation;
 
+    //Alert Box
+    AlertDialog.Builder confirmation;
+    AlertDialog dialogBox;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_map);
         initWidgets();
 
+        //ToDo: make the alert for all activities.  Otherwise it will crash if activated on different Activity.
+        confirmation = new AlertDialog.Builder(DriverMapActivity.this);
+
         mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        mLocationCallback = new LocationCallback(){
-            @Override
-            public void onLocationResult(LocationResult locationResult){
-                Location location = locationResult.getLastLocation();
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-                if(isOn && exchange) {
-                    mAvailableGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
-                        @Override
-                        public void onComplete(String key, DatabaseError error) {
-
-                        }
-                    });
-                }
-                else if(!exchange){
-                    mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
-                        @Override
-                        public void onComplete(String key, DatabaseError error) {
-
-                        }
-                    });
-                }
-
-                //ToDo: Fix camera
-                //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-                //mMap.animateCamera(cameraUpdate);
-
-                //ToDo: Remove? It was removed on RiderMapActivity.
-                //locationManager.removeUpdates(this);
-
-            }
-        };
+        callBack();
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -142,42 +128,21 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         mAuth = FirebaseAuth.getInstance();
         userid = mAuth.getCurrentUser().getUid();
-        mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                key = dataSnapshot.getValue(String.class);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.USER_RATING).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                rating = dataSnapshot.getValue(String.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        readDatabase();
 
         getLocationPermissions();
 
-        // TODO: change button, Need toggle button to determine if Driver can give out rides.
+        createDialogBox();
 
+        // TODO: change button, Need toggle button to determine if Driver can give out rides.
         setPickupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(isOn) {
                     isOn = false;
-                    mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
-                    mDatabaseReference.child(Constants.LOCATION).child(key).removeValue();
-                    mapFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+                    deleteLocation();
+                    stopLocationUpdates();
                 }
                 else{
                     isOn = true;
@@ -188,11 +153,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
+
+
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        Toast.makeText(DriverMapActivity.this,"" + location.getLatitude(),Toast.LENGTH_LONG).show();
 
         if(isOn && exchange) {
             mAvailableGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
@@ -292,6 +257,118 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
 
+    // TODO: Add code to prevent race condition.
+    private void getDeviceLocation() {
+        try {
+            if (mapLocationPermissionsGranted) {
+                mLocationRequest = new LocationRequest();
+                mLocationRequest.setInterval(DES_TIME);
+                mLocationRequest.setFastestInterval(EXP_TIME);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+                startLocationUpdates();
+
+                Task location = mapFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            Log.d(TAG, "onComplete: found location.");
+                            Location currentLocation = (Location) task.getResult();
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+
+                            if(isOn && exchange){
+                                mAvailableGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
+                                    @Override
+                                    public void onComplete(String key, DatabaseError error) {
+
+                                    }
+                                });
+
+                                exchangeInfo = new HashMap();
+                                writeInfo = new HashMap();
+
+                                exchangeInfo.put(Constants.IS_AVAILABLE,"true");
+                                exchangeInfo.put(Constants.USER_RATING, rating);
+                                writeInfo.put(Constants.LOCATION + "/" + key + "/", exchangeInfo);
+
+                                mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                        if(databaseError != null){
+                                            Log.wtf(TAG, databaseError.getMessage());
+                                        }
+                                    }
+                                });
+
+                                mDatabaseReference.child(Constants.LOCATION).child(key).addChildEventListener(new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                    }
+
+                                    @Override
+                                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                        if(dataSnapshot.getKey().equals(Constants.IS_AVAILABLE)) {
+                                            dialogBox.show();
+                                            new CountDownTimer(10000, 1000) {
+
+                                                public void onTick(long millisUntilFinished) {
+
+                                                }
+
+                                                public void onFinish() {
+                                                    dialogBox.dismiss();
+                                                    if(isOn)
+                                                        isOn = false;
+                                                    else
+                                                        isOn = true;
+
+                                                    if(!chosen) {
+                                                        deleteLocation();
+                                                        stopLocationUpdates();
+                                                    }
+                                                    chosen = false;
+                                                }
+                                            }.start();
+                                        }
+                                    }
+
+                                    @Override
+
+                                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                    }
+
+                                    @Override
+                                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            }
+
+                        } else {
+                            Log.d(TAG, "onComplete: current location is null");
+                            Toast.makeText(DriverMapActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e) {
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
+        }
+    }
+
+    private void moveCamera(LatLng latLng, float zoom) {
+        Log.d(TAG, "moveCamera: moving the camera to: lat:" + latLng.latitude + ", lng: " + latLng.longitude);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -317,101 +394,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 
-    // TODO: Add code to prevent race condition.
-    private void getDeviceLocation() {
-        try {
-            if (mapLocationPermissionsGranted) {
-                //TODO: Fix times? Documentation says to use these times but, the overhead seems insane.
-                mLocationRequest = new LocationRequest();
-                mLocationRequest.setInterval(DES_TIME);
-                mLocationRequest.setFastestInterval(EXP_TIME);
-                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-                //mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest,mLocationCallback,null);
-                startLocationUpdates();
-
-                Task location = mapFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            Log.d(TAG, "onComplete: found location.");
-                            Location currentLocation = (Location) task.getResult();
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
-                            if(isOn && exchange){
-                                mAvailableGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
-                                    @Override
-                                    public void onComplete(String key, DatabaseError error) {
-
-                                    }
-                                });
-
-                                exchangeInfo = new HashMap();
-                                writeInfo = new HashMap();
-
-                                exchangeInfo.put(Constants.IS_AVAILABLE,"true");
-                                exchangeInfo.put(Constants.USER_RATING, rating);
-                                writeInfo.put(Constants.LOCATION + "/" + key + "/", exchangeInfo);
-
-                                mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        if(databaseError != null){
-                                            Log.wtf(TAG, databaseError.getMessage());
-                                            Toast.makeText(DriverMapActivity.this,"An error occurred while creating your account, please try again.",Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-
-                                mDatabaseReference.child(Constants.LOCATION).child(key).addChildEventListener(new ChildEventListener() {
-                                    @Override
-                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                    }
-
-                                    @Override
-                                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                                        if(dataSnapshot.getKey().equals(Constants.IS_AVAILABLE)) {
-                                            mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
-                                            exchange = false;
-                                        }
-                                    }
-
-                                    @Override
-
-                                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                                    }
-
-                                    @Override
-                                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-
-                            }
-
-                        } else {
-                            Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(DriverMapActivity.this, "Unabled to get current location", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        } catch (SecurityException e) {
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
-        }
-    }
-
-    private void moveCamera(LatLng latLng, float zoom) {
-        Log.d(TAG, "moveCamera: moving the camera to: lat:" + latLng.latitude + ", lng: " + latLng.longitude);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-    }
-
     private void getLocationPermissions() {
         String[] permissions = {FINE_LOCATION, COURSE_LOCATION};
 
@@ -430,7 +412,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void initWidgets()
-    {setPickupBtn = (Button) findViewById(R.id.setPickupBtn_ridermap);}
+    {setPickupBtn = (Button) findViewById(R.id.setPickupBtn_ridermap);
+        confirm_dialog_view = getLayoutInflater().inflate(R.layout
+                .confirmation_dialog, null);
+        yesButton = (Button)confirm_dialog_view.findViewById(R.id.yesButton);
+        noButton = (Button)confirm_dialog_view.findViewById(R.id.noButton);
+        txt = (TextView)confirm_dialog_view.findViewById(R.id.textAlert);}
 
     // Pad map appropriately to not obscure google logo/copyright info
     // This is a generic function, wont look nice on most devices
@@ -443,7 +430,103 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mMap.setPadding(0,0, 0,150);
 
     }
+
+    private void createDialogBox(){
+        String message = "Rider Available" + "\n" + "Give Ride?";
+        txt.setText(message);
+        confirmation.setView(confirm_dialog_view);
+        dialogBox = confirmation.create();
+        dialogBox.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
+                exchange = false;
+                dialogBox.dismiss();
+            }
+        });
+
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosen = true;
+                dialogBox.dismiss();
+            }
+        });
+    }
+
+    private void readDatabase(){
+        mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                key = dataSnapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.USER_RATING).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                rating = dataSnapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void callBack(){
+        mLocationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult){
+                Location location = locationResult.getLastLocation();
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                if(isOn && exchange) {
+                    mAvailableGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+
+                        }
+                    });
+                }
+                else if(!exchange){
+                    mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+
+                        }
+                    });
+                }
+
+                //ToDo: Fix camera
+                //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+                //mMap.animateCamera(cameraUpdate);
+
+                //ToDo: Remove? It was removed on RiderMapActivity.
+                //locationManager.removeUpdates(this);
+
+            }
+        };
+    }
+
+    private void deleteLocation(){
+        mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
+        mDatabaseReference.child(Constants.LOCATION).child(key).removeValue();
+    }
 }
+
+
+
+
 
 
 

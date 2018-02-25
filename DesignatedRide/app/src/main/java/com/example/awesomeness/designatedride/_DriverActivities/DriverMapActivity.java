@@ -292,6 +292,31 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getDeviceLocation();
+    }
+    // Prevent battery drain when activity is not in focus
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    private void stopLocationUpdates() {
+        Log.d(TAG, "stopLocationUpdates: STOPPED LOCATION UPDATES");
+        mapFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+    }
+    private void startLocationUpdates() {
+        try {
+            Log.d(TAG, "startLocationUpdates: STARTED LOCATION UPDATES");
+            mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+        }catch (SecurityException e){
+            Log.d(TAG, "startLocationUpdates: " + e.getMessage());
+        }
+    }
+
     // TODO: Add code to prevent race condition.
     private void getDeviceLocation() {
         try {
@@ -302,7 +327,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 mLocationRequest.setFastestInterval(EXP_TIME);
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-                mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest,mLocationCallback,null);
+                //mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest,mLocationCallback,null);
+                startLocationUpdates();
 
                 Task location = mapFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {

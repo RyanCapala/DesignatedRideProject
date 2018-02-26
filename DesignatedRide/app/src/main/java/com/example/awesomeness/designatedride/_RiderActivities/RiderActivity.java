@@ -19,9 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.Activities.LoginActivity;
+import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.Util.Constants;
 import com.example.awesomeness.designatedride.Util.ProfileDialogHelper;
-import com.example.awesomeness.designatedride.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -63,6 +63,7 @@ public class RiderActivity extends AppCompatActivity {
     private ImageButton requestrideBtn;
     private ImageButton calendarBtn;
     private ImageButton settingsBtn;
+
 
     private ProgressDialog mProgress;
 
@@ -276,7 +277,8 @@ public class RiderActivity extends AppCompatActivity {
                             Picasso.with(RiderActivity.this).load(imgUrl).into(profileImage);
                             //Toast.makeText(RiderActivity.this, imgUrl, Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(RiderActivity.this, "imagePath: " + imgUrl, Toast.LENGTH_LONG).show();
+                            //Toast.makeText(RiderActivity.this, "imagePath: " + imgUrl, Toast
+                            //        .LENGTH_LONG).show();
                         }
 
 

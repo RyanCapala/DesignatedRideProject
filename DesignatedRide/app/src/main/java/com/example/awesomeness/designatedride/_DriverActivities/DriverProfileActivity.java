@@ -1,11 +1,14 @@
 package com.example.awesomeness.designatedride._DriverActivities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.awesomeness.designatedride.R;
@@ -34,6 +37,7 @@ public class DriverProfileActivity extends AppCompatActivity {
     private Button updateProfileBtn;
     private TextView resetPwdTV;
     private TextView closeTV;
+    private ScrollView scrollView;
 
     private String _userId;
     private HashMap<String, String> childMap;
@@ -60,6 +64,7 @@ public class DriverProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 profileHelper.updateAccount();
+                hideKeyboard();
             }
         });
 
@@ -91,6 +96,7 @@ public class DriverProfileActivity extends AppCompatActivity {
         updateProfileBtn = (Button) findViewById(R.id.updateProfileBtn_drUpdate);
         resetPwdTV = (TextView) findViewById(R.id.resetPwdTV_dUpdate);
         closeTV = (TextView) findViewById(R.id.closeTV_dUpdate);
+        scrollView = (ScrollView) findViewById(R.id.scrollView_dProfile);
 
     }
 
@@ -114,6 +120,13 @@ public class DriverProfileActivity extends AppCompatActivity {
         firstNameET.setText("");
         lastNameET.setText("");
         emailET.setText("");
+    }
+
+    //----------------------------------------------------------------------------------------------
+    private void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context
+                .INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(scrollView.getWindowToken(), 0);
     }
 
 }

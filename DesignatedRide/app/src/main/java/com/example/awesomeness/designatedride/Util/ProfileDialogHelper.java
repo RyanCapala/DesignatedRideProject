@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class ProfileDialogHelper {
     private EditText resetDialog_vpwdET;
     private TextView resetDialog_closeTV;
     private Button resetDialog_updtPwdBtn;
+
 
 
     public ProfileDialogHelper(Context ctx, View pwdDialogView, FirebaseAuth mAuth, FirebaseUser mUser) {
@@ -150,6 +152,7 @@ public class ProfileDialogHelper {
                 String pwd = resetDialog_pwdET.getText().toString().trim();
                 String vpwd = resetDialog_vpwdET.getText().toString().trim();
                 updateUserPassword(pwd, vpwd, resetDialog_pwdET, resetDialog_vpwdET);
+                hideKeyboard();
             }
         });
 
@@ -209,6 +212,12 @@ public class ProfileDialogHelper {
     private void clearPwdField(EditText et1, EditText et2) {
         et1.setText("");
         et2.setText("");
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager)ctx.getSystemService(Context
+                .INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(pwdDialogView.getWindowToken(), 0);
     }
 
 

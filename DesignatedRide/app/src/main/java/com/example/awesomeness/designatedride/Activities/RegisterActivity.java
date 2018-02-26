@@ -278,6 +278,7 @@ public class RegisterActivity extends AppCompatActivity {
         loginLinkTV = (TextView) findViewById(R.id.loginLinkTV_reg);
         scrollView = (ScrollView) findViewById(R.id.scrollView_reg);
         toggleButton = (ToggleButton) findViewById(R.id.toggleBtn_log);
+        scrollView = (ScrollView) findViewById(R.id.scrollView_reg);
     }
 
     private void clearEditText() {

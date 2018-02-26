@@ -32,4 +32,7 @@
     <string name="yes">Yes</string>
     <string name="driver_profile">Driver Profile</string>
     <string name="rider_profile">Rider Profile</string>
+    <string name="update_pwd">Update Password</string>
+    <string name="close">Close</string>
+    <string name="reset_pwd">Reset Password</string>
 </resources>

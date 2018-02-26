@@ -76,46 +76,6 @@
             app:layout_constraintTop_toBottomOf="@+id/lastNameET_rdUpdate"
             app:layout_constraintVertical_bias="0.033" />
 
-        <EditText
-            android:id="@+id/passwrodET_rdUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/edittext_borders"
-            android:hint="@string/register_page_password_hint"
-            android:inputType="textPassword"
-            android:padding="15dp"
-            android:cursorVisible="true"
-            android:textCursorDrawable="@drawable/cursor_color"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailET_rdUpdate"
-            app:layout_constraintVertical_bias="0.053" />
-
-        <EditText
-            android:id="@+id/verifyPwdET_rdUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/edittext_borders"
-            android:hint="@string/register_page_verify_password_hint"
-            android:inputType="textPassword"
-            android:padding="15dp"
-            android:cursorVisible="true"
-            android:textCursorDrawable="@drawable/cursor_color"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/passwrodET_rdUpdate"
-            app:layout_constraintVertical_bias="0.069" />
-
 
         <Button
             android:id="@+id/updateProfileBtn_rdUpdate"
@@ -124,10 +84,10 @@
             android:layout_marginEnd="15dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/borders"
+            android:background="@drawable/edittext_borders"
             android:text="@string/update_profile"
             android:textAllCaps="false"
-            android:textColor="@color/input_et"
+            android:textColor="@color/colorPrimary"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -135,6 +95,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/verifyPwdET_rdUpdate"
             app:layout_constraintVertical_bias="0.112" />
+
+        <TextView
+            android:id="@+id/resetPwdTV_rUpdate"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:text="@string/reset_pwd"
+            android:textSize="24dp"
+            android:textStyle="italic"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/closeTV_rUpdate"
+            android:text="@string/close"
+            android:textAlignment="center"
+            android:textSize="24dp"
+            android:padding="10dp"
+            android:textStyle="italic"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
 
     </LinearLayout>
 

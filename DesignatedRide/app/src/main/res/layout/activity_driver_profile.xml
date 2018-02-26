@@ -57,33 +57,6 @@
             android:cursorVisible="true"
             android:textCursorDrawable="@drawable/cursor_color"/>
 
-        <EditText
-            android:id="@+id/passwordET_drUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/edittext_borders"
-            android:hint="@string/register_page_password_hint"
-            android:inputType="textCapWords"
-            android:padding="15dp"
-            android:cursorVisible="true"
-            android:textCursorDrawable="@drawable/cursor_color"/>
-
-        <EditText
-            android:id="@+id/verifyPwdET_drUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/edittext_borders"
-            android:hint="@string/register_page_verify_password_hint"
-            android:inputType="textCapWords"
-            android:padding="15dp"
-            android:cursorVisible="true"
-            android:textCursorDrawable="@drawable/cursor_color"/>
 
         <Button
             android:id="@+id/updateProfileBtn_drUpdate"
@@ -92,12 +65,31 @@
             android:layout_marginEnd="15dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/borders"
+            android:background="@drawable/edittext_borders"
             android:text="@string/update_profile"
             android:textAllCaps="false"
-            android:textColor="@color/input_et"
+            android:textColor="@color/colorPrimary"
             android:textSize="24sp"/>
 
+        <TextView
+            android:id="@+id/resetPwdTV_dUpdate"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:text="@string/reset_pwd"
+            android:textSize="24dp"
+            android:textStyle="italic"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/closeTV_dUpdate"
+            android:text="@string/close"
+            android:textAlignment="center"
+            android:textSize="24dp"
+            android:padding="10dp"
+            android:textStyle="italic"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
 
     </LinearLayout>
 

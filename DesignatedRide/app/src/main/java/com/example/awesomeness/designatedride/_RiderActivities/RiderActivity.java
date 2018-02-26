@@ -56,14 +56,9 @@ public class RiderActivity extends AppCompatActivity {
 
     private String uid;
     private String email;
-//    private String profileImg = "profileImage";
-//    private String cUser = "User";
-//    private String cProfile = "Profile";
-//    private String cUserImage = "userImage";
 
     //
     private CircleImageView profileImage;
-    //private ImageView profileImage;
     private ImageButton viewProfileBtn;
     private ImageButton requestrideBtn;
     private ImageButton calendarBtn;
@@ -125,31 +120,14 @@ public class RiderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //createPopupDialog();
                 View profile_dialog_view = getLayoutInflater().inflate(R.layout
                         .profile_dialog_popup, null);
                 View confirm_dialog_view = getLayoutInflater().inflate(R.layout
                         .confirmation_dialog, null);
-                ProfileDialogHelper profileDialogHelper = new ProfileDialogHelper(RiderActivity
-                        .this, profile_dialog_view, confirm_dialog_view, mAuth, mUser,
+                ProfileDialogHelper profileDialogHelper = new ProfileDialogHelper(RiderActivity.this, profile_dialog_view, confirm_dialog_view, mAuth, mUser,
                         RiderProfileActivity.class, LoginActivity.class);
                 profileDialogHelper.createPopupDialog();
 
-                /*********************************************************
-                 DatabaseReference databaseReference = mDbRef2.child(cUser).child(uid).child(cProfile).child(cUserImage);
-                 databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override public void onDataChange(DataSnapshot dataSnapshot) {
-                String imgPath = dataSnapshot.getValue(String.class);
-                if (imgPath.isEmpty()) {
-                Toast.makeText(RiderActivity.this, "Empty Image path.", Toast.LENGTH_LONG).show();
-                }
-                }
-
-                @Override public void onCancelled(DatabaseError databaseError) {
-
-                }
-                });
-                 *********************************************************/
 
             }
         });
@@ -270,7 +248,7 @@ public class RiderActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
     private void gotoActivity(Class activityClass) {
         startActivity(new Intent(RiderActivity.this, activityClass));
-        // finish();
+        finish();
     }
 
     //----------------------------------------------------------------------------------------------
@@ -311,86 +289,6 @@ public class RiderActivity extends AppCompatActivity {
                 });
     }
 
-    /**
-     //createPopupDialog() & showConfirmationDialog() are moved to ProfileDialogHelper.
-     //----------------------------------------------------------------------------------------------
-     private void createPopupDialog() {
-
-     dialogBuilder = new AlertDialog.Builder(this);
-     View view = getLayoutInflater().inflate(R.layout.profile_dialog_popup, null);
-
-     updateProfileBtn = (Button) view.findViewById(R.id.btn_updateProfile_drvrPopup);
-     logoutBtn = (Button) view.findViewById(R.id.btn_logout_drvrPopup);
-     cancelTV = (TextView) view.findViewById(R.id.tv_cancelLink_drvrPopup);
-
-     dialogBuilder.setView(view);
-     dialog = dialogBuilder.create();
-     dialog.show();
-
-     //-----------
-     updateProfileBtn.setOnClickListener(new View.OnClickListener() {
-    @Override public void onClick(View v) {
-
-    }
-    });
-
-     //-----------
-     logoutBtn.setOnClickListener(new View.OnClickListener() {
-    @Override public void onClick(View v) {
-    dialog.dismiss();
-
-    //will delay the next dialog
-    new Handler().postDelayed(new Runnable() {
-    @Override public void run() {
-    showConfirmationDialog();
-    }
-    }, 100);
-
-    }
-    });
-
-     //-----------
-     cancelTV.setOnClickListener(new View.OnClickListener() {
-    @Override public void onClick(View v) {
-    dialog.dismiss();
-    }
-    });
-
-     }//End of createPopupDialog
-
-     //----------------------------------------------------------------------------------------------
-     private void showConfirmationDialog() {
-
-     final AlertDialog _dialog;
-     AlertDialog.Builder _dialogBuilder;
-     View view = getLayoutInflater().inflate(R.layout.confirmation_dialog, null);
-     _dialogBuilder = new AlertDialog.Builder(this);
-     yesButton = (Button) view.findViewById(R.id.yesButton);
-     noButton = (Button) view.findViewById(R.id.noButton);
-
-     _dialogBuilder.setView(view);
-     _dialog = _dialogBuilder.create();
-     _dialog.show();
-
-     yesButton.setOnClickListener(new View.OnClickListener() {
-    @Override public void onClick(View v) {
-
-    signOutUser();
-
-    }
-    });
-
-     noButton.setOnClickListener(new View.OnClickListener() {
-    @Override public void onClick(View v) {
-
-    _dialog.dismiss();
-
-    }
-    });
-
-     }//End of showConfirmationDialog
-
-     **/
 
 
 }

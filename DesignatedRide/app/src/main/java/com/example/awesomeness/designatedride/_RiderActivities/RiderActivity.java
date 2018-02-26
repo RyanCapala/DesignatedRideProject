@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -64,6 +65,7 @@ public class RiderActivity extends AppCompatActivity {
     private ImageButton calendarBtn;
     private ImageButton settingsBtn;
 
+    private View parentView;    //for snackbar
 
     private ProgressDialog mProgress;
 
@@ -91,6 +93,9 @@ public class RiderActivity extends AppCompatActivity {
 
         initWidgets();
         getProfileImage();
+        Intent intent = getIntent();
+        String uname = intent.getStringExtra(Constants.INTENT_KEY_NAME);
+        Snackbar.make(parentView, "Welcome " + uname + "!", Snackbar.LENGTH_LONG).show();
 
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -244,6 +249,7 @@ public class RiderActivity extends AppCompatActivity {
         calendarBtn = (ImageButton) findViewById(R.id.calendarImgBtn_rider);
         settingsBtn = (ImageButton) findViewById(R.id.settingsImgBtn_rider);
         mProgress = new ProgressDialog(this);
+        parentView = findViewById(R.id.activity_rider_layout);
     }
 
     //----------------------------------------------------------------------------------------------

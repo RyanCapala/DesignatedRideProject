@@ -2,9 +2,9 @@ package com.example.awesomeness.designatedride.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mUser;
-    private DatabaseReference mDatabaseReference;
+    private DatabaseReference mDatabaseReference, mDbRef;
     private FirebaseDatabase mDatabase;
 
     //Widgets
@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     //Global Var
     private String uid;
     private String mode;
+    private String uName;
 
 
     @Override
@@ -60,8 +61,10 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance();
+        mDbRef = mDatabase.getReference();
         mDatabaseReference = mDatabase.getReference();
         mDatabaseReference.keepSynced(true);
+        mDbRef.keepSynced(true);
         initWidgets();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -142,6 +145,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 //Check user mode if "Rider" or "Driver"
                                 //then, send user to each specific page.
+
                                 GetUserType();
                                 UserDataHelper.saveUserInfo(getApplicationContext(), email, pwd, mode);
 
@@ -158,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
     }//End of loginUser
 
     private String GetUserType() {
+        getUserName();
         mDatabaseReference.
                 child(Constants.USER).
                 child(uid).
@@ -214,7 +219,10 @@ public class LoginActivity extends AppCompatActivity {
         if (isDismiss) {
             mProgressDialog.dismiss();
         }
-        startActivity(new Intent(LoginActivity.this, activityClass));
+        //startActivity(new Intent(LoginActivity.this, activityClass));
+        Intent intent = new Intent(LoginActivity.this, activityClass);
+        intent.putExtra(Constants.INTENT_KEY_NAME, uName);
+        startActivity(intent);
         finish();
     }
 
@@ -234,5 +242,24 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean checkPwd(String pwd) {
         return (pwd.matches("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{3,}") && pwd.length() >= 8);
+    }
+
+    private void getUserName() {
+        //get username
+        mDbRef
+                .child(Constants.USER)
+                .child(uid)
+                .child(Constants.PROFILE)
+                .child(Constants.FIRSTNAME).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                uName = dataSnapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

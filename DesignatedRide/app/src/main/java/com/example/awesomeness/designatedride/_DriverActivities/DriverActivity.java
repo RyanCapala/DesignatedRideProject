@@ -4,6 +4,7 @@ package com.example.awesomeness.designatedride._DriverActivities;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.Activities.LoginActivity;
 import com.example.awesomeness.designatedride.R;
+import com.example.awesomeness.designatedride.Util.Constants;
 import com.example.awesomeness.designatedride.Util.ProfileDialogHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -32,10 +34,11 @@ public class DriverActivity extends AppCompatActivity {
 
 
     //---
-    CircleImageView profileImage;
-    ImageButton profileBtn;
-    ImageButton pickupRiderBtn;
-    ImageButton settingsBtn;
+    private CircleImageView profileImage;
+    private ImageButton profileBtn;
+    private ImageButton pickupRiderBtn;
+    private ImageButton settingsBtn;
+    private View parentView;    //for snackbar
 
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
@@ -54,6 +57,10 @@ public class DriverActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference();
         mDatabaseReference.keepSynced(true);
+
+        Intent intent = getIntent();
+        String uname = intent.getStringExtra(Constants.INTENT_KEY_NAME);
+        Snackbar.make(parentView, "Welcome " + uname + "!", Snackbar.LENGTH_LONG).show();
 
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +120,7 @@ public class DriverActivity extends AppCompatActivity {
         profileBtn = (ImageButton) findViewById(R.id.viewProfileImgBtn_driver);
         pickupRiderBtn = (ImageButton) findViewById(R.id.pickupRiderImgBtn_driver);
         settingsBtn = (ImageButton) findViewById(R.id.settingsImgBtn_driver);
+        parentView = findViewById(R.id.activity_driver_layout);
     }
 
     //----------------------------------------------------------------------------------------------

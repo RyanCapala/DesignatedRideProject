@@ -36,6 +36,7 @@ public class Constants {
 
 
     public static final String INTENT_KEY               = "userid";
+    public static final String INTENT_KEY_NAME          = "username";
 
     public static final String ACCT_UPDATED             = "Account Updated";
     public static final String NO_UPDATE                = "No Updates";

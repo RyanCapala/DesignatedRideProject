@@ -1,11 +1,9 @@
 package com.example.awesomeness.designatedride._DriverActivities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -64,7 +62,7 @@ public class DriverProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 profileHelper.updateAccount();
-                hideKeyboard();
+                profileHelper.hideKeyboard(v);
             }
         });
 
@@ -122,11 +120,5 @@ public class DriverProfileActivity extends AppCompatActivity {
         emailET.setText("");
     }
 
-    //----------------------------------------------------------------------------------------------
-    private void hideKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context
-                .INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(scrollView.getWindowToken(), 0);
-    }
 
 }

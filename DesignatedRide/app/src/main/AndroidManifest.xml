@@ -25,7 +25,7 @@
      You need a different API key for each encryption key, including the release key that is used to
      sign the APK for publishing.
      You can define the keys for the debug and release targets in src/debug/ and src/release/.
--->
+        -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -42,13 +42,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.StartPageActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"
@@ -59,7 +53,6 @@
         <activity
             android:name=".Activities.ChangePasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name="._RiderActivities.RiderMapActivity"
             android:label="@string/title_activity_rider_map" />
@@ -73,15 +66,30 @@
         <activity
             android:name="._DriverActivities.DriverProfileActivity"
             android:label="@string/driver_profile"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".Activities.StartLogoActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:windowSoftInputMode="stateAlwaysHidden"
+        <activity android:name=".Util.SynAck" />
+
+        <receiver android:name=".Util.Receiver">
+            <intent-filter>
+                <action android:name="SYN" />
+                <action android:name="ACK" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".Activities.StartLogoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="._RiderActivities.RiderViewProfileActivity"
+            android:label="@string/title_activity_rider_view_profile"
+            android:parentActivityName="._RiderActivities.RiderActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
     </application>
 
 </manifest>

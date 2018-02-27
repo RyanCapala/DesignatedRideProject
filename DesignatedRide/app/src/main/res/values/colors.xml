@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#ea756d</color>
     <color name="colorPrimaryDark">#E66152</color>
-    <color name="colorAccentWhite">#eeead5</color>
+    <color name="colorAccentWhiteBrown">#eeead5</color>
     <color name="colorAccentLight">#fee379</color>
     <color name="colorAccentDark">#a67c52</color>
     <color name="colorTextBlue">#3ba5e1</color>
@@ -18,7 +18,7 @@
     <color name="helpTextColor">@color/colorTextWhite</color>
 
     <color name="buttonTextDefault">@color/colorTextWhite</color>
-    <color name="buttonBorderColor">@color/colorAccentWhite</color>
+    <color name="buttonBorderColor">@color/colorTextWhite</color>
     <color name="buttonInnerColor">@color/colorPrimary</color>
 
     <color name="input_et">#F5FBEF</color>

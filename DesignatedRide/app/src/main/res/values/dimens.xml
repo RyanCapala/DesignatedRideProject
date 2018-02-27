@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="default_element_height">15dp</dimen>
+    <dimen name="default_header_height">24dp</dimen>
+    <dimen name="default_element_width">250dp</dimen>
+</resources>

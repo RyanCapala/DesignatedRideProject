@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">Designated Ride</string>
-    <string name="loginLinkTV">Login Page</string>
-    <string name="registerLinkTV">Register Page</string>
-    <string name="view_profile">View Profile</string>
-    <string name="request_ride">Request Ride</string>
-    <string name="appointment">Appointment</string>
-    <string name="settings">Settings</string>
+    <!--Activity Labels-->
+    <string name="title_activity_rider_view_profile">User Profile</string>
     <string name="title_activity_rider_map">Request Ride</string>
     <string name="title_activity_driver_map">DRIVERMAP</string>
-    <string name="start_page_welcome">DesignatedRide</string>
+
+    <!--StartLogoPage-->
+    <string name="start_page_welcome">@string/app_name</string>
+
+    <!--Register Page-->
     <string name="register_page_already_account">already have an account? login here</string>
     <string name="register_page_first_name_hint">First Name</string>
     <string name="register_page_last_name_hint">Last Name</string>
@@ -16,6 +16,8 @@
     <string name="register_page_password_hint">Password</string>
     <string name="register_page_verify_password_hint">Verify Password</string>
     <string name="register_page_register_button_text">Register</string>
+
+    <!--Login Page-->
     <string name="app_name_first_word">Designated</string>
     <string name="app_name_second_word">Ride</string>
     <string name="login_page_email_hint">awesome@email.com</string>
@@ -24,6 +26,35 @@
     <string name="login_page_forgot_password_text">forgot password</string>
     <string name="login_page_not_a_member_text">not a member? sign up here</string>
     <string name="designated_ride_logo_descriptor">Designated Ride Logo</string>
+
+
+    <!--Rider Profile Strings-->
+        <!--headers-->
+    <string name="rider_profile_header_general_info">General Information</string>
+    <string name="rider_profile_header_medical_info">Medical Information</string>
+    <string name="rider_profile_header_public_info">Public Profile</string>
+        <!--general info-->
+    <string name="rider_profile_gen_info_fname">First Name</string>
+    <string name="rider_profile_gen_info_lname">Last Name</string>
+    <string name="rider_profile_gen_info_age">Age</string>
+    <string name="rider_profile_gen_info_email">Email Address</string>
+    <string name="rider_profile_gen_info_phonenumber">Phone Number</string>
+        <!--medical info-->
+    <string name="rider_profile_med_info_insurance_company">Insurance Company</string>
+    <string name="rider_profile_med_info_ride_coverage">Rider Coverage</string>
+    <string name="rider_profile_med_info_gen_doctor_name">Doctor\'s Name</string>
+        <!--public info-->
+    <string name="rider_profile_public_info_public_name">Name</string>
+    <string name="rider_profile_public_info_wheelchair_required">Wheelchair Required</string>
+
+    <!--Uncategorized-->
+    <string name="loginLinkTV">Login Page</string>
+    <string name="registerLinkTV">Register Page</string>
+    <string name="view_profile">View Profile</string>
+    <string name="request_ride">Request Ride</string>
+    <string name="appointment">Appointment</string>
+    <string name="settings">Settings</string>
+
     <string name="pickup_rider">Pickup Rider</string>
     <string name="update_profile">Update Profile</string>
     <string name="logout">Logout</string>

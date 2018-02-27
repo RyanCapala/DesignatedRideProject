@@ -7,7 +7,7 @@
     android:background="@mipmap/shapes1"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    tools:context="com.example.awesomeness.designatedride.Activities.StartLogoActivity">
+    tools:context="com.example.awesomeness.designatedride.activities.StartLogoActivity">
 
     <ImageView
         android:id="@+id/startPageLogo"

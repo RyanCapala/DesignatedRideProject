@@ -2,7 +2,6 @@ package com.example.awesomeness.designatedride._DriverActivities;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,12 +14,11 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
-import com.example.awesomeness.designatedride.Util.Constants;
-import com.example.awesomeness.designatedride.Util.SynAck;
+import com.example.awesomeness.designatedride.util.Constants;
+import com.example.awesomeness.designatedride.util.SynAck;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;

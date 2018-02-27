@@ -10,9 +10,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.awesomeness.designatedride.R;
-import com.example.awesomeness.designatedride.Util.Constants;
-import com.example.awesomeness.designatedride.Util.ProfileDialogHelper;
-import com.example.awesomeness.designatedride.Util.ProfileHelper;
+import com.example.awesomeness.designatedride.util.Constants;
+import com.example.awesomeness.designatedride.util.ProfileDialogHelper;
+import com.example.awesomeness.designatedride.util.ProfileHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;

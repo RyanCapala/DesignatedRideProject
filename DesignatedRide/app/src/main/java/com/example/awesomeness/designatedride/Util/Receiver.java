@@ -1,4 +1,4 @@
-package com.example.awesomeness.designatedride.Util;
+package com.example.awesomeness.designatedride.util;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

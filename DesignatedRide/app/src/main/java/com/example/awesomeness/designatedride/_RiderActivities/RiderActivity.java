@@ -19,10 +19,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.awesomeness.designatedride.Activities.LoginActivity;
+import com.example.awesomeness.designatedride.activities.LoginActivity;
 import com.example.awesomeness.designatedride.R;
-import com.example.awesomeness.designatedride.Util.Constants;
-import com.example.awesomeness.designatedride.Util.ProfileDialogHelper;
+import com.example.awesomeness.designatedride.util.Constants;
+import com.example.awesomeness.designatedride.util.ProfileDialogHelper;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

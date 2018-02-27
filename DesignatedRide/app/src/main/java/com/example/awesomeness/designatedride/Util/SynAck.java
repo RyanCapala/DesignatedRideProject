@@ -1,4 +1,4 @@
-package com.example.awesomeness.designatedride.Util;
+package com.example.awesomeness.designatedride.util;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;

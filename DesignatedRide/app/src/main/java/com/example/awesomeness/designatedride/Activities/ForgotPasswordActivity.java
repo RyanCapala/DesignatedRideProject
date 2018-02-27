@@ -1,4 +1,4 @@
-package com.example.awesomeness.designatedride.Activities;
+package com.example.awesomeness.designatedride.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;

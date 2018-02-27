@@ -1,4 +1,4 @@
-package com.example.awesomeness.designatedride.Model;
+package com.example.awesomeness.designatedride.model;
 
 /**
  * Created by awesomeness on 2/1/18.

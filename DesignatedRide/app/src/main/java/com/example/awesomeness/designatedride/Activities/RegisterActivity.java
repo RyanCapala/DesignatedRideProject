@@ -1,4 +1,4 @@
-package com.example.awesomeness.designatedride.Activities;
+package com.example.awesomeness.designatedride.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -17,10 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.awesomeness.designatedride.Model.User;
+import com.example.awesomeness.designatedride.model.User;
 import com.example.awesomeness.designatedride.R;
-import com.example.awesomeness.designatedride.Util.Constants;
-import com.example.awesomeness.designatedride.Util.UserDataHelper;
+import com.example.awesomeness.designatedride.util.Constants;
+import com.example.awesomeness.designatedride.util.UserDataHelper;
 import com.example.awesomeness.designatedride._DriverActivities.DriverActivity;
 import com.example.awesomeness.designatedride._RiderActivities.RiderActivity;
 import com.google.android.gms.tasks.OnCompleteListener;

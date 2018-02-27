@@ -6,7 +6,7 @@
     android:background="@mipmap/shapes1"
     android:fillViewport="true"
     android:orientation="vertical"
-    tools:context="com.example.awesomeness.designatedride.Activities.StartPageActivity">
+    tools:context="com.example.awesomeness.designatedride.activities.StartPageActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

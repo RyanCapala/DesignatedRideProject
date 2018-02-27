@@ -1,4 +1,4 @@
-package com.example.awesomeness.designatedride.Util;
+package com.example.awesomeness.designatedride.util;
 
 /**
  * Created by awesome on 2/23/18.

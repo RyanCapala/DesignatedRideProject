@@ -4,6 +4,6 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/transparent"
-    tools:context="com.example.awesomeness.designatedride.Util.SynAck">
+    tools:context="com.example.awesomeness.designatedride.util.SynAck">
 
 </android.support.constraint.ConstraintLayout>

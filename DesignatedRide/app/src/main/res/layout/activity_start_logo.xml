@@ -11,13 +11,13 @@
 
     <ImageView
         android:id="@+id/startPageLogo"
-        android:maxHeight="200dp"
-        android:maxWidth="200dp"
-        android:minHeight="150dp"
-        android:minWidth="150dp"
+        android:maxHeight="150dp"
+        android:maxWidth="150dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/logo"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

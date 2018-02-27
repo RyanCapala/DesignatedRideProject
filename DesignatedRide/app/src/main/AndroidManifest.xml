@@ -72,6 +72,14 @@
             android:name="._DriverActivities.DriverProfileActivity"
             android:label="@string/driver_profile"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".Util.SynAck" />
+        <receiver android:name=".Util.Receiver" >
+            <intent-filter>
+                <action android:name="SYN" />
+                <action android:name="ACK" />
+            </intent-filter>
+        </receiver>
         <activity android:name=".Activities.StartLogoActivity"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>

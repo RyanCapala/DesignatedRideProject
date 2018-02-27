@@ -14,9 +14,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,13 +52,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class RiderMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
+public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "RiderMapActivity";
     private static final long DES_TIME = 10000; //milliseconds
@@ -485,6 +490,10 @@ public class RiderMapActivity extends FragmentActivity implements OnMapReadyCall
         noButton = (Button)confirm_dialog_view.findViewById(R.id.noButton);
         txt = (TextView)confirm_dialog_view.findViewById(R.id.textAlert);
         mProgressDialog = new ProgressDialog(RiderMapActivity.this);
+
+        // Add <- arrow on actionBar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     // Pad map appropriately to not obscure google logo/copyright info

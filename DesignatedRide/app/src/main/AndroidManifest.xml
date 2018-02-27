@@ -66,7 +66,7 @@
         <activity
             android:name="._DriverActivities.DriverProfileActivity"
             android:label="@string/driver_profile"
-            android:windowSoftInputMode="stateAlwaysHidden"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".Util.SynAck" />
 
         <receiver android:name=".Util.Receiver">

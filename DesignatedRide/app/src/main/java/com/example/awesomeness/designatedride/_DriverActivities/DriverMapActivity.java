@@ -1,16 +1,13 @@
 package com.example.awesomeness.designatedride._DriverActivities;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -23,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.Util.Constants;
+import com.example.awesomeness.designatedride.Util.SynAck;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -43,12 +41,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
@@ -73,20 +72,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private FirebaseAuth mAuth;
     private String userid;
 
-    private boolean isOn = false;
-    private boolean ttl = false;
-    private boolean exchange = true;
-
     //Widgets
     Button setPickupBtn;
-    Button yesButton;
-    Button noButton;
-    TextView txt;
-    View confirm_dialog_view;
 
-    private String key = "";
-    private String riderKey = "";
-    private String rating = "";
+    public static boolean isOn;
+    public static boolean exchange = true;
+
+    private String key;
+    private String rating;
+    private String isAvailable;
     private String available = "Currently Available (ON)";
     private String unavailable = "Currently Unavailable (OFF)";
 
@@ -101,12 +95,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private DatabaseReference mGeoLocationRef;
     private DatabaseReference mChildAvailable;
     private DatabaseReference mChildLocation;
+    private ChildEventListener mChildEventListener;
+    private Query obtainKey;
+    private Query obtainRating;
 
-    //Alert Box
-    AlertDialog.Builder confirmation;
-    AlertDialog dialogBox;
-
-    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +106,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         setContentView(R.layout.activity_rider_map);
         initWidgets();
 
-        //ToDo: make the alert for all activities.  Otherwise it will crash if activated on different Activity.
-        confirmation = new AlertDialog.Builder(DriverMapActivity.this);
+        checkIsOn();
 
         mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -140,9 +131,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         getLocationPermissions();
 
-        createDialogBox();
-
-        // TODO: change button, Need toggle button to determine if Driver can give out rides.
         setPickupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,15 +139,23 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     setPickupBtn.setText(unavailable);
                     deleteLocation();
                     stopLocationUpdates();
+                    mDatabaseReference.child(Constants.LOCATION).child(key).removeEventListener(mChildEventListener);
                 }
                 else{
                     isOn = true;
+                    exchange = true;
                     setPickupBtn.setText(available);
                     getDeviceLocation();
                 }
             }
         });
 
+        if(!exchange){
+            setPickupBtn.setVisibility(View.GONE);
+        }
+        if(SynAck.ttl){
+            stopLocationUpdates();
+        }
     }
 
 
@@ -177,11 +173,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             });
         }
         else if(!exchange){
-           mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
-               @Override
-               public void onComplete(String key, DatabaseError error) {
+            mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                @Override
+                public void onComplete(String key, DatabaseError error) {
 
-               }
+                }
             });
         }
 
@@ -300,7 +296,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                 exchangeInfo.put(Constants.IS_AVAILABLE,"true");
                                 exchangeInfo.put(Constants.USER_RATING, rating);
                                 exchangeInfo.put(Constants.CONFIRMATION,"false");
-                                writeInfo.put(Constants.LOCATION + "/" + key + "/", exchangeInfo);
+
+                                writeInfo.put(Constants.LOCATION + "/" + key, exchangeInfo);
 
                                 mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
                                     @Override
@@ -311,7 +308,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                     }
                                 });
 
-                                mDatabaseReference.child(Constants.LOCATION).child(key).addChildEventListener(new ChildEventListener() {
+                                mChildEventListener = mDatabaseReference.child(Constants.LOCATION).child(key).addChildEventListener(new ChildEventListener() {
                                     @Override
                                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                                     }
@@ -319,24 +316,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                     @Override
                                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                                         if(dataSnapshot.getKey().equals(Constants.IS_AVAILABLE)) {
-                                            dialogBox.show();
-                                            timer = new Timer();
-                                            timer.schedule(new TimerTask(){
-                                                @Override
-                                                public void run(){
-                                                    dialogBox.dismiss();
-                                                    if(ttl){
-                                                    }
-                                                    else
-                                                    {
-                                                        deleteLocation();
-                                                        stopLocationUpdates();
-                                                        //setPickupBtn.setText(unavailable);
-                                                        ttl = false;
-                                                    }
-                                                    timer.cancel();
-                                                }
-                                            },10000);
+                                            isAvailable = dataSnapshot.getValue(String.class);
+                                            if(isAvailable.equals("false")){
+                                                Intent intent = new Intent("ACK");
+                                                sendBroadcast(intent);
+                                            }
                                         }
                                     }
 
@@ -356,7 +340,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                     }
                                 });
-
                             }
 
                         } else {
@@ -379,14 +362,16 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onResume() {
         super.onResume();
-        getDeviceLocation();
+        //getDeviceLocation();
     }
     // Prevent battery drain when activity is not in focus
     @Override
     protected void onPause() {
         super.onPause();
-        stopLocationUpdates();
+        if(!isOn)
+            stopLocationUpdates();
     }
+
 
     private void stopLocationUpdates() {
         Log.d(TAG, "stopLocationUpdates: STOPPED LOCATION UPDATES");
@@ -419,13 +404,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void initWidgets()
-    {setPickupBtn = (Button) findViewById(R.id.setPickupBtn_ridermap);
-        setPickupBtn.setText(unavailable);
-        confirm_dialog_view = getLayoutInflater().inflate(R.layout
-                .confirmation_dialog, null);
-        yesButton = (Button)confirm_dialog_view.findViewById(R.id.yesButton);
-        noButton = (Button)confirm_dialog_view.findViewById(R.id.noButton);
-        txt = (TextView)confirm_dialog_view.findViewById(R.id.textAlert);
+    {
+        setPickupBtn = (Button) findViewById(R.id.setPickupBtn_ridermap);
     }
 
     // Pad map appropriately to not obscure google logo/copyright info
@@ -440,41 +420,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
-    private void createDialogBox(){
-        String message = "Rider Available" + "\n" + "Give Ride?";
-        txt.setText(message);
-        confirmation.setView(confirm_dialog_view);
-        dialogBox = confirmation.create();
-        dialogBox.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-
-        yesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ttl = true;
-                dialogBox.dismiss();
-                mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
-                mDatabaseReference.child(Constants.LOCATION).child(key).child(Constants.CONFIRMATION).setValue("true");
-                setPickupBtn.setText(unavailable);
-                setPickupBtn.setVisibility(View.GONE);
-                exchange = false;
-                isOn = true;
-            }
-        });
-
-        noButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ttl = true;
-                isOn = false;
-                setPickupBtn.setText(available);
-                dialogBox.dismiss();
-            }
-        });
-    }
-
     private void readDatabase(){
-        mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY).addValueEventListener(new ValueEventListener() {
+        obtainKey = mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY);
+        obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 key = dataSnapshot.getValue(String.class);
@@ -486,7 +434,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
-        mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.USER_RATING).addValueEventListener(new ValueEventListener() {
+        obtainRating = mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.USER_RATING);
+        obtainRating.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 rating = dataSnapshot.getValue(String.class);
@@ -513,6 +462,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                         }
                     });
+
                 }
                 else if(!exchange){
                     mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
@@ -537,6 +487,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private void deleteLocation(){
         mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
         mDatabaseReference.child(Constants.LOCATION).child(key).removeValue();
+    }
+
+    private void checkIsOn(){
+        if(isOn){
+            setPickupBtn.setText(available);
+        }
+        else
+            setPickupBtn.setText(unavailable);
     }
 }
 

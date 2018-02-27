@@ -6,7 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccentWhite</item>
-        <item name="android:textColor">@color/colorTextWhite</item>
+        <item name="android:textColorPrimary">@color/colorTextBlack</item>
+        <item name="android:textColorSecondary">@color/colorTextBlack</item>
         <item name="buttonStyle">@style/AppTheme.Widget.Button</item>
     </style>
 

@@ -7,6 +7,7 @@
     <color name="colorAccentDark">#a67c52</color>
     <color name="colorTextBlue">#3ba5e1</color>
 
+    <color name="colorTextBlack">#000000</color>
     <color name="colorTextWhite">#ffffff</color>
 
     <color name="textBoxBackground">#f5fbf1</color>

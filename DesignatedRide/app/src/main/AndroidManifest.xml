@@ -30,7 +30,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <!--General Activities-->
+        <!-- General Activities -->
         <activity
             android:name=".activities.StartLogoActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -46,7 +46,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.StartPageActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"
@@ -58,7 +58,7 @@
             android:name=".activities.ChangePasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <!--Rider Activities-->
+        <!-- Rider Activities -->
         <activity
             android:name="._RiderActivities.RiderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -73,22 +73,21 @@
             android:name="._RiderActivities.RiderViewProfileActivity"
             android:label="@string/title_activity_rider_view_profile"
             android:parentActivityName="._RiderActivities.RiderActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name="._RiderActivities.RiderViewAppointmentActivity"
+            android:label="APPT_VIEW"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-
-        <!--Driver Activities-->
+        <!-- Driver Activities -->
         <activity
             android:name="._DriverActivities.DriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="._DriverActivities.DriverMapActivity"
             android:label="@string/title_activity_driver_map" />
-
         <activity
             android:name="._DriverActivities.DriverProfileActivity"
             android:label="@string/driver_profile"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
-
         <activity android:name=".util.SynAck" />
 
         <receiver android:name=".util.Receiver">
@@ -97,6 +96,8 @@
                 <action android:name="ACK" />
             </intent-filter>
         </receiver>
+
+
     </application>
 
 </manifest>

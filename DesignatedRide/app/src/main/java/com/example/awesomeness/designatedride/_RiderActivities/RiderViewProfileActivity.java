@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+// TODO: 2/27/2018 Add the date circle on top of action bar
 public class RiderViewProfileActivity extends AppCompatActivity {
     private static final String TAG = "RiderViewProfileActivity";
 
@@ -30,7 +31,6 @@ public class RiderViewProfileActivity extends AppCompatActivity {
         FIRST_NAME, LAST_NAME, AGE, EMAIL, PHONE_NUMBER,
         INSURANCE_CO, RIDE_COVERAGE, DOCTOR_GEN_NAME,
         PUBLIC_NAME, WHEEL_CHAIR_REQ
-
     }
 
     @Override

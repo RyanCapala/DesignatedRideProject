@@ -27,25 +27,38 @@
     <string name="login_page_not_a_member_text">not a member? sign up here</string>
     <string name="designated_ride_logo_descriptor">Designated Ride Logo</string>
 
-
     <!--Rider Profile Strings-->
-        <!--headers-->
+    <!--headers-->
     <string name="rider_profile_header_general_info">General Information</string>
     <string name="rider_profile_header_medical_info">Medical Information</string>
     <string name="rider_profile_header_public_info">Public Profile</string>
-        <!--general info-->
+    <!--general info-->
     <string name="rider_profile_gen_info_fname">First Name</string>
     <string name="rider_profile_gen_info_lname">Last Name</string>
     <string name="rider_profile_gen_info_age">Age</string>
     <string name="rider_profile_gen_info_email">Email Address</string>
     <string name="rider_profile_gen_info_phonenumber">Phone Number</string>
-        <!--medical info-->
+    <!--medical info-->
     <string name="rider_profile_med_info_insurance_company">Insurance Company</string>
     <string name="rider_profile_med_info_ride_coverage">Rider Coverage</string>
     <string name="rider_profile_med_info_gen_doctor_name">Doctor\'s Name</string>
-        <!--public info-->
+    <!--public info-->
     <string name="rider_profile_public_info_public_name">Name</string>
     <string name="rider_profile_public_info_wheelchair_required">Wheelchair Required</string>
+
+    <!--View Appointment Rider-->
+    <string name="view_appt_rider_request_ride_btn_text">Request Ride</string>
+    <string name="view_appt_rider_dest_logo_desc">marker dest logo</string>
+    <string name="view_appt_rider_hospital_name_default">HOSPITAL_NAME</string>
+    <string name="view_appt_rider_hospital_address_default">HOSPITAL_ADDRESS CITY STATE ZIP</string>
+    <string name="view_appt_rider_time_icon_desc">Time icon</string>
+    <string name="view_appt_rider_time_header_default">TIME TIMEZONE</string>
+    <string name="view_appt_rider_time_daymonthday_default_text">DAYNAME, MONTH DAY</string>
+    <string name="view_appt_rider_advancebookingicon_desc">advanced booking icon</string>
+    <string name="view_appt_rider_advanced_book_status_default_text">ADVANCED_BOOK_STATUS</string>
+    <string name="view_appt_rider_advancedbookingsubtext_default_text">ADVANCED_BOOKING_AVAILABLE</string>
+    <string name="view_appt_rider_additionalnote_default_text">ADDITIONAL_NOTES_TEXT</string>
+    <string name="view_appt_rider_editpen_desc">edit pen icon</string>
 
     <!--Uncategorized-->
     <string name="loginLinkTV">Login Page</string>
@@ -67,4 +80,5 @@
     <string name="update_pwd">Update Password</string>
     <string name="close">Close</string>
     <string name="reset_pwd">Reset Password</string>
+
 </resources>

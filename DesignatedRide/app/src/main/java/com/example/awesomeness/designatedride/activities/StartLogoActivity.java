@@ -1,11 +1,13 @@
 package com.example.awesomeness.designatedride.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 public class StartLogoActivity extends AppCompatActivity {
 
     private static final String TAG = "StartLogoActivity";
-    private TextView loginLink, registerLink;
 
+    // Widgets
+    ProgressBar progressBar;
     //Firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -45,7 +48,7 @@ public class StartLogoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_logo);
-
+        initWidgets();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance();
@@ -133,5 +136,8 @@ public class StartLogoActivity extends AppCompatActivity {
                     }
                 });
         return mode;
+    }
+    private void initWidgets(){
+        progressBar = findViewById(R.id.startPageLogo_progessbar);
     }
 }

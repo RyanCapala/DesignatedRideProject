@@ -84,6 +84,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private String available = "Currently Available (ON)";
     private String unavailable = "Currently Unavailable (OFF)";
 
+    private boolean typePacket = false;
+
     //Hash Table
     private Map aWriteInfo;
     private Map aExchangeInfo;
@@ -395,7 +397,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                     mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(0);
 
-                                } else if (isAdvancedBooking.equals("true")) {
+                                } else if (isAdvancedBooking.equals("true") && seqAck == 8) {
 
                                 }
 
@@ -491,6 +493,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 key = dataSnapshot.getValue(String.class);
+                //we get all the packet of information the moment we also obtain the key.  This is done
+                //in case a packet was created outside of the map.
+                getPacket();
             }
 
             @Override
@@ -571,24 +576,40 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             setPickupBtn.setText(unavailable);
     }
 
-    //reads the packet of information from the database.
+    //reads the packet of information from the database. In case packet was dropped or created outside this activity.
     private void getPacket() {
         obtainPacket = mDatabaseReference.child(Constants.PACKET).child(key);
             obtainPacket.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                        if (childDataSnapshot.getKey().equals(Constants.IS_AVAILABLE)) {
-                            isAvailable = childDataSnapshot.getValue(String.class);
-                        } else if (childDataSnapshot.getKey().equals(Constants.IS_ADVANCED_BOOKING)) {
-                            isAdvancedBooking = childDataSnapshot.getValue(String.class);
-                        } else if (childDataSnapshot.getKey().equals(Constants.SEQ_ACK)) {
-                            seqAck = childDataSnapshot.getValue(Integer.class);
-                        } else if (childDataSnapshot.getKey().equals(Constants.USER_RATING)) {
-
-                            rating = childDataSnapshot.getValue(String.class);
+                    typePacket = true;
+                    mDatabaseReference.child(Constants.PACKET).child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                                if (childDataSnapshot.getKey().equals(Constants.IS_AVAILABLE)) {
+                                    isAvailable = childDataSnapshot.getValue(String.class);
+                                    if(isAdvancedBooking != null) {
+                                        if (isAdvancedBooking.equals("true")) {
+                                            setPickupBtn.setVisibility(View.GONE);
+                                        }
+                                    }
+                                } else if (childDataSnapshot.getKey().equals(Constants.IS_ADVANCED_BOOKING)) {
+                                    isAdvancedBooking = childDataSnapshot.getValue(String.class);
+                                    Toast.makeText(DriverMapActivity.this,isAdvancedBooking,Toast.LENGTH_LONG).show();
+                                } else if (childDataSnapshot.getKey().equals(Constants.SEQ_ACK)) {
+                                    seqAck = childDataSnapshot.getValue(Integer.class);
+                                } else if (childDataSnapshot.getKey().equals(Constants.USER_RATING)) {
+                                    rating = childDataSnapshot.getValue(String.class);
+                                }
+                            }
                         }
-                    }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
 
                 @Override
@@ -596,7 +617,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                 }
             });
+
+            getDeviceLocation();
         }
+
+
 
         private void setPacket() {
             aExchangeInfo = new HashMap();
@@ -650,9 +675,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         isAdvancedBooking = null;
     }
 }
-
-
-
 
 
 

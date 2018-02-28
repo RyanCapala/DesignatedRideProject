@@ -4,12 +4,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.awesomeness.designatedride.R;
-import com.example.awesomeness.designatedride._DriverActivities.DriverMapActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,9 +19,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class SynAck extends AppCompatActivity {
+
+    private static final String TAG = "SynAck";
 
     //Alert Box
     private AlertDialog.Builder confirmation;
@@ -42,7 +47,8 @@ public class SynAck extends AppCompatActivity {
     private String key;
     private Query obtainKey;
 
-    public static boolean ttl = false;
+    private Map aWriteInfo;
+    private Map aExchangeInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +81,31 @@ public class SynAck extends AppCompatActivity {
         dialogBox = confirmation.create();
         dialogBox.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        aExchangeInfo = new HashMap();
+        aWriteInfo = new HashMap();
+
+        dialogBox.show();
+
+        timer = new Timer();
+        timer.schedule(new TimerTask(){
+            @Override
+            public void run(){
+                dialogBox.dismiss();
+                mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(4);
+                timer.cancel();
+                finish();
+            }
+        },10000);
 
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogBox.dismiss();
-                mDatabaseReference.child(Constants.LOCATION).child(key).child(Constants.CONFIRMATION).setValue("true");
+                timer.cancel();
+
+                mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(2);
                 mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
-                DriverMapActivity.exchange = false;
-                DriverMapActivity.isOn = false;
+
                 finish();
             }
         });
@@ -92,17 +114,14 @@ public class SynAck extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialogBox.dismiss();
-                mDatabaseReference.child(Constants.LOCATION).child(key).child(Constants.IS_AVAILABLE).setValue("true");
+                timer.cancel();
+                mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(0);
+                mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.IS_AVAILABLE).setValue("true");
+
                 finish();
             }
         });
 
-        dialogBox.show();
-
-        if(ttl) {
-            deleteLocation();
-            DriverMapActivity.isOn = false;
-        }
     }
 
     private void initWidgets()
@@ -113,10 +132,4 @@ public class SynAck extends AppCompatActivity {
         noButton = (Button)confirm_dialog_view.findViewById(R.id.noButton);
         txt = (TextView)confirm_dialog_view.findViewById(R.id.textAlert);
     }
-
-    private void deleteLocation(){
-        mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
-        mDatabaseReference.child(Constants.LOCATION).child(key).removeValue();
-    }
-
 }

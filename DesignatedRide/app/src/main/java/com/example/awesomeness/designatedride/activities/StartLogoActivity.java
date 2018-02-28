@@ -35,7 +35,6 @@ public class StartLogoActivity extends AppCompatActivity {
     ProgressBar progressBar;
     //Firebase
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mUser;
     private DatabaseReference mDatabaseReference;
     private FirebaseDatabase mDatabase;
@@ -43,6 +42,7 @@ public class StartLogoActivity extends AppCompatActivity {
     //Global Var
     private String uid;
     private String mode;
+    private String uName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,23 +56,17 @@ public class StartLogoActivity extends AppCompatActivity {
         mDatabaseReference.keepSynced(true);
         checkForSavedState();
     }
-
-    private void gotoActivity(Class activityClass) {
-        startActivity(new Intent(StartLogoActivity.this, activityClass));
-        finish();
-    }
-
     private void checkForSavedState() {
         UserDataHelper.AccountInfoContainer container = UserDataHelper.loadLocalUser(getApplicationContext());
         Log.d(TAG, "checkForSavedState: USERINFO:" + container.email + container.password + container.userType);
+
         if (container.containsInvalidData()) {
             gotoActivity(StartPageActivity.class);
             Log.d(TAG, "checkForSavedState: Did not find saved state");
             return;
         }
-        loginUser(container.email, container.password);
         Log.d(TAG, "checkForSavedState: Found saved state");
-
+        loginUser(container.email, container.password);
     }
 
     @Override
@@ -83,7 +77,6 @@ public class StartLogoActivity extends AppCompatActivity {
     }
 
     private void loginUser(String email, String pwd) {
-        final String testpwd = pwd;
         mAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(this, new
                 OnCompleteListener<AuthResult>() {
                     @Override
@@ -95,47 +88,54 @@ public class StartLogoActivity extends AppCompatActivity {
 
                             //Check user mode if "Rider" or "Driver"
                             //then, send user to each specific page.
-                            GetUserType();
+                            getUserData();
                         } else {
                             Log.d(TAG, "onComplete: No previous state loaded");
-                        }
-
-                    }
-                });
-    }//End of loginUser
-
-    private String GetUserType() {
-        mDatabaseReference.
-                child(Constants.USER).
-                child(uid).
-                child(Constants.PROFILE).
-                child(Constants.USERMODE).
-                addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        mode = dataSnapshot.getValue(String.class);
-                        if (mode.equals(Constants.DRIVER)) {
-
-                            gotoActivity(DriverActivity.class);
-
-                        } else if (mode.equals(Constants.RIDER)) {
-
-                            gotoActivity(RiderActivity.class);
-
-                        } else {
                             gotoActivity(StartPageActivity.class);
-                            Toast.makeText(StartLogoActivity.this,
-                                    "Credentials Not Valid!", Toast.LENGTH_LONG).show();
                         }
 
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
 
                     }
                 });
-        return mode;
+    }
+
+    private void getUserData() {
+        //get username
+        mDatabaseReference
+                .child(Constants.USER)
+                .child(uid)
+                .child(Constants.PROFILE)
+                .addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                uName = dataSnapshot.child(Constants.FIRSTNAME).getValue(String.class);
+                mode = dataSnapshot.child(Constants.USERMODE).getValue(String.class);
+                Log.d(TAG, "onDataChange: NAME" + uName + ", MODE:" + mode);
+                gotoCorrectView();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: getUserName was cancelled: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void gotoCorrectView(){
+        switch (mode){
+            case Constants.DRIVER: gotoActivity(DriverActivity.class); break;
+            case Constants.RIDER: gotoActivity(RiderActivity.class); break;
+            default: gotoActivity(StartPageActivity.class);
+                Toast.makeText(StartLogoActivity.this,
+                        "Credentials Not Valid!", Toast.LENGTH_LONG).show();
+        }
+    }
+    private void gotoActivity(Class activityClass) {
+        Intent intent = new Intent(StartLogoActivity.this, activityClass);
+        Log.d(TAG, "gotoActivity: " + uName);
+        intent.putExtra(Constants.INTENT_KEY_NAME, uName);
+        startActivity(intent);
+        finish();
     }
     private void initWidgets(){
         progressBar = findViewById(R.id.startPageLogo_progessbar);

@@ -2,12 +2,15 @@ package com.example.awesomeness.designatedride._DriverActivities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -105,6 +108,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Query obtainPacket;
     private Query obtainRiderKey;
 
+
     Marker marker;
 
 
@@ -115,8 +119,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         setContentView(R.layout.activity_rider_map);
 
         initWidgets();
-
-        checkIsOn();
 
         mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -140,36 +142,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mAuth = FirebaseAuth.getInstance();
         userid = mAuth.getCurrentUser().getUid();
 
+        getLocationPermissions();
+
         //function reads database to get user's rating and geo location key
         getKeyNodes();
 
-        //calls getDeviceLocation() at some point
-        getLocationPermissions();
-
-        //button if clicked sets the driver to be available for pick ups
-        setPickupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isAvailable != null) {
-                    if (isAvailable.equals("true")) {
-                        mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.IS_AVAILABLE).setValue("false");
-                        isAvailable = "false";
-                        setPickupBtn.setText(unavailable);
-                        deleteLocation();
-                        stopLocationUpdates();
-                        //shuts off the listener to prevent stacked code
-                        mDatabaseReference.child(Constants.PACKET).child(key).removeEventListener(mChildEventListener);
-                    }
-                    else if(isAvailable.equals("false")){
-                        setPacket();
-                    }
-                }
-                if (isAvailable == null) {
-                   setPacket();
-                }
-
-            }
-        });
     }
 
 
@@ -431,14 +408,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onPause() {
         super.onPause();
-
         //Stop their geolocation if we know we don't need it
         if(isAvailable != null) {
             if (isAvailable.equals("false"))
                 stopLocationUpdates();
         }
     }
-
 
     private void stopLocationUpdates() {
         Log.d(TAG, "stopLocationUpdates: STOPPED LOCATION UPDATES");
@@ -496,6 +471,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 //we get all the packet of information the moment we also obtain the key.  This is done
                 //in case a packet was created outside of the map.
                 getPacket();
+
             }
 
             @Override
@@ -579,104 +555,136 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     //reads the packet of information from the database. In case packet was dropped or created outside this activity.
     private void getPacket() {
         obtainPacket = mDatabaseReference.child(Constants.PACKET).child(key);
-            obtainPacket.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    typePacket = true;
-                    mDatabaseReference.child(Constants.PACKET).child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                                if (childDataSnapshot.getKey().equals(Constants.IS_AVAILABLE)) {
-                                    isAvailable = childDataSnapshot.getValue(String.class);
-                                    if(isAdvancedBooking != null) {
-                                        if (isAdvancedBooking.equals("true")) {
-                                            setPickupBtn.setVisibility(View.GONE);
-                                        }
+        obtainPacket.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                typePacket = true;
+                mDatabaseReference.child(Constants.PACKET).child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                            if (childDataSnapshot.getKey().equals(Constants.IS_AVAILABLE)) {
+                                isAvailable = childDataSnapshot.getValue(String.class);
+                            } else if (childDataSnapshot.getKey().equals(Constants.IS_ADVANCED_BOOKING)) {
+                                isAdvancedBooking = childDataSnapshot.getValue(String.class);
+                                if(isAdvancedBooking != null) {
+                                    if (isAdvancedBooking.equals("true")) {
+                                        setPickupBtn.setVisibility(View.GONE);
                                     }
-                                } else if (childDataSnapshot.getKey().equals(Constants.IS_ADVANCED_BOOKING)) {
-                                    isAdvancedBooking = childDataSnapshot.getValue(String.class);
-                                    Toast.makeText(DriverMapActivity.this,isAdvancedBooking,Toast.LENGTH_LONG).show();
-                                } else if (childDataSnapshot.getKey().equals(Constants.SEQ_ACK)) {
-                                    seqAck = childDataSnapshot.getValue(Integer.class);
-                                } else if (childDataSnapshot.getKey().equals(Constants.USER_RATING)) {
-                                    rating = childDataSnapshot.getValue(String.class);
                                 }
+                            } else if (childDataSnapshot.getKey().equals(Constants.SEQ_ACK)) {
+                                seqAck = childDataSnapshot.getValue(Integer.class);
+                            } else if (childDataSnapshot.getKey().equals(Constants.USER_RATING)) {
+                                rating = childDataSnapshot.getValue(String.class);
                             }
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-            getDeviceLocation();
-        }
-
-
-
-        private void setPacket() {
-            aExchangeInfo = new HashMap();
-            aWriteInfo = new HashMap();
-
-            //////////////////////////////////////////
-            //Creates a brand new node within database
-            //Packet
-            // $geokey
-            //   isAdvancedBooking -> false
-            //   isAvailable ->       true
-            //   userRating ->        (current rating)
-            //   seqAck ->             8
-            /////////////////////////////////////////
-
-            aExchangeInfo.put(Constants.IS_AVAILABLE, "true");
-            aExchangeInfo.put(Constants.USER_RATING, rating);
-            aExchangeInfo.put(Constants.SEQ_ACK, 8);
-            aExchangeInfo.put(Constants.IS_ADVANCED_BOOKING, "false");
-
-            aWriteInfo.put(Constants.PACKET + "/" + key, aExchangeInfo);
-
-            mDatabaseReference.updateChildren(aWriteInfo, new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if (databaseError != null) {
-                        Log.wtf(TAG, databaseError.getMessage());
+                        initButton();
+                        checkIsOn();
                     }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+        getDeviceLocation();
+    }
+
+
+
+    private void setPacket() {
+        aExchangeInfo = new HashMap();
+        aWriteInfo = new HashMap();
+
+        //////////////////////////////////////////
+        //Creates a brand new node within database
+        //Packet
+        // $geokey
+        //   isAdvancedBooking -> false
+        //   isAvailable ->       true
+        //   userRating ->        (current rating)
+        //   seqAck ->             8
+        /////////////////////////////////////////
+
+        aExchangeInfo.put(Constants.IS_AVAILABLE, "true");
+        aExchangeInfo.put(Constants.USER_RATING, rating);
+        aExchangeInfo.put(Constants.SEQ_ACK, 8);
+        aExchangeInfo.put(Constants.IS_ADVANCED_BOOKING, "false");
+
+        aWriteInfo.put(Constants.PACKET + "/" + key, aExchangeInfo);
+
+        mDatabaseReference.updateChildren(aWriteInfo, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Log.wtf(TAG, databaseError.getMessage());
                 }
-            });
+            }
+        });
 
-            // Initializes the variables being used to match what we are writing into the database
-            isAvailable = "true";
-            seqAck = 8;
-            isAdvancedBooking = "false";
+        // Initializes the variables being used to match what we are writing into the database
+        isAvailable = "true";
+        seqAck = 8;
+        isAdvancedBooking = "false";
 
-            setPickupBtn.setText(available);
+        setPickupBtn.setText(available);
 
-            //Calls getDeviceLocation a second time.  This is because the first time it runs
-            //is to set up the map (initialize it to their position) but, the second time is to start the
-            //read,write and listen operations to the database.
-            getDeviceLocation();
+        initButton();
 
-            //Get the information about the packet node we just created
-            //getPacket();
-        }
 
-        private void resetValues(){
+        //Calls getDeviceLocation a second time.  This is because the first time it runs
+        //is to set up the map (initialize it to their position) but, the second time is to start the
+        //read,write and listen operations to the database.
+        getDeviceLocation();
+
+        //Get the information about the packet node we just created
+        getPacket();
+    }
+
+    private void resetValues(){
         isAvailable = null;
         seqAck = null;
         isAdvancedBooking = null;
     }
+
+    private void initButton(){
+        //button if clicked sets the driver to be available for pick ups
+        setPickupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isAvailable != null) {
+                    if (isAvailable.equals("true")) {
+                        resetValues();
+                        setPickupBtn.setText(unavailable);
+                        deleteLocation();
+                        stopLocationUpdates();
+                        //shuts off the listener to prevent stacked code
+                        if(mChildEventListener != null) {
+                            mDatabaseReference.child(Constants.PACKET).child(key).removeEventListener(mChildEventListener);
+                        }
+                    }
+                    else if(isAvailable.equals("false")){
+                        setPacket();
+                    }
+                }
+                else if (isAvailable == null) {
+                    setPickupBtn.setText(available);
+                    setPacket();
+                }
+
+            }
+        });
+    }
 }
-
-
-
 
 

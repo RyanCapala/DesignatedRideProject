@@ -10,7 +10,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -84,10 +83,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private String isAdvancedBooking;
     private Integer seqAck;
     private String riderKey;
+    private String pairKey;
     private String available = "Currently Available (ON)";
     private String unavailable = "Currently Unavailable (OFF)";
 
-    private boolean typePacket = false;
+    public static boolean listener = false;
 
     //Hash Table
     private Map aWriteInfo;
@@ -107,7 +107,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Query obtainRating;
     private Query obtainPacket;
     private Query obtainRiderKey;
-
 
     Marker marker;
 
@@ -259,6 +258,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             if(isAvailable != null && seqAck != null) {
                                 if (isAvailable.equals("true") && seqAck == 8) {
 
+                                    mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(0);
+
                                     //If the driver is available write their geolocation to this node
                                     mAvailableGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
                                         @Override
@@ -269,48 +270,158 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                     //Create a listener on the database.  If the Packet node of the user we created changes for any reason
                                     //Determine which node did and respond to it accordingly.
+                                    if(!listener){
+                                        listener = true;
+                                            mChildEventListener = mDatabaseReference.child(Constants.PACKET).child(key).addChildEventListener(new ChildEventListener() {
+                                                @Override
+                                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                                }
+
+                                                @Override
+                                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                                    //If they are no longer available, delete their geolocation.
+                                                    if (dataSnapshot.getKey().equals(Constants.IS_AVAILABLE)) {
+                                                        isAvailable = dataSnapshot.getValue(String.class);
+                                                        if (isAvailable.equals("false")) {
+                                                            mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
+                                                        }
+                                                    }
+
+                                                    //SeqAck operates very similar to an internet packet
+                                                    //Rather than create multiple nodes to store boolean values in the database to help determine
+                                                    //where or what each packet of information is doing.  SeqAck stores a number that describes
+                                                    //where and what it is doing.
+                                                    else if (dataSnapshot.getKey().equals(Constants.SEQ_ACK)) {
+                                                        seqAck = dataSnapshot.getValue(Integer.class);
+                                                        //0 means the packet is not being held by anyone.
+                                                        //1 means that a Rider has sent a request to this driver.
+                                                        if (seqAck == 1) {
+                                                            //DriverMapActivity can't deal with the request itself because it's possible the
+                                                            //packet of information changes outside of the activity thus a broadcast is sent
+                                                            //to the receiver.
+                                                            Intent intent = new Intent("ACK");
+                                                            sendBroadcast(intent);
+                                                            Toast.makeText(DriverMapActivity.this, "Being paired with Rider", Toast.LENGTH_LONG).show();
+                                                        }
+                                                        //2 means the Driver has seen their request and has sent an acknowledgement
+                                                        //3 means that the Rider has seen their acknowledgement and has sent an acknowledgement
+                                                        else if (seqAck == 3) {
+                                                            Toast.makeText(DriverMapActivity.this, "Connected with Rider", Toast.LENGTH_LONG).show();
+                                                            setPickupBtn.setVisibility(View.GONE);
+                                                            obtainRiderKey = mDatabaseReference.child(Constants.LOCATION).child(key).child(Constants.RIDER_KEY);
+                                                            obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                    riderKey = dataSnapshot.getValue(String.class);
+                                                                    mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                                                        @Override
+                                                                        public void onLocationResult(String key, GeoLocation location) {
+                                                                                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                                                marker.setTag(riderKey);
+
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                                        }
+                                                                    });
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                                }
+                                                            });
+
+                                                            mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.IS_AVAILABLE).setValue("false");
+
+                                                            mDatabaseReference.child(Constants.PACKET).child(key).removeEventListener(mChildEventListener);
+
+                                                        }
+                                                        //4 means that the TTL(time to live) has died.  This is because the driver is inactive.
+                                                        else if (seqAck == 4) {
+                                                            deleteLocation();
+                                                            stopLocationUpdates();
+                                                            resetValues();
+
+                                                            setPickupBtn.setText(unavailable);
+                                                            Toast.makeText(DriverMapActivity.this, "From inactivity Geolocation turned off", Toast.LENGTH_LONG).show();
+                                                        }
+                                                        //5 means that the TTL(time to live) has died.  This is because it has been lost into the void
+                                                        //of the internet forever.
+                                                        //6 means the packet is being held by someone.
+                                                        //7 means an error has happened.
+                                                        //8 means the packet is being created.
+                                                    }
+                                                }
+
+                                                @Override
+
+                                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                                }
+
+                                                @Override
+                                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+
+                                        }
+
+
+                                } else if (isAdvancedBooking.equals("true") && seqAck == 8) {
+                                    //Create a listener on the database.  If the Packet node of the user we created changes for any reason
+                                    //Determine which node did and respond to it accordingly.
+
+                                    mGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
+                                        @Override
+                                        public void onComplete(String key, DatabaseError error) {
+
+                                        }
+                                    });
+
+
                                     mChildEventListener = mDatabaseReference.child(Constants.PACKET).child(key).addChildEventListener(new ChildEventListener() {
                                         @Override
                                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
                                         }
 
                                         @Override
                                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                                            //If they are no longer available, delete their geolocation.
-                                            if (dataSnapshot.getKey().equals(Constants.IS_AVAILABLE)) {
-                                                isAvailable = dataSnapshot.getValue(String.class);
-                                                if (isAvailable.equals("false")) {
-                                                    mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
-                                                }
-                                            }
-
-                                            //SeqAck operates very similar to an internet packet
-                                            //Rather than create multiple nodes to store boolean values in the database to help determine
-                                            //where or what each packet of information is doing.  SeqAck stores a number that describes
-                                            //where and what it is doing.
-                                            else if (dataSnapshot.getKey().equals(Constants.SEQ_ACK)) {
+                                            if (dataSnapshot.getKey().equals(Constants.SEQ_ACK)) {
                                                 seqAck = dataSnapshot.getValue(Integer.class);
-                                                //0 means the packet is not being held by anyone.
-                                                //1 means that a Rider has sent a request to this driver.
-                                                if (seqAck == 1) {
-                                                    //DriverMapActivity can't deal with the request itself because it's possible the
-                                                    //packet of information changes outside of the activity thus a broadcast is sent
-                                                    //to the receiver.
-                                                    Intent intent = new Intent("ACK");
-                                                    sendBroadcast(intent);
-                                                    Toast.makeText(DriverMapActivity.this, "Being paired with Rider", Toast.LENGTH_LONG).show();
-                                                }
-                                                //2 means the Driver has seen their request and has sent an acknowledgement
-                                                //3 means that the Rider has seen their acknowledgement and has sent an acknowledgement
-                                                else if (seqAck == 3) {
-                                                    Toast.makeText(DriverMapActivity.this, "Connected with Rider", Toast.LENGTH_LONG).show();
+                                                if (seqAck == 9) {
                                                     setPickupBtn.setVisibility(View.GONE);
-                                                    obtainRiderKey = mDatabaseReference.child(Constants.LOCATION).child(key).child(Constants.RIDER_KEY);
+                                                    mDatabaseReference.child(Constants.PACKET).child(Constants.PAIR_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            pairKey = dataSnapshot.getValue(String.class);
+                                                            mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(10);
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+
+                                                }
+                                                else if (seqAck == 11) {
+                                                    obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(Constants.PAIR_KEY).child(Constants.RIDER_KEY);
                                                     obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                                             riderKey = dataSnapshot.getValue(String.class);
+                                                            mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(3);
                                                             mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
                                                                 @Override
                                                                 public void onLocationResult(String key, GeoLocation location) {
@@ -332,26 +443,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                                         }
                                                     });
-
-                                                    mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.IS_AVAILABLE).setValue("false");
-
-                                                    mDatabaseReference.child(Constants.PACKET).child(key).removeEventListener(mChildEventListener);
-
                                                 }
-                                                //4 means that the TTL(time to live) has died.  This is because the driver is inactive.
-                                                else if (seqAck == 4) {
-                                                    deleteLocation();
-                                                    stopLocationUpdates();
-                                                    resetValues();
-
-                                                    setPickupBtn.setText(unavailable);
-                                                    Toast.makeText(DriverMapActivity.this, "From inactivity Geolocation turned off", Toast.LENGTH_LONG).show();
-                                                }
-                                                //5 means that the TTL(time to live) has died.  This is because it has been lost into the void
-                                                //of the internet forever.
-                                                //6 means the packet is being held by someone.
-                                                //7 means an error has happened.
-                                                //8 means the packet is being created.
                                             }
                                         }
 
@@ -372,9 +464,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                         }
                                     });
 
-                                    mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(0);
-
-                                } else if (isAdvancedBooking.equals("true") && seqAck == 8) {
+                                    mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(9);
 
                                 }
 
@@ -404,6 +494,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         //it's prevented from running the code twice from the (seqAck == 8) boolean value.
         //getDeviceLocation();
     }
+
     // Prevent battery drain when activity is not in focus
     @Override
     protected void onPause() {
@@ -414,6 +505,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 stopLocationUpdates();
         }
     }
+
 
     private void stopLocationUpdates() {
         Log.d(TAG, "stopLocationUpdates: STOPPED LOCATION UPDATES");
@@ -470,21 +562,20 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 key = dataSnapshot.getValue(String.class);
                 //we get all the packet of information the moment we also obtain the key.  This is done
                 //in case a packet was created outside of the map.
-                getPacket();
+                obtainRating = mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.USER_RATING);
+                obtainRating.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        rating = dataSnapshot.getValue(String.class);
+                        getPacket();
+                    }
 
-            }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
 
-            }
-        });
-
-        obtainRating = mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.USER_RATING);
-        obtainRating.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                rating = dataSnapshot.getValue(String.class);
             }
 
             @Override
@@ -558,7 +649,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         obtainPacket.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                typePacket = true;
                 mDatabaseReference.child(Constants.PACKET).child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -576,10 +666,18 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                 seqAck = childDataSnapshot.getValue(Integer.class);
                             } else if (childDataSnapshot.getKey().equals(Constants.USER_RATING)) {
                                 rating = childDataSnapshot.getValue(String.class);
+                            } else if (childDataSnapshot.getKey().equals(Constants.PAIR_KEY)){
+                                pairKey = childDataSnapshot.getValue(String.class);
                             }
                         }
+
                         initButton();
                         checkIsOn();
+                        //Calls getDeviceLocation a second time.  This is because the first time it runs
+                        //is to set up the map (initialize it to their position) but, the second time is to start the
+                        //read,write and listen operations to the database.
+                        getDeviceLocation();
+
                     }
 
                     @Override
@@ -596,8 +694,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
 
         });
-
-        getDeviceLocation();
     }
 
 
@@ -620,6 +716,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         aExchangeInfo.put(Constants.USER_RATING, rating);
         aExchangeInfo.put(Constants.SEQ_ACK, 8);
         aExchangeInfo.put(Constants.IS_ADVANCED_BOOKING, "false");
+        aExchangeInfo.put(Constants.PAIR_KEY, "false");
 
         aWriteInfo.put(Constants.PACKET + "/" + key, aExchangeInfo);
 
@@ -636,25 +733,17 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         isAvailable = "true";
         seqAck = 8;
         isAdvancedBooking = "false";
+        pairKey = "false";
 
-        setPickupBtn.setText(available);
-
-        initButton();
-
-
-        //Calls getDeviceLocation a second time.  This is because the first time it runs
-        //is to set up the map (initialize it to their position) but, the second time is to start the
-        //read,write and listen operations to the database.
+        checkIsOn();
         getDeviceLocation();
-
-        //Get the information about the packet node we just created
-        getPacket();
     }
 
     private void resetValues(){
         isAvailable = null;
         seqAck = null;
         isAdvancedBooking = null;
+        pairKey = null;
     }
 
     private void initButton(){
@@ -664,10 +753,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             public void onClick(View view) {
                 if (isAvailable != null) {
                     if (isAvailable.equals("true")) {
+                        stopLocationUpdates();
                         resetValues();
                         setPickupBtn.setText(unavailable);
                         deleteLocation();
-                        stopLocationUpdates();
                         //shuts off the listener to prevent stacked code
                         if(mChildEventListener != null) {
                             mDatabaseReference.child(Constants.PACKET).child(key).removeEventListener(mChildEventListener);
@@ -686,5 +775,4 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 }
-
 

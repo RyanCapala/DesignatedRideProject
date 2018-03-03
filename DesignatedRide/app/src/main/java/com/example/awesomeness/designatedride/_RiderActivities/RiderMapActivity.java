@@ -96,9 +96,10 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     private double latitude;
 
     //Marker
-    Marker driver;
-    Marker driverMarker;
-
+    private Marker driver;
+    private Marker driverMarker;
+    private Marker locMarker;
+    
     //FireBase
     private DatabaseReference mDatabaseReference;
     private DataSnapshot mDataSnapshot;
@@ -113,6 +114,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     private Integer filter;
     private Integer temp;
     private String mPushKey;
+    private String pairKey;
 
     //Alert Box
     AlertDialog.Builder confirmation;
@@ -141,6 +143,8 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
     private Query obtainKey;
     private Query obtainRating;
+    private Query obtainDriverKey;
+    private Query obtainPairKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,33 +175,52 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         mAuth = FirebaseAuth.getInstance();
         userid = mAuth.getCurrentUser().getUid();
 
-        //Temp Location (Requires New Permissions)
-        //Acquires location from string (Should only be used for pick up after appointment (NOT ADVANCED BOOKING)
-        geoCoder = new Geocoder(RiderMapActivity.this);
-        try {
-            address = geoCoder.getFromLocationName("BatCave",1);
-            location = address.get(0);
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-            mPushKey = FirebaseDatabase.getInstance().getReference(Constants.TEXT_BOX + "/" + Constants.PAIR_KEY + "/").push().getKey();
-            mGeoFire.setLocation(mPushKey, new GeoLocation(latitude, longitude), new GeoFire.CompletionListener() {
-                @Override
-                public void onComplete(String key, DatabaseError error) {
+        availableDrivers = new ArrayList<>();
 
-                }
-            });
-            obtainKey = mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.GEOKEY);
-            obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    key = dataSnapshot.getValue(String.class);
-                    mDatabaseReference.child(Constants.PAIR).child(mPushKey).child(Constants.RIDER_KEY).setValue(key);
-                    obtainRating = mDatabaseReference.child(Constants.PACKET).child(driverKey).child(Constants.USER_RATING);
-                    obtainRating.addListenerForSingleValueEvent(new ValueEventListener() {
+        getLocationPermissions();
+
+        //This code only deals with isAvailable (Pick up after appointment NOT ADVANCED BOOKING)
+        setPickupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(RiderMapActivity.this, "Requested a ride!", Toast.LENGTH_SHORT).show();
+                //Temp Location (Requires New Permissions)
+                //Acquires location from string (Should only be used for pick up after appointment (NOT ADVANCED BOOKING)
+                geoCoder = new Geocoder(RiderMapActivity.this);
+                try {
+                    address = geoCoder.getFromLocationName("BatCave",1);
+                    location = address.get(0);
+                    longitude = location.getLongitude();
+                    latitude = location.getLatitude();
+                    mPushKey = FirebaseDatabase.getInstance().getReference(Constants.TEXT_BOX + "/" + Constants.PAIR_KEY + "/").push().getKey();
+                    mGeoFire.setLocation(mPushKey, new GeoLocation(latitude, longitude), new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+
+                        }
+                    });
+
+                    obtainKey = mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.GEOKEY);
+                    obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            rating = dataSnapshot.getValue(String.class);
-                            mDatabaseReference.child(Constants.TEXT_BOX).child(mPushKey).child(Constants.USER_RATING).setValue(rating);
+                            key = dataSnapshot.getValue(String.class);
+                            mDatabaseReference.child(Constants.PAIR).child(mPushKey).child(Constants.RIDER_KEY).setValue(key);
+                            mDatabaseReference.child(Constants.TEXT_BOX).child(mPushKey).child(Constants.PAIR_KEY).setValue(mPushKey);
+                            mDatabaseReference.child(Constants.PAIR).child(key).setValue(mPushKey);
+                            obtainRating = mDatabaseReference.child(Constants.PACKET).child(driverKey).child(Constants.USER_RATING);
+                            obtainRating.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    rating = dataSnapshot.getValue(String.class);
+                                    mDatabaseReference.child(Constants.TEXT_BOX).child(mPushKey).child(Constants.USER_RATING).setValue(rating);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
                         }
 
                         @Override
@@ -206,45 +229,18 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                         }
                     });
                 }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                catch (IOException e){
 
                 }
-            });
-        }
-        catch (IOException e){
+                catch (IllegalArgumentException e){
 
-        }
-        catch (IllegalArgumentException e){
+                }
+                // end temp location
 
-        }
-        // end temp location
-
-        obtainKey = mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.GEOKEY);
-        obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                key = dataSnapshot.getValue(String.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        availableDrivers = new ArrayList<>();
-
-        getLocationPermissions();
-
-        setPickupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(RiderMapActivity.this, "Requested a ride!", Toast.LENGTH_SHORT).show();
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
+
                         mDatabaseReference.child(Constants.PACKET).child(driverKey).child(Constants.SEQ_ACK).setValue(6);
                         mDatabaseReference.child(Constants.PACKET).child(driverKey).child(Constants.IS_AVAILABLE).setValue("false");
                         if(seqAck != null) {
@@ -259,6 +255,12 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 rating = dataSnapshot.getValue(String.class);
+                                String message = rating + "\n" + "Choose this Driver?";
+                                txt.setText(message);
+                                confirmation.setView(confirm_dialog_view);
+                                dialogBox = confirmation.create();
+                                dialogBox.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                dialogBox.show();
                             }
 
                             @Override
@@ -266,14 +268,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
                             }
                         });
-                        String message = rating + "\n" + "Choose this Driver?";
-                        txt.setText(message);
-                        confirmation.setView(confirm_dialog_view);
-                        dialogBox = confirmation.create();
-                        dialogBox.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        dialogBox.show();
-
-
+                        
                         yesButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -458,6 +453,115 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     protected void onResume() {
         super.onResume();
+        obtainKey = mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.GEOKEY);
+        obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                key = dataSnapshot.getValue(String.class);
+                obtainPairKey = mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY);
+                obtainPairKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        pairKey = dataSnapshot.getValue(String.class);
+                        if(pairKey != null) {
+                            obtainDriverKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.DRIVER_KEY);
+                            obtainDriverKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    driverKey = dataSnapshot.getValue(String.class);
+                                    if(driverKey != null) {
+                                        mGeoFire.getLocation(driverKey, new com.firebase.geofire.LocationCallback() {
+                                            @Override
+                                            public void onLocationResult(String key, GeoLocation location) {
+                                                driverMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+                                                driverMarker.setTag(driverKey);
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                        mLocation.getLocation(pairKey, new com.firebase.geofire.LocationCallback() {
+                                            @Override
+                                            public void onLocationResult(String key, GeoLocation location) {
+                                                if(location != null) {
+                                                    locMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+                                                    locMarker.setTag(pairKey);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                        driverEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(driverKey).addChildEventListener(new ChildEventListener() {
+                                            @Override
+                                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                                mGeoFire.getLocation(driverKey, new com.firebase.geofire.LocationCallback() {
+                                                    @Override
+                                                    public void onLocationResult(String key, GeoLocation location) {
+                                                        driverMarker.remove();
+                                                        driverMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                        driverMarker.setTag(driverKey);
+
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                            }
+
+                                            @Override
+                                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         getDeviceLocation();
     }
     // Prevent battery drain when activity is not in focus
@@ -465,6 +569,49 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     protected void onPause() {
         super.onPause();
         stopLocationUpdates();
+        obtainKey = mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.GEOKEY);
+        obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                key = dataSnapshot.getValue(String.class);
+                obtainPairKey = mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY);
+                obtainPairKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        pairKey = dataSnapshot.getValue(String.class);
+                        if(pairKey != null) {
+                            obtainDriverKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.DRIVER_KEY);
+                            obtainDriverKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    driverKey = dataSnapshot.getValue(String.class);
+                                    if(driverKey != null) {
+                                        if(driverEventListener != null) {
+                                            mDatabaseReference.child(Constants.GEO_LOCATION).child(driverKey).removeEventListener(driverEventListener);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void stopLocationUpdates() {
@@ -683,4 +830,5 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         };
     }
 }
+
 

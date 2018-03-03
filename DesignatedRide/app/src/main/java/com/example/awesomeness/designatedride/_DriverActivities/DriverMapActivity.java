@@ -161,7 +161,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         //function reads database to get user's rating and geo location key
         getKeyNodes();
-
     }
 
 
@@ -310,7 +309,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                             else{
                                                                 mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(5);
                                                             }
-                                                            
+
                                                             Toast.makeText(DriverMapActivity.this, "Being paired with Rider", Toast.LENGTH_LONG).show();
                                                         }
                                                         //2 means the Driver has seen their request and has sent an acknowledgement
@@ -591,16 +590,149 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onResume() {
         super.onResume();
-        Resumed();
+        resumed();
         startLocationUpdates();
+        obtainKey = mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY);
+        obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                key = dataSnapshot.getValue(String.class);
+                obtainPairKey = mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.PAIR_KEY);
+                obtainPairKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        pairKey = dataSnapshot.getValue(String.class);
+                        if(pairKey != null) {
+                            obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
+                            obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    riderKey = dataSnapshot.getValue(String.class);
+                                    if(riderKey != null) {
+                                        mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                            @Override
+                                            public void onLocationResult(String key, GeoLocation location) {
+                                                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                marker.setTag(riderKey);
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                        riderEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).addChildEventListener(new ChildEventListener() {
+                                            @Override
+                                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                                mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                                    @Override
+                                                    public void onLocationResult(String key, GeoLocation location) {
+                                                        marker.remove();
+                                                        marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                            }
+
+                                            @Override
+                                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     // Prevent battery drain when activity is not in focus
     @Override
     protected void onPause() {
         super.onPause();
-        Paused();
+        paused();
         stopLocationUpdates();
+        obtainKey = mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY);
+        obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                key = dataSnapshot.getValue(String.class);
+                obtainPairKey = mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.PAIR_KEY);
+                obtainPairKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        pairKey = dataSnapshot.getValue(String.class);
+                        if(pairKey != null) {
+                            obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
+                            obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    riderKey = dataSnapshot.getValue(String.class);
+                                    if(riderKey != null) {
+                                        mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).removeEventListener(riderEventListener);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -882,13 +1014,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         return activity;
     }
 
-    public static void Resumed() {
+    public static void resumed() {
         activity = true;
     }
 
-    public static void Paused() {
+    public static void paused() {
         activity= false;
     }
 }
+
 
 

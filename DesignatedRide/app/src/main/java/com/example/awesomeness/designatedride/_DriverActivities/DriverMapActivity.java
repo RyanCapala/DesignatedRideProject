@@ -95,7 +95,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private String unavailable = "Currently Unavailable (OFF)";
 
     public static boolean listener = false;
-
     private static boolean activity;
 
     //Hash Table
@@ -107,10 +106,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     //GeoFire
     private GeoFire mAvailableGeoFire;
     private GeoFire mGeoFire;
+    private GeoFire mLocation;
     private DatabaseReference mAvailableGeoLocationRef;
     private DatabaseReference mGeoLocationRef;
+    private DatabaseReference mLocationRef;
     private DatabaseReference mChildAvailable;
     private DatabaseReference mChildLocation;
+    private DatabaseReference mChildDropOff;
     private ChildEventListener mChildEventListener;
     private ChildEventListener riderEventListener;
     private Query obtainKey;
@@ -120,7 +122,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Query obtainPairKey;
     private Timer timer;
 
-    Marker marker;
+    private Marker marker;
+    private Marker LocMarker;
 
 
     @Override
@@ -147,13 +150,16 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mDatabaseReference = mDatabase.getReference();
         mChildLocation = mDatabase.getReference();
         mChildAvailable = mDatabase.getReference();
+        mChildDropOff = mDatabase.getReference();
 
         //Creates write locations depending if the user is current available or un-available(giving a ride)
         mAvailableGeoLocationRef = mChildAvailable.child(Constants.AVAILABLE_GEOLOCATION);
         mGeoLocationRef = mChildLocation.child(Constants.GEO_LOCATION);
+        mLocationRef = mChildDropOff.child(Constants.LOCATION);
 
         mAvailableGeoFire = new GeoFire(mAvailableGeoLocationRef);
         mGeoFire = new GeoFire(mGeoLocationRef);
+        mLocation = new GeoFire(mLocationRef);
 
         //Gets the user id number
         mAuth = FirebaseAuth.getInstance();
@@ -302,7 +308,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                         //0 means the packet is not being held by anyone.
                                                         //1 means that a Rider has sent a request to this driver.
                                                         if (seqAck == 1) {
-                                                            if(activtyOn()){
+                                                            if(activityOn()){
                                                                 Intent intent = new Intent("ACK");
                                                                 sendBroadcast(intent);
                                                             }
@@ -340,20 +346,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                                                                 }
                                                                             });
-
-                                                                            riderEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).addChildEventListener(new ChildEventListener() {
-                                                                                @Override
-                                                                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                                                                                }
-
-                                                                                @Override
-                                                                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                                                                                    mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                                                            
+                                                                            mLocation.getLocation(pairKey, new com.firebase.geofire.LocationCallback() {
                                                                                         @Override
                                                                                         public void onLocationResult(String key, GeoLocation location) {
-                                                                                            marker.remove();
-                                                                                            marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                                                            LocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_red)));
+                                                                                            LocMarker.setTag(pairKey);
                                                                                         }
 
                                                                                         @Override
@@ -361,23 +359,44 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                                                                         }
                                                                                     });
-                                                                                }
 
-                                                                                @Override
-                                                                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                                                                    riderEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).addChildEventListener(new ChildEventListener() {
+                                                                                        @Override
+                                                                                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                                                                                }
+                                                                                        }
 
-                                                                                @Override
-                                                                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                                                                                        @Override
+                                                                                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                                                                            mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                                                                                @Override
+                                                                                                public void onLocationResult(String key, GeoLocation location) {
+                                                                                                    marker.remove();
+                                                                                                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                                                                }
 
-                                                                                }
+                                                                                                @Override
+                                                                                                public void onCancelled(DatabaseError databaseError) {
 
-                                                                                @Override
-                                                                                public void onCancelled(DatabaseError databaseError) {
+                                                                                                }
+                                                                                            });
+                                                                                        }
 
-                                                                                }
-                                                                            });
+                                                                                        @Override
+                                                                                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                                                                        }
+
+                                                                                        @Override
+                                                                                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                                                                        }
+
+                                                                                        @Override
+                                                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                                                        }
+                                                                                    });
 
                                                                         }
 
@@ -506,6 +525,19 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                         }
                                                     });
 
+                                                    mLocation.getLocation(pairKey, new com.firebase.geofire.LocationCallback() {
+                                                        @Override
+                                                        public void onLocationResult(String key, GeoLocation location) {
+                                                            LocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_red)));
+                                                            LocMarker.setTag(pairKey);
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+
                                                     riderEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).addChildEventListener(new ChildEventListener() {
                                                         @Override
                                                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -622,6 +654,20 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                             }
                                         });
+
+                                        mLocation.getLocation(pairKey, new com.firebase.geofire.LocationCallback() {
+                                            @Override
+                                            public void onLocationResult(String key, GeoLocation location) {
+                                                LocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_red)));
+                                                LocMarker.setTag(pairKey);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                        
                                         riderEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).addChildEventListener(new ChildEventListener() {
                                             @Override
                                             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -635,6 +681,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                     public void onLocationResult(String key, GeoLocation location) {
                                                         marker.remove();
                                                         marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                        marker.setTag(riderKey);
 
                                                     }
 
@@ -709,7 +756,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     riderKey = dataSnapshot.getValue(String.class);
                                     if(riderKey != null) {
-                                        mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).removeEventListener(riderEventListener);
+                                        if(riderEventListener != null)
+                                            mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).removeEventListener(riderEventListener);
                                     }
                                 }
 
@@ -1010,7 +1058,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 
-    public static boolean activtyOn() {
+    public static boolean activityOn() {
         return activity;
     }
 

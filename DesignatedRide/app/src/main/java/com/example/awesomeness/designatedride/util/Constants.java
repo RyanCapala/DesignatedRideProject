@@ -38,7 +38,7 @@ public class Constants {
     public static final String PAIR                     = "Pair";
     public static final String PAIR_KEY                 = "pairKey";
     public static final String TEXT_BOX                 = "TextBox";
-    public static final String MESSAGE                  = "Message";
+    public static final String DRIVER_KEY               = "driverKey";
 
     public static final String INTENT_KEY               = "userid";
     public static final String INTENT_KEY_NAME          = "username";
@@ -53,9 +53,3 @@ public class Constants {
     public static final String ERR_PWD_NOTMATCH         = "Passwords don't match!";
     public static final String ERR_NAME_SPECIALCHAR     = "Name can't include numbers ,special characters, or spaces";
     public static final String ERR_EMAIL_PATTERN        = "Incorrect EMAIL pattern";
-
-
-
-}
-
-

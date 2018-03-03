@@ -1,9 +1,12 @@
 package com.example.awesomeness.designatedride._DriverActivities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,10 +19,12 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.util.Constants;
+import com.example.awesomeness.designatedride.util.SynAck;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -90,6 +95,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private String unavailable = "Currently Unavailable (OFF)";
 
     public static boolean listener = false;
+
+    private static boolean activity;
 
     //Hash Table
     private Map aWriteInfo;
@@ -296,11 +303,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                         //0 means the packet is not being held by anyone.
                                                         //1 means that a Rider has sent a request to this driver.
                                                         if (seqAck == 1) {
-                                                            //DriverMapActivity can't deal with the request itself because it's possible the
-                                                            //packet of information changes outside of the activity thus a broadcast is sent
-                                                            //to the receiver.
-                                                            Intent intent = new Intent("ACK");
-                                                            sendBroadcast(intent);
+                                                            if(activtyOn()){
+                                                                Intent intent = new Intent("ACK");
+                                                                sendBroadcast(intent);
+                                                            }
+                                                            else{
+                                                                mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(5);
+                                                            }
+                                                            
                                                             Toast.makeText(DriverMapActivity.this, "Being paired with Rider", Toast.LENGTH_LONG).show();
                                                         }
                                                         //2 means the Driver has seen their request and has sent an acknowledgement
@@ -313,7 +323,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                                 @Override
                                                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                                                     pairKey = dataSnapshot.getValue(String.class);
-                                                                    Toast.makeText(DriverMapActivity.this,pairKey,Toast.LENGTH_LONG).show();
                                                                     obtainRiderKey  = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
                                                                     obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
                                                                         @Override
@@ -387,8 +396,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                                 }
                                                             });
 
-                                                            //mDatabaseReference.child(Constants.PACKET).child(key).removeEventListener(mChildEventListener);
-
                                                         }
                                                         //4 means that the TTL(time to live) has died.  This is because the driver is inactive.
                                                         else if (seqAck == 4) {
@@ -399,9 +406,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                             setPickupBtn.setText(unavailable);
                                                             Toast.makeText(DriverMapActivity.this, "From inactivity Geolocation turned off", Toast.LENGTH_LONG).show();
                                                         }
-                                                        //5 means that the TTL(time to live) has died.  This is because it has been lost into the void
-                                                        //of the internet forever.
+
+                                                        else if(seqAck == 5){
+                                                            mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(0);
+                                                            Toast.makeText(DriverMapActivity.this, "Request unavailable",Toast.LENGTH_LONG).show();
+                                                        }
                                                         //6 means the packet is being held by someone.
+                                                        else if(seqAck == 6){
+                                                            Toast.makeText(DriverMapActivity.this,"A rider is viewing you",Toast.LENGTH_LONG).show();
+                                                        }
                                                         //7 means an error has happened.
                                                         //8 means the packet is being created.
                                                     }
@@ -493,7 +506,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                                         }
                                                     });
-                                                    
+
                                                     riderEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).addChildEventListener(new ChildEventListener() {
                                                         @Override
                                                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -578,6 +591,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onResume() {
         super.onResume();
+        Resumed();
         startLocationUpdates();
     }
 
@@ -585,6 +599,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onPause() {
         super.onPause();
+        Paused();
         stopLocationUpdates();
     }
 
@@ -861,6 +876,18 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
             }
         });
+    }
+
+    public static boolean activtyOn() {
+        return activity;
+    }
+
+    public static void Resumed() {
+        activity = true;
+    }
+
+    public static void Paused() {
+        activity= false;
     }
 }
 

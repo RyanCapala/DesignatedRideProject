@@ -120,7 +120,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_map);
-
         getLocationPermissions();
 
         initWidgets();
@@ -189,7 +188,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         //LatLng sydney = new LatLng(-34, 151);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
         if (mapLocationPermissionsGranted) {
             getDeviceLocation();
 
@@ -310,11 +308,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                         else if (seqAck == 3) {
                                                             Toast.makeText(DriverMapActivity.this, "Connected with Rider", Toast.LENGTH_LONG).show();
                                                             setPickupBtn.setVisibility(View.GONE);
-                                                            obtainPairKey = mDatabaseReference.child(Constants.PACKET).child(Constants.PAIR_KEY);
+                                                            obtainPairKey = mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.PAIR_KEY);
                                                             obtainPairKey.addListenerForSingleValueEvent(new ValueEventListener() {
                                                                 @Override
                                                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                                                     pairKey = dataSnapshot.getValue(String.class);
+                                                                    Toast.makeText(DriverMapActivity.this,pairKey,Toast.LENGTH_LONG).show();
                                                                     obtainRiderKey  = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
                                                                     obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
                                                                         @Override
@@ -467,12 +466,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                                 }
                                                 else if (seqAck == 11) {
-                                                    obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(Constants.PAIR_KEY).child(Constants.RIDER_KEY);
+                                                    obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
                                                     obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                                             riderKey = dataSnapshot.getValue(String.class);
-                                                            mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(3);
                                                             mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
                                                                 @Override
                                                                 public void onLocationResult(String key, GeoLocation location) {
@@ -487,6 +485,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                                                 }
                                                             });
+
                                                         }
 
                                                         @Override
@@ -494,6 +493,45 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                                         }
                                                     });
+                                                    
+                                                    riderEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).addChildEventListener(new ChildEventListener() {
+                                                        @Override
+                                                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                                            mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                                                @Override
+                                                                public void onLocationResult(String key, GeoLocation location) {
+                                                                    marker.remove();
+                                                                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                                }
+                                                            });
+                                                        }
+
+                                                        @Override
+                                                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+                                                    mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(3);
                                                 }
                                             }
                                         }
@@ -547,6 +585,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onPause() {
         super.onPause();
+        stopLocationUpdates();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
         stopLocationUpdates();
     }
 
@@ -819,4 +863,5 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 }
+
 

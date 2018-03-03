@@ -49,6 +49,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
@@ -103,13 +105,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private DatabaseReference mChildAvailable;
     private DatabaseReference mChildLocation;
     private ChildEventListener mChildEventListener;
+    private ChildEventListener riderEventListener;
     private Query obtainKey;
     private Query obtainRating;
     private Query obtainPacket;
     private Query obtainRiderKey;
+    private Query obtainPairKey;
+    private Timer timer;
 
     Marker marker;
-
 
 
     @Override
@@ -117,9 +121,17 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_map);
 
+        getLocationPermissions();
+
         initWidgets();
 
         mapFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        //mLocationRequest sets the time we acquire their geo location
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(DES_TIME);
+        mLocationRequest.setFastestInterval(EXP_TIME);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         //This code is run based on the time of mLocationRequest
         callBack();
@@ -140,8 +152,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         //Gets the user id number
         mAuth = FirebaseAuth.getInstance();
         userid = mAuth.getCurrentUser().getUid();
-
-        getLocationPermissions();
 
         //function reads database to get user's rating and geo location key
         getKeyNodes();
@@ -238,13 +248,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private void getDeviceLocation() {
         try {
             if (mapLocationPermissionsGranted) {
-                //mLocationRequest sets the time we acquire their geo location
-                mLocationRequest = new LocationRequest();
-                mLocationRequest.setInterval(DES_TIME);
-                mLocationRequest.setFastestInterval(EXP_TIME);
-                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-                startLocationUpdates();
 
                 Task location = mapFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
@@ -283,9 +286,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                     //If they are no longer available, delete their geolocation.
                                                     if (dataSnapshot.getKey().equals(Constants.IS_AVAILABLE)) {
                                                         isAvailable = dataSnapshot.getValue(String.class);
-                                                        if (isAvailable.equals("false")) {
-                                                            mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
-                                                        }
+                                                        mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).removeValue();
                                                     }
 
                                                     //SeqAck operates very similar to an internet packet
@@ -309,16 +310,67 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                         else if (seqAck == 3) {
                                                             Toast.makeText(DriverMapActivity.this, "Connected with Rider", Toast.LENGTH_LONG).show();
                                                             setPickupBtn.setVisibility(View.GONE);
-                                                            obtainRiderKey = mDatabaseReference.child(Constants.LOCATION).child(key).child(Constants.RIDER_KEY);
-                                                            obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            obtainPairKey = mDatabaseReference.child(Constants.PACKET).child(Constants.PAIR_KEY);
+                                                            obtainPairKey.addListenerForSingleValueEvent(new ValueEventListener() {
                                                                 @Override
                                                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                                                    riderKey = dataSnapshot.getValue(String.class);
-                                                                    mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                                                    pairKey = dataSnapshot.getValue(String.class);
+                                                                    obtainRiderKey  = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
+                                                                    obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
                                                                         @Override
-                                                                        public void onLocationResult(String key, GeoLocation location) {
-                                                                                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
-                                                                                marker.setTag(riderKey);
+                                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                            riderKey = dataSnapshot.getValue(String.class);
+                                                                            mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                                                                @Override
+                                                                                public void onLocationResult(String key, GeoLocation location) {
+                                                                                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                                                    marker.setTag(riderKey);
+
+                                                                                }
+
+                                                                                @Override
+                                                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                                                }
+                                                                            });
+
+                                                                            riderEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).addChildEventListener(new ChildEventListener() {
+                                                                                @Override
+                                                                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                                                                                }
+
+                                                                                @Override
+                                                                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                                                                    mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                                                                        @Override
+                                                                                        public void onLocationResult(String key, GeoLocation location) {
+                                                                                            marker.remove();
+                                                                                            marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                                                        }
+
+                                                                                        @Override
+                                                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                                                        }
+                                                                                    });
+                                                                                }
+
+                                                                                @Override
+                                                                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                                                                }
+
+                                                                                @Override
+                                                                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                                                                }
+
+                                                                                @Override
+                                                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                                                }
+                                                                            });
 
                                                                         }
 
@@ -327,6 +379,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                                                         }
                                                                     });
+
                                                                 }
 
                                                                 @Override
@@ -335,9 +388,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                                 }
                                                             });
 
-                                                            mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.IS_AVAILABLE).setValue("false");
-
-                                                            mDatabaseReference.child(Constants.PACKET).child(key).removeEventListener(mChildEventListener);
+                                                            //mDatabaseReference.child(Constants.PACKET).child(key).removeEventListener(mChildEventListener);
 
                                                         }
                                                         //4 means that the TTL(time to live) has died.  This is because the driver is inactive.
@@ -489,21 +540,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onResume() {
         super.onResume();
-        //Temporary commented out. Calling getDeviceLocation for a third time is a problem.  It could potentially create multiple listeners
-        //on the database thus the code will stack.  If the listener is triggered it will run all stacked code. Currently
-        //it's prevented from running the code twice from the (seqAck == 8) boolean value.
-        //getDeviceLocation();
+        startLocationUpdates();
     }
 
     // Prevent battery drain when activity is not in focus
     @Override
     protected void onPause() {
         super.onPause();
-        //Stop their geolocation if we know we don't need it
-        if(isAvailable != null) {
-            if (isAvailable.equals("false"))
-                stopLocationUpdates();
-        }
+        stopLocationUpdates();
     }
 
 
@@ -594,7 +638,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                 //Driver is available, thus stores geolocation into section to be available for query
                 if(isAvailable != null && seqAck != null) {
-                    if (isAvailable.equals("true") && seqAck < 1) {
+                    if (isAvailable.equals("true") && seqAck == 0) {
                         mAvailableGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
                             @Override
                             public void onComplete(String key, DatabaseError error) {

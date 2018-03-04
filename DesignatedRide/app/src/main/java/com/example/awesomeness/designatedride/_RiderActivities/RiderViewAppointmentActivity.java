@@ -70,7 +70,7 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
     private void initializeMap() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.appointmentViewMap_rider);
+                .findFragmentById(R.id.appointmentViewRider_map);
         mapFragment.getMapAsync(this);
     }
 

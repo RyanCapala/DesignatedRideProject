@@ -1,6 +1,7 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
+import com.example.awesomeness.designatedride.util.Constants;
+import com.example.awesomeness.designatedride.util.HandleFileReadWrite;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,15 +33,25 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
     private Marker marker;
 
     // Widgets
-    Button reqRideButton;
+    private Button reqRideButton;
+
+    //file
+    private String fileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_appointment);
+
+        //
+        Intent intent = getIntent();
+        fileName = intent.getStringExtra(Constants.FILENAME_MESSAGE);
+
+        //
         initWidgets();
         initializeMap();
         runExampleAppt();
+        setAppt();
         reqRideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +83,7 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
     private void initializeMap() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.appointmentViewRider_map);
+                .findFragmentById(R.id.appointmentViewMap_rider);
         mapFragment.getMapAsync(this);
     }
 
@@ -91,6 +104,40 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
         setTimeInfo("14:00 PST", "Monday, February 5");
         setAdvancedBookingInfo("Not Set", "Advanced booking available");
         setNotesInfo("Tap the edit button to add notes.");
+    }
+
+    private void setAppt() {
+        //open file
+
+        String name = "";
+        String address = "";
+        String time = "";
+        String date = "";
+        String status = "";
+        String notes = "";
+
+        HandleFileReadWrite reader = new HandleFileReadWrite();
+        reader.open(this, fileName);
+        if (reader.isExist()) {
+            name = reader.readLine();
+            address = reader.readLine();
+            time = reader.readLine();
+            date = reader.readLine();
+            status = reader.readLine();
+            notes = reader.readLine();
+            StringBuilder stringBuilder = new StringBuilder();
+            while (notes != null) {
+                stringBuilder.append(notes);
+                stringBuilder.append("\n");
+                notes = reader.readLine();
+            }
+            notes = stringBuilder.toString();
+        }
+
+        setHospitalInfo(name, address);
+        setTimeInfo(time, date);
+        setAdvancedBookingInfo(status, (status.equals("yes")) ? "Advanced booking available" : "Advanced booking not available");
+        setNotesInfo(notes);
     }
 
     private void setHospitalInfo(String name, String address) {

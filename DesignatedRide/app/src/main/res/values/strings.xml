@@ -58,7 +58,15 @@
     <string name="view_appt_rider_advanced_book_status_default_text">ADVANCED_BOOK_STATUS</string>
     <string name="view_appt_rider_advancedbookingsubtext_default_text">ADVANCED_BOOKING_AVAILABLE</string>
     <string name="view_appt_rider_additionalnote_default_text">ADDITIONAL_NOTES_TEXT</string>
+    <string name="view_appt_rider_hospital_name">Enter Hospital\'s Name</string>
+    <string name="view_appt_rider_hospital_address">Enter Hospital\'s Address</string>
+    <string name="view_appt_rider_time">Appointment\'s Time</string>
+    <string name="view_appt_rider_note">Additional Notes</string>
     <string name="view_appt_rider_editpen_desc">edit pen icon</string>
+    <string name="view_appt_rider_editpen_desc1">edit pen icon</string>
+    <string name="view_appt_rider_appointment_text_view">%1$s\\n%2$s</string>
+
+
 
     <!--Uncategorized-->
     <string name="loginLinkTV">Login Page</string>
@@ -72,6 +80,7 @@
     <string name="update_profile">Update Profile</string>
     <string name="logout">Logout</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
     <string name="verify">Are you sure?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
@@ -80,5 +89,11 @@
     <string name="update_pwd">Update Password</string>
     <string name="close">Close</string>
     <string name="reset_pwd">Reset Password</string>
+
+
+    <!--Calendar Fragment-->
+    <!--Not necessary-->
+    <string name="addCalDes">ADD CAL</string>
+    <string name="viewCalDes">VIEW CAL</string>
 
 </resources>

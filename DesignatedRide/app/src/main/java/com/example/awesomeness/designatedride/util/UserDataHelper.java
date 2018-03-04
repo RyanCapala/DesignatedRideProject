@@ -70,6 +70,5 @@ public class UserDataHelper{
     public static void deleteLocalUser(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(userDataFileName,Context.MODE_PRIVATE);
         sharedPreferences.edit().clear().commit();
-        Log.d(TAG, "deleteLocalUser: DELETED USER DATA");
     }
 }

@@ -85,6 +85,7 @@ public class ProfileDialogHelper {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UserDataHelper.deleteLocalUser(ctx);
                 dialog.dismiss();
                 showConfirmationDialog();
             }
@@ -116,7 +117,6 @@ public class ProfileDialogHelper {
             public void onClick(View v) {
                 confirmationDialog.dismiss();
                 confirmationDialog = null;
-                UserDataHelper.deleteLocalUser(ctx);
                 signOutUser();
             }
         });
@@ -126,6 +126,7 @@ public class ProfileDialogHelper {
             public void onClick(View v) {
                 confirmationDialog.dismiss();
                 confirmationDialog = null;
+                confirmationDialog.dismiss();
             }
         });
 

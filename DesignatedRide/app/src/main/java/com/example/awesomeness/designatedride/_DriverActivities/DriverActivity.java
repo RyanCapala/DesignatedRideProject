@@ -142,7 +142,4 @@ public class DriverActivity extends AppCompatActivity {
         }
         return false;
     }
-
-
-
 }

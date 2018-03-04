@@ -1,6 +1,7 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -148,9 +149,15 @@ public class RiderActivity extends AppCompatActivity {
         calendarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DialogFragment newFragment = new AppointmentManagerFragment();
+                //newFragment.show(getSupportFragmentManager(), "missiles");
+                newFragment.show(getFragmentManager(), "");
 
             }
         });
+
+
+
 
         settingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +169,7 @@ public class RiderActivity extends AppCompatActivity {
         getProfileImage();
 
     }//End of onCreate
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

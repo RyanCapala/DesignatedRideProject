@@ -130,7 +130,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_map);
-        getLocationPermissions();
 
         initWidgets();
 
@@ -237,12 +236,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     for (int i = 0; i < grantResults.length; i++) {
                         if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             mapLocationPermissionsGranted = false;
+                            Log.d(TAG, "onRequestPermissionsResult: (Driver) Permissions not granted!");
                             return;
                         }
                     }
 
                     mapLocationPermissionsGranted = true;
+                    Log.d(TAG, "onRequestPermissionsResult: (Driver) PPermissions granted!");
                     initializeMap();
+                    startLocationUpdates();
                 }
             }
         }
@@ -620,10 +622,21 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        // Start location updates. Will ask for permissions if necessary
+        startLocationUpdates();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         resumed();
-        startLocationUpdates();
+        if (mapLocationPermissionsGranted) {
+            startLocationUpdates();
+        } else {
+            Toast.makeText(this, "Location permissions not granted!", Toast.LENGTH_SHORT).show();
+        }
         obtainKey = mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY);
         obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -791,15 +804,23 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
 
     private void stopLocationUpdates() {
-        Log.d(TAG, "stopLocationUpdates: STOPPED LOCATION UPDATES");
-        mapFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        Log.d(TAG, "stopLocationUpdates: (DRIVER) STOPPED LOCATION UPDATES");
+        if (mapFusedLocationProviderClient != null) {
+            if (mLocationCallback != null) {
+                mapFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+            }
+        }
     }
     private void startLocationUpdates() {
-        try {
-            Log.d(TAG, "startLocationUpdates: STARTED LOCATION UPDATES");
-            mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-        }catch (SecurityException e){
-            Log.d(TAG, "startLocationUpdates: " + e.getMessage());
+        if (mapLocationPermissionsGranted) {
+            try {
+                Log.d(TAG, "startLocationUpdates: STARTED LOCATION UPDATES");
+                mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+            } catch (SecurityException e) {
+                Log.d(TAG, "startLocationUpdates: " + e.getMessage());
+            }
+        } else {
+            getLocationPermissions();
         }
     }
 
@@ -812,6 +833,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mapLocationPermissionsGranted = true;
                 initializeMap();
+                Log.d(TAG, "getLocationPermissions: (DRIVER) Have permissions. Starting Updates");
+                startLocationUpdates();
             } else {
                 ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
             }
@@ -1046,10 +1069,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         }
                     }
                     else if(isAvailable.equals("false")){
+                        startLocationUpdates();
                         setPacket();
                     }
                 }
                 else if (isAvailable == null) {
+                    startLocationUpdates();
                     setPickupBtn.setText(available);
                     setPacket();
                 }

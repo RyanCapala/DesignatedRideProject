@@ -218,12 +218,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     for (int i = 0; i < grantResults.length; i++) {
                         if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             mapLocationPermissionsGranted = false;
+                            Log.d(TAG, "onRequestPermissionsResult: (Driver) Permissions not granted!");
                             return;
                         }
                     }
 
                     mapLocationPermissionsGranted = true;
+                    Log.d(TAG, "onRequestPermissionsResult: (Driver) PPermissions granted!");
                     initializeMap();
+                    startLocationUpdates();
                 }
             }
         }
@@ -397,12 +400,135 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        // Start location updates. Will ask for permissions if necessary
+        startLocationUpdates();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+<<<<<<< HEAD
         //Temporary commented out. Calling getDeviceLocation for a third time is a problem.  It could potentially create multiple listeners
         //on the database thus the code will stack.  If the listener is triggered it will run all stacked code. Currently
         //it's prevented from running the code twice from the (seqAck == 8) boolean value.
         //getDeviceLocation();
+=======
+        resumed();
+        if (mapLocationPermissionsGranted) {
+            startLocationUpdates();
+        } else {
+            Toast.makeText(this, "Location permissions not granted!", Toast.LENGTH_SHORT).show();
+        }
+        obtainKey = mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY);
+        obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                key = dataSnapshot.getValue(String.class);
+                obtainPairKey = mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.PAIR_KEY);
+                obtainPairKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        pairKey = dataSnapshot.getValue(String.class);
+                        if(pairKey != null) {
+                            obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
+                            obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    riderKey = dataSnapshot.getValue(String.class);
+                                    if(riderKey != null) {
+                                        mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                            @Override
+                                            public void onLocationResult(String key, GeoLocation location) {
+                                                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                marker.setTag(riderKey);
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                        mLocation.getLocation(pairKey, new com.firebase.geofire.LocationCallback() {
+                                            @Override
+                                            public void onLocationResult(String key, GeoLocation location) {
+                                                LocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_red)));
+                                                LocMarker.setTag(pairKey);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                        
+                                        riderEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).addChildEventListener(new ChildEventListener() {
+                                            @Override
+                                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                                mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                                    @Override
+                                                    public void onLocationResult(String key, GeoLocation location) {
+                                                        marker.remove();
+                                                        marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                        marker.setTag(riderKey);
+
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                            }
+
+                                            @Override
+                                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+>>>>>>> dc7c4693e3c0eef4d2528c78274f26b12986232b
     }
     // Prevent battery drain when activity is not in focus
     @Override
@@ -416,15 +542,23 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void stopLocationUpdates() {
-        Log.d(TAG, "stopLocationUpdates: STOPPED LOCATION UPDATES");
-        mapFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        Log.d(TAG, "stopLocationUpdates: (DRIVER) STOPPED LOCATION UPDATES");
+        if (mapFusedLocationProviderClient != null) {
+            if (mLocationCallback != null) {
+                mapFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+            }
+        }
     }
     private void startLocationUpdates() {
-        try {
-            Log.d(TAG, "startLocationUpdates: STARTED LOCATION UPDATES");
-            mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-        }catch (SecurityException e){
-            Log.d(TAG, "startLocationUpdates: " + e.getMessage());
+        if (mapLocationPermissionsGranted) {
+            try {
+                Log.d(TAG, "startLocationUpdates: STARTED LOCATION UPDATES");
+                mapFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+            } catch (SecurityException e) {
+                Log.d(TAG, "startLocationUpdates: " + e.getMessage());
+            }
+        } else {
+            getLocationPermissions();
         }
     }
 
@@ -437,6 +571,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mapLocationPermissionsGranted = true;
                 initializeMap();
+                Log.d(TAG, "getLocationPermissions: (DRIVER) Have permissions. Starting Updates");
+                startLocationUpdates();
             } else {
                 ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
             }
@@ -674,10 +810,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         }
                     }
                     else if(isAvailable.equals("false")){
+                        startLocationUpdates();
                         setPacket();
                     }
                 }
                 else if (isAvailable == null) {
+                    startLocationUpdates();
                     setPickupBtn.setText(available);
                     setPacket();
                 }

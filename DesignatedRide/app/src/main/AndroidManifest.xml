@@ -74,10 +74,11 @@
             android:label="@string/title_activity_rider_view_profile"
             android:parentActivityName="._RiderActivities.RiderActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name="._RiderActivities.RiderViewAppointmentActivity"
+        <activity android:name="._RiderActivities.RiderViewAppointmentActivity"
             android:label="APPT_VIEW"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name="._RiderActivities.RiderViewAppointmentActivityWrapper" />
+        <activity android:name="._RiderActivities.RiderAddAppointmentActivity"/>
         <!-- Driver Activities -->
         <activity
             android:name="._DriverActivities.DriverActivity"
@@ -98,8 +99,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name="._RiderActivities.RiderViewAppointmentActivityWrapper" />
-        <activity android:name="._RiderActivities.RiderAddAppointmentActivity"></activity>
+
     </application>
 
 </manifest>

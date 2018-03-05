@@ -10,7 +10,7 @@
     tools:context="com.example.awesomeness.designatedride._RiderActivities.RiderViewAppointmentActivity">
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline"
+        android:id="@+id/appointmentViewRiderMapInfo_guideline"
         android:layout_width="1dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -18,11 +18,11 @@
 
     <!--Google map-->
     <fragment
-        android:id="@+id/appointmentViewMap_rider"
+        android:id="@+id/appointmentViewRider_map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/guideline"
+        app:layout_constraintBottom_toTopOf="@id/appointmentViewRiderMapInfo_guideline"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,166 +30,180 @@
         tools:layout_editor_absoluteX="411dp" />
 
     <!--Bottom Info Bar-->
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/viewAppointmentRiderScroll_scrollview"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorAccentWhiteBrown"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline">
+        app:layout_constraintTop_toTopOf="@+id/appointmentViewRiderMapInfo_guideline">
 
-        <!-- Appointment Destination-->
-        <android.support.constraint.ConstraintLayout
-            android:layout_gravity="center_horizontal"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/blueMarkerDestLogo"
-                android:layout_width="25dp"
+            <!-- Appointment Destination-->
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp">
+
+                <ImageView
+                    android:id="@+id/blueMarkerDestLogo"
+                    android:layout_width="25dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="250dp"
+                    android:contentDescription="@string/view_appt_rider_dest_logo_desc"
+                    android:src="@drawable/icon_location_blue"
+                    app:layout_constraintLeft_toRightOf="parent"
+                    app:layout_constraintRight_toLeftOf="parent" />
+
+                <TextView
+                    android:id="@+id/viewAppointmentRiderDestName_tv"
+                    style="@style/AppTheme.RiderApptView.LabelText.Headers"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/view_appt_rider_hospital_name_default"
+                    app:layout_constraintLeft_toRightOf="@id/blueMarkerDestLogo"
+                    app:layout_constraintTop_toTopOf="@id/blueMarkerDestLogo" />
+
+                <TextView
+                    android:id="@+id/viewAppointmentRiderDestAddress_tv"
+                    style="@style/AppTheme.RiderApptView.LabelText.Subtext"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/view_appt_rider_hospital_address_default"
+                    app:layout_constraintLeft_toRightOf="@id/blueMarkerDestLogo"
+                    app:layout_constraintTop_toBottomOf="@id/viewAppointmentRiderDestName_tv" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <!--Date and Time -->
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/apptViewTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp">
+
+                <ImageView
+                    android:id="@+id/blueMarkerClockLogo"
+                    android:layout_width="25dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="250dp"
+                    android:contentDescription="@string/view_appt_rider_time_icon_desc"
+                    android:src="@drawable/icon_clock"
+                    app:layout_constraintLeft_toRightOf="parent"
+                    app:layout_constraintRight_toLeftOf="parent" />
+
+                <TextView
+                    android:id="@+id/viewAppointmentRiderDateTime_tv"
+                    style="@style/AppTheme.RiderApptView.LabelText.Headers"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/view_appt_rider_time_header_default"
+                    app:layout_constraintLeft_toRightOf="@id/blueMarkerClockLogo"
+                    app:layout_constraintTop_toTopOf="@id/blueMarkerClockLogo" />
+
+                <TextView
+                    android:id="@+id/viewAppointmentRiderDateDayMonth_tv"
+                    style="@style/AppTheme.RiderApptView.LabelText.Subtext"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/view_appt_rider_time_daymonthday_default_text"
+                    app:layout_constraintLeft_toRightOf="@id/blueMarkerClockLogo"
+                    app:layout_constraintTop_toBottomOf="@id/viewAppointmentRiderDateTime_tv" />
+
+            </android.support.constraint.ConstraintLayout>
+            <!--Advanced Booking-->
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp">
+
+                <ImageView
+                    android:id="@+id/blueMarkerCarLogo"
+                    android:layout_width="25dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="250dp"
+                    android:contentDescription="@string/view_appt_rider_advancebookingicon_desc"
+                    android:src="@drawable/icon_car"
+                    app:layout_constraintLeft_toRightOf="parent"
+                    app:layout_constraintRight_toLeftOf="parent" />
+
+                <TextView
+                    android:id="@+id/viewAppointmentRiderAdvanceBookingSetStatus_tv"
+                    style="@style/AppTheme.RiderApptView.LabelText.Headers"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/view_appt_rider_advanced_book_status_default_text"
+                    app:layout_constraintLeft_toRightOf="@id/blueMarkerCarLogo"
+                    app:layout_constraintTop_toTopOf="@id/blueMarkerCarLogo" />
+
+                <TextView
+                    android:id="@+id/viewAppointmentRiderAdvanceBookingAvail_tv"
+                    style="@style/AppTheme.RiderApptView.LabelText.Subtext"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/view_appt_rider_advancedbookingsubtext_default_text"
+                    app:layout_constraintLeft_toRightOf="@id/blueMarkerCarLogo"
+                    app:layout_constraintTop_toBottomOf="@id/viewAppointmentRiderAdvanceBookingSetStatus_tv" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <!--Notes-->
+
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp">
+
+                <ImageView
+                    android:id="@+id/blueMarkerNotesLogo"
+                    android:layout_width="25dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="250dp"
+                    android:src="@drawable/icon_notes"
+                    app:layout_constraintLeft_toRightOf="parent"
+                    app:layout_constraintRight_toLeftOf="parent" />
+
+                <TextView
+                    android:id="@+id/viewAppointmentRiderNotesText_tv"
+                    style="@style/AppTheme.RiderApptView.LabelText.Subtext"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/view_appt_rider_additionalnote_default_text"
+                    app:layout_constraintBottom_toBottomOf="@id/blueMarkerNotesLogo"
+                    app:layout_constraintLeft_toRightOf="@id/blueMarkerNotesLogo"
+                    app:layout_constraintTop_toTopOf="@id/blueMarkerNotesLogo" />
+
+            </android.support.constraint.ConstraintLayout>
+            <!-- Request Ride Button -->
+            <Button
+                android:id="@+id/viewAppointmentRiderRequestRide_btn"
+                android:layout_width="250dp"
                 android:layout_height="40dp"
-                android:src="@drawable/icon_location_blue"
-                app:layout_constraintRight_toLeftOf="parent"
-                app:layout_constraintLeft_toRightOf="parent"
-                android:contentDescription="@string/view_appt_rider_dest_logo_desc"
-                android:layout_marginEnd="250dp"/>
-            <TextView
-                android:id="@+id/viewAppointmentRiderDestName_tv"
-                style="@style/AppTheme.RiderApptView.LabelText.Headers"
-                android:text="@string/view_appt_rider_hospital_name_default"
-                android:layout_marginStart="5dp"
-                app:layout_constraintTop_toTopOf="@id/blueMarkerDestLogo"
-                app:layout_constraintLeft_toRightOf="@id/blueMarkerDestLogo"/>
+                android:layout_marginTop="15dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/view_appt_rider_request_ride_btn_text" />
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/viewAppointmentRiderDestAddress_tv"
-                style="@style/AppTheme.RiderApptView.LabelText.Subtext"
-                android:text="@string/view_appt_rider_hospital_address_default"
-                android:layout_marginStart="5dp"
-                app:layout_constraintTop_toBottomOf="@id/viewAppointmentRiderDestName_tv"
-                app:layout_constraintLeft_toRightOf="@id/blueMarkerDestLogo"/>
-
-        </android.support.constraint.ConstraintLayout>
-
-        <!--Date and Time -->
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/apptViewTime"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
-
-            <ImageView
-                android:id="@+id/blueMarkerClockLogo"
-                android:layout_width="25dp"
-                android:layout_height="40dp"
-                android:src="@drawable/icon_clock"
-                app:layout_constraintRight_toLeftOf="parent"
-                app:layout_constraintLeft_toRightOf="parent"
-                android:contentDescription="@string/view_appt_rider_time_icon_desc"
-                android:layout_marginEnd="250dp"/>
-            <TextView
-                android:id="@+id/viewAppointmentRiderDateTime_tv"
-                style="@style/AppTheme.RiderApptView.LabelText.Headers"
-                android:text="@string/view_appt_rider_time_header_default"
-                android:layout_marginStart="5dp"
-                app:layout_constraintTop_toTopOf="@id/blueMarkerClockLogo"
-                app:layout_constraintLeft_toRightOf="@id/blueMarkerClockLogo"/>
-
-            <TextView
-                android:id="@+id/viewAppointmentRiderDateDayMonth_tv"
-                style="@style/AppTheme.RiderApptView.LabelText.Subtext"
-                android:text="@string/view_appt_rider_time_daymonthday_default_text"
-                android:layout_marginStart="5dp"
-                app:layout_constraintTop_toBottomOf="@id/viewAppointmentRiderDateTime_tv"
-                app:layout_constraintLeft_toRightOf="@id/blueMarkerClockLogo"/>
-
-        </android.support.constraint.ConstraintLayout>
-        <!--Advanced Booking-->
-        <android.support.constraint.ConstraintLayout
-            android:layout_gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
-
-            <ImageView
-                android:id="@+id/blueMarkerCarLogo"
-                android:layout_width="25dp"
-                android:layout_height="40dp"
-                android:src="@drawable/icon_car"
-                android:contentDescription="@string/view_appt_rider_advancebookingicon_desc"
-                app:layout_constraintRight_toLeftOf="parent"
-                app:layout_constraintLeft_toRightOf="parent"
-                android:layout_marginEnd="250dp"/>
-            <TextView
-                android:id="@+id/viewAppointmentRiderAdvanceBookingSetStatus_tv"
-                style="@style/AppTheme.RiderApptView.LabelText.Headers"
-                android:text="@string/view_appt_rider_advanced_book_status_default_text"
-                android:layout_marginStart="5dp"
-                app:layout_constraintTop_toTopOf="@id/blueMarkerCarLogo"
-                app:layout_constraintLeft_toRightOf="@id/blueMarkerCarLogo"/>
-
-            <TextView
-                android:id="@+id/viewAppointmentRiderAdvanceBookingAvail_tv"
-                style="@style/AppTheme.RiderApptView.LabelText.Subtext"
-                android:text="@string/view_appt_rider_advancedbookingsubtext_default_text"
-                android:layout_marginStart="5dp"
-                app:layout_constraintTop_toBottomOf="@id/viewAppointmentRiderAdvanceBookingSetStatus_tv"
-                app:layout_constraintLeft_toRightOf="@id/blueMarkerCarLogo"/>
-
-        </android.support.constraint.ConstraintLayout>
-
-        <!--Notes-->
-        <android.support.constraint.ConstraintLayout
-            android:layout_gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
-
-            <ImageView
-                android:id="@+id/blueMarkerNotesLogo"
-                android:layout_width="25dp"
-                android:layout_height="40dp"
-                android:src="@drawable/icon_notes"
-                app:layout_constraintRight_toLeftOf="parent"
-                app:layout_constraintLeft_toRightOf="parent"
-                android:layout_marginEnd="250dp"/>
-            <TextView
-                android:id="@+id/viewAppointmentRiderNotesText_tv"
-                style="@style/AppTheme.RiderApptView.LabelText.Subtext"
-                android:text="@string/view_appt_rider_additionalnote_default_text"
-                android:layout_marginStart="5dp"
-                app:layout_constraintTop_toTopOf="@id/blueMarkerNotesLogo"
-                app:layout_constraintLeft_toRightOf="@id/blueMarkerNotesLogo"
-                app:layout_constraintBottom_toBottomOf="@id/blueMarkerNotesLogo"/>
-
-        </android.support.constraint.ConstraintLayout>
-        <!-- Request Ride Button -->
-        <Button
-            android:layout_marginTop="15dp"
-            android:id="@+id/viewAppointmentRiderRequestRide_btn"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/view_appt_rider_request_ride_btn_text" />
-
-    </LinearLayout>
-
+    </ScrollView>
     <!--Edit Pen-->
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+    <ImageButton
+        android:id="@+id/viewAppointmentRiderDraggableResize_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/icon_editpen"
+        android:background="@drawable/icon_editpen"
         android:contentDescription="@string/view_appt_rider_editpen_desc"
-        app:layout_constraintBottom_toTopOf="@id/guideline"
+        app:layout_constraintBottom_toTopOf="@id/appointmentViewRiderMapInfo_guideline"
         app:layout_constraintLeft_toRightOf="parent"
         app:layout_constraintRight_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline" />
-
+        app:layout_constraintTop_toTopOf="@id/appointmentViewRiderMapInfo_guideline" />
 </android.support.constraint.ConstraintLayout>

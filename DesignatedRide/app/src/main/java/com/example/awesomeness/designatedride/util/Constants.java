@@ -37,6 +37,8 @@ public class Constants {
     public static final String RIDER_KEY                = "riderKey";
     public static final String PAIR                     = "Pair";
     public static final String PAIR_KEY                 = "pairKey";
+    public static final String TEXT_BOX                 = "TextBox";
+    public static final String DRIVER_KEY               = "driverKey";
 
     public static final String INTENT_KEY               = "userid";
     public static final String INTENT_KEY_NAME          = "username";

@@ -3,7 +3,9 @@ package com.example.awesomeness.designatedride._RiderActivities;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -94,8 +96,9 @@ public class RiderActivity extends AppCompatActivity {
 
         initWidgets();
         getProfileImage();
-        Intent intent = getIntent();
-        String uname = intent.getStringExtra(Constants.INTENT_KEY_NAME);
+        //Intent intent = getIntent();
+        //String uname = intent.getStringExtra(Constants.INTENT_KEY_NAME);
+        String uname = getFNameFromShrPref(mUser.getUid());
         Snackbar.make(parentView, "Welcome " + uname + "!", Snackbar.LENGTH_LONG).show();
 
 
@@ -105,9 +108,7 @@ public class RiderActivity extends AppCompatActivity {
                 mUser = firebaseAuth.getCurrentUser();
                 if (mUser != null) {
                     uid = mUser.getUid();
-                    Log.d(TAG, "onAuthStateChanged: ===>>uid: " + uid);
                     email = mUser.getEmail();
-
                     mDbRef.child(Constants.RIDER).child(uid).child(Constants.PROFILE);
                 }
             }
@@ -303,6 +304,26 @@ public class RiderActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    //----------------------------------------------------------------------------------------------
+    private String getFNameFromShrPref(String uid) {
+        String fname = "";
+        SharedPreferences sf = getSharedPreferences(Constants.SF_UNAME_PREF, Context.MODE_PRIVATE);
+        fname = sf.getString(uid, "");
+        return fname;
+
+        /*
+        *Note:
+        *       if the welcome snackbar only displays 'Welcome !' its because your account has been
+        *       created already and your first name has not been stored in the shared preference.
+        *       It should display 'Welcome yourName!'.
+        *       But, if you edit your profile name, it will automatically store it to the SF.
+        *       But, for new user, it will store its first name to shared pref when they register.
+        *
+         */
+
+
     }
 
 

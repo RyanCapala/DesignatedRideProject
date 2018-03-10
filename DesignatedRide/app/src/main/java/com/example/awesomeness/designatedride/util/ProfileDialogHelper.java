@@ -78,7 +78,9 @@ public class ProfileDialogHelper {
         updateProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 goToProfileActivity(profileActivityClass);
+
             }
         });
 

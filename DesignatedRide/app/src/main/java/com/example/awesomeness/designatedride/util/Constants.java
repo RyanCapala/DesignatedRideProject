@@ -47,11 +47,16 @@ public class Constants {
     public static final String NO_UPDATE                = "No Updates";
 
     //Error messages
-    public static final String ERROR_MSG = "Password must be at least 8 characters " +
-            "containing at least one of each: lower case (a-z), upper case (A-Z), number (0-9)";
+    public static final String ERROR_MSG                = "Password must be at least 8 characters" +
+                                                          " containing at least one of each: " +
+                                                          "lower case (a-z), upper case (A-Z), " +
+                                                          "number (0-9).";
+    public static final String ERR_CRT_ACT              = "An error occurred while creating your " +
+                                                          "account, please try again.";
 
     public static final String ERR_PWD_NOTMATCH         = "Passwords don't match!";
-    public static final String ERR_NAME_SPECIALCHAR     = "Name can't include numbers ,special characters, or spaces";
+    public static final String ERR_NAME_SPECIALCHAR     = "Name can't include numbers, special " +
+                                                          "characters, or spaces.";
     public static final String ERR_EMAIL_PATTERN        = "Incorrect EMAIL pattern";
 
     public static final String FILENAME_MESSAGE         = "filename";
@@ -60,6 +65,10 @@ public class Constants {
     public static final String DATE_PICKER_TAG          = "datePicker";
 
     public static final String NO_APPOINTMENT_MESSAGE   = "There is currently no appointment";
+
+    //For Shared Preferences
+    public static final String SF_UNAME_PREF            = "UserNamePreference";
+    public static final String SF_UNAME_KEY             = "unameKey";
 
 }
 

@@ -1,7 +1,9 @@
 package com.example.awesomeness.designatedride.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -94,14 +96,17 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        toggleButton.setOnCheckedChangeListener(new CompoundButton
+                .OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Toast.makeText(RegisterActivity.this, "Rider", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, "Rider", Toast.LENGTH_LONG)
+                            .show();
                     isStatus = isChecked;
                 } else {
-                    Toast.makeText(RegisterActivity.this, "Driver", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, "Driver", Toast.LENGTH_LONG)
+                            .show();
                     isStatus = isChecked;
                 }
             }
@@ -145,50 +150,72 @@ public class RegisterActivity extends AppCompatActivity {
                             else
                                 uMode = "Driver";
 
+                            //store fname to Shared pref
+                            storeFNametoSharedPref(fname, userid);
+
                             userInfo.put(Constants.USERID, userid);
                             userInfo.put(Constants.USERMODE, uMode);
                             userInfo.put(Constants.FIRSTNAME, fname);
                             userInfo.put(Constants.LASTNAME, lname);
                             userInfo.put(Constants.EMAIL, em);
-                            userInfo.put(Constants.USEREMAILVERIFIED, String.valueOf(user.isEmailVerified()));
+                            userInfo.put(Constants.USEREMAILVERIFIED, String.valueOf
+                                    (user.isEmailVerified()));
                             drInfo.put(Constants.EMAIL, em);
                             drInfo.put(Constants.USER_RATING, "No Feedback");
                             Map writeInfo = new HashMap();
-                            writeInfo.put(Constants.USER + "/" +
-                                    userid + "/" +
+                            writeInfo.put(Constants.USER + "/" + userid + "/" +
                                     Constants.PROFILE + "/", userInfo);
 
 
                             if (uMode.equals(Constants.DRIVER)) {
-                                mPushKey = FirebaseDatabase.getInstance().getReference(Constants.DRIVER + "/" + userid + "/").push().getKey();
+                                mPushKey = FirebaseDatabase.getInstance().getReference
+                                        (Constants.DRIVER + "/" + userid + "/").push()
+                                        .getKey();
                                 drInfo.put(Constants.GEOKEY, mPushKey);
-                                writeInfo.put(Constants.DRIVER + "/" + userid + "/", drInfo);
+                                writeInfo.put(Constants.DRIVER + "/" + userid + "/",
+                                        drInfo);
                             } else {
-                                writeInfo.put(Constants.RIDER + "/" + userid + "/", drInfo);
-                                mPushKey = FirebaseDatabase.getInstance().getReference(Constants.RIDER + "/" + userid + "/").push().getKey();
+                                writeInfo.put(Constants.RIDER + "/" + userid + "/",
+                                        drInfo);
+                                mPushKey = FirebaseDatabase.getInstance().getReference
+                                        (Constants.RIDER + "/" + userid + "/").push()
+                                        .getKey();
                                 drInfo.put(Constants.GEOKEY, mPushKey);
-                                writeInfo.put(Constants.RIDER + "/" + userid + "/", drInfo);
+                                writeInfo.put(Constants.RIDER + "/" + userid + "/",
+                                        drInfo);
                             }
 
-                            mDatabaseReference.updateChildren(writeInfo, new DatabaseReference.CompletionListener() {
+                            mDatabaseReference.updateChildren(writeInfo, new
+                                    DatabaseReference.CompletionListener() {
                                 @Override
-                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                public void onComplete(DatabaseError databaseError,
+                                                       DatabaseReference
+                                                               databaseReference) {
                                     if (databaseError != null) {
-                                        Log.wtf("Write Error", databaseError.getMessage());
-                                        Toast.makeText(RegisterActivity.this, "An error occurred while creating your account, please try again.", Toast.LENGTH_LONG).show();
+                                        Log.wtf("Write Error", databaseError.getMessage
+                                                ());
+                                        Toast.makeText(RegisterActivity.this, Constants.ERR_CRT_ACT, Toast.LENGTH_LONG).show();
                                         clearEditText();
                                         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
+                                            public void onComplete(@NonNull Task<Void>
+                                                                           task) {
                                                 if (!task.isSuccessful()) {
-                                                    Log.wtf("Non-Deleted User Account", task.getException().getMessage());
+                                                    Log.wtf("Non-Deleted User Account",
+                                                            task.getException()
+                                                                    .getMessage());
                                                 }
                                             }
                                         });
                                     } else {
                                         user.sendEmailVerification();
-                                        Toast.makeText(RegisterActivity.this, "Verification email sent to " + user.getEmail(), Toast.LENGTH_LONG).show();
-                                        UserDataHelper.saveUserInfo(getApplicationContext(), user.getEmail(), pwd, uMode);
+                                        Toast.makeText(RegisterActivity.this,
+                                                "Verification email sent to " + user
+                                                        .getEmail(), Toast.LENGTH_LONG)
+                                                .show();
+                                        UserDataHelper.saveUserInfo
+                                                (getApplicationContext(), user.getEmail
+                                                        (), pwd, uMode);
                                         if (isStatus) {
                                             gotoActivity(RiderActivity.class);
                                         } else {
@@ -198,17 +225,24 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 }
                             });
-                        } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                            Toast.makeText(RegisterActivity.this, "Registration Failed. Email exist!", Toast.LENGTH_LONG).show();
-                        } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                            Toast.makeText(RegisterActivity.this, "Registration Failed. Email incorrect!", Toast.LENGTH_LONG).show();
+                        } else if (task.getException() instanceof
+                                FirebaseAuthUserCollisionException) {
+                            Toast.makeText(RegisterActivity.this, "Registration Failed." +
+                                    " Email exist!", Toast.LENGTH_LONG).show();
+                        } else if (task.getException() instanceof
+                                FirebaseAuthInvalidCredentialsException) {
+                            Toast.makeText(RegisterActivity.this, "Registration Failed." +
+                                    " Email incorrect!", Toast.LENGTH_LONG).show();
                             userEmailET.setError("Email address is required");
-                        } else if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
+                        } else if (task.getException() instanceof
+                                FirebaseAuthWeakPasswordException) {
                             // This code should never run (Error checking purposes)
-                            Toast.makeText(RegisterActivity.this, "Registration Failed. Weak password!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this, "Registration Failed." +
+                                    " Weak password!", Toast.LENGTH_LONG).show();
                             pwdMessage(true, true);
                         } else {
-                            Log.wtf("Authentication creation error", task.getException().getMessage());
+                            Log.wtf("Authentication creation error", task.getException
+                                    ().getMessage());
                         }
 
                         mProgressDialog.dismiss();
@@ -218,9 +252,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    //private void insertToDatabase(String userId, DatabaseReference mDatabaseReference, String fname, String lname, Uri resultUri) {
-    private void insertToDatabase(DatabaseReference mDatabaseReference, String userId, String mode,
-                                  String email, String fname, String lname) {
+    //private void insertToDatabase(String userId, DatabaseReference
+    // mDatabaseReference, String fname, String lname, Uri resultUri) {
+    private void insertToDatabase(DatabaseReference mDatabaseReference, String userId,
+                                  String mode, String email, String fname, String lname) {
 
         // TODO: user profile image.
 
@@ -237,7 +272,8 @@ public class RegisterActivity extends AppCompatActivity {
          //                              --> userImage
          //                              --> userMode
          ***************************************************************************/
-        DatabaseReference currentUserDB = mDatabaseReference.child(Constants.USER).child(Constants.USERID).child(Constants.PROFILE);
+        DatabaseReference currentUserDB = mDatabaseReference.child(Constants.USER)
+                .child(Constants.USERID).child(Constants.PROFILE);
         User mUser = new User(userId, mode, fname, lname, email);
         currentUserDB.setValue(mUser);
 
@@ -290,13 +326,15 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean checkPwd(String pwd) {
-        return (pwd.matches("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{3,}") && pwd.length() >= 8);
+        return (pwd.matches("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{3,}") && pwd.length()
+                >= 8);
     }
 
     private boolean checkName(String fname, String lname) {
         boolean flag = true;
         if (fname.matches("(.*[0-9].*)|(.*[@#$%^&+=.{}(),\"].*)|(.*[\\s].*)")) {
-            firstName.setError("Name can't include numbers ,special characters, or spaces");
+            firstName.setError("Name can't include numbers ,special characters, or " +
+                    "spaces");
             flag = false;
         }
         if (lname.matches("(.*[0-9].*)|(.*[@#$%^&+={}(),\"].*)|(.*[\\s].*)")) {
@@ -308,8 +346,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void pwdMessage(boolean userpwd, boolean vpwd) {
-        String errorMsg = "Password must be at least 8 characters " +
-                "containing at least one of each: lower case (a-z), upper case (A-Z), number (0-9)";
+        String errorMsg = "Password must be at least 8 characters " + "containing at " +
+                "least one of each: lower case (a-z), upper case (A-Z), number (0-9)";
 
         if (userpwd) {
             userPwd.setError(errorMsg);
@@ -329,7 +367,8 @@ public class RegisterActivity extends AppCompatActivity {
             return true;
     }
 
-    private boolean fieldChecking(String fname, String lname, String em, String pwd, String vpwd) {
+    private boolean fieldChecking(String fname, String lname, String em, String pwd,
+                                  String vpwd) {
         boolean flag = true;
 
         if (fname.isEmpty()) {
@@ -354,6 +393,15 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         return flag;
+    }
+
+    //function to store the firstname to shared preference
+    //so we dont have to call firebase for it
+    private void storeFNametoSharedPref(String fname, String uid) {
+        SharedPreferences sf = getSharedPreferences(Constants.SF_UNAME_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sf.edit();
+        editor.putString(uid, fname);
+        editor.apply();
     }
 
 }

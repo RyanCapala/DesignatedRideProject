@@ -2,7 +2,9 @@
 package com.example.awesomeness.designatedride._DriverActivities;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -58,8 +60,9 @@ public class DriverActivity extends AppCompatActivity {
         mDatabaseReference = mDatabase.getReference();
         mDatabaseReference.keepSynced(true);
 
-        Intent intent = getIntent();
-        String uname = intent.getStringExtra(Constants.INTENT_KEY_NAME);
+        //Intent intent = getIntent();
+        //String uname = intent.getStringExtra(Constants.INTENT_KEY_NAME);
+        String uname = getFNameFromShrPref(mUser.getUid());
         Snackbar.make(parentView, "Welcome " + uname + "!", Snackbar.LENGTH_LONG).show();
 
         profileImage.setOnClickListener(new View.OnClickListener() {
@@ -142,4 +145,23 @@ public class DriverActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    //----------------------------------------------------------------------------------------------
+    private String getFNameFromShrPref(String uid) {
+        String fname = "";
+        SharedPreferences sf = getSharedPreferences(Constants.SF_UNAME_PREF, Context.MODE_PRIVATE);
+        fname = sf.getString(uid, "");
+        return fname;
+
+        /*
+        *Note:
+        *       if the welcome snackbar only displays 'Welcome !' its because your account has been
+        *       created already and your first name has not been stored in the shared preference.
+        *       It should display 'Welcome yourName!'.
+        *       But, if you edit your profile name, it will automatically store it to the SF.
+        *       But, for new user, it will store its first name to shared pref when they register.
+        *
+         */
+    }
+
 }

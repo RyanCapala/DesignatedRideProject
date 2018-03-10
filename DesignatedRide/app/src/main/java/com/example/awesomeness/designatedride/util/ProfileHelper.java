@@ -1,7 +1,7 @@
 package com.example.awesomeness.designatedride.util;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -25,14 +25,14 @@ public class ProfileHelper {
 
     private static final String TAG = "ProfileHelper";
     //Firebase
-    private DatabaseReference mDatabaseReference;
+    private DatabaseReference mDatabaseReference, mDatabaseReference2;
     private FirebaseDatabase mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
     private Context ctx;
     private HashMap<String, String> childMap;
-    private String child_fname, child_lname, child_email;
+    private String child_fname, child_lname, child_email, child_mode;
 
     private EditText firstNameET, lastNameET, emailET;
 
@@ -44,6 +44,7 @@ public class ProfileHelper {
         this.firstNameET = firstNameET;
         this.lastNameET = lastNameET;
         this.emailET = emailET;
+        mDatabaseReference2 = mDatabaseReference;
     }
 
     //----------------------------------------------------------------------------------------------
@@ -65,10 +66,11 @@ public class ProfileHelper {
 
                         child_fname = childMap.get(Constants.FIRSTNAME);
                         child_lname = childMap.get(Constants.LASTNAME);
-                        child_email = childMap.get(Constants.EMAIL);
+                        //child_email = childMap.get(Constants.EMAIL);
+                        child_mode  = childMap.get(Constants.USERMODE);
                         firstNameET.setText(child_fname);
                         lastNameET.setText(child_lname);
-                        emailET.setText(child_email);
+                        //emailET.setText(child_email);
                     }
 
                     @Override
@@ -76,6 +78,10 @@ public class ProfileHelper {
 
                     }
                 });
+
+        child_email = mUser.getEmail();
+        emailET.setText(child_email);
+
     }
 
     //----------------------------------------------------------------------------------------------
@@ -85,9 +91,6 @@ public class ProfileHelper {
         String lname = lastNameET.getText().toString().trim();
         String email = emailET.getText().toString().trim();
 
-        Log.d(TAG, "updateAccount: >>>>>>childname: " + child_fname);
-        Log.d(TAG, "updateAccount: >>>>>>childlname: " + child_lname);
-        Log.d(TAG, "updateAccount: >>>>>>childEmail: " + child_email);
 
         DatabaseReference dbref = mDatabaseReference
                 .child(Constants.USER)
@@ -103,6 +106,9 @@ public class ProfileHelper {
                 if (!checker.compareString(fname, child_fname)) {
                     dbref.child(Constants.FIRSTNAME).setValue(fname);
                     itemsUpdated = itemsUpdated + " \nfirstName: " + fname;
+
+                    //Store updated fname to Shared Pref
+                    storeFNametoSharedPref(fname, mUser.getUid());
                 }
 
                 if (!checker.compareString(lname, child_lname)) {
@@ -117,6 +123,25 @@ public class ProfileHelper {
                     dbref.child(Constants.EMAIL).setValue(email);
                     mUser.updateEmail(email);
                     itemsUpdated = itemsUpdated + " \nemail: " + email;
+
+                    //check the 'userMode' so we can also update the rider/driver data
+                    if (child_mode.equals(Constants.RIDER)) {
+                        //update the Rider email data
+                        DatabaseReference dbref2 = mDatabaseReference2
+                                .child(Constants.RIDER)
+                                .child(mUser.getUid());
+
+                        dbref2.child(Constants.EMAIL).setValue(email);
+
+                    } else if (child_mode.equals(Constants.DRIVER)) {
+                        //update the Driver email data
+                        DatabaseReference dbref2 = mDatabaseReference2
+                                .child(Constants.DRIVER)
+                                .child(mUser.getUid());
+
+                        dbref2.child(Constants.EMAIL).setValue(email);
+                    }
+
                 } else {
                     emailET.setError(Constants.ERR_EMAIL_PATTERN);
                 }
@@ -139,6 +164,17 @@ public class ProfileHelper {
         InputMethodManager inputMethodManager = (InputMethodManager)ctx.getSystemService(Context
                 .INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    //----------------------------------------------------------------------------------------------
+    private void storeFNametoSharedPref(String fname, String uid) {
+        //SharedPreferences sf = getSharedPreferences(Constants.SF_UNAME_PREF, Context
+        // .MODE_PRIVATE);
+        SharedPreferences sf = ctx.getSharedPreferences(Constants.SF_UNAME_PREF, Context
+                .MODE_PRIVATE);
+        SharedPreferences.Editor editor = sf.edit();
+        editor.putString(uid, fname);
+        editor.apply();
     }
 
 }

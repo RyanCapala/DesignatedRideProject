@@ -90,6 +90,15 @@
     <string name="close">Close</string>
     <string name="reset_pwd">Reset Password</string>
 
+    
+    <!--Driver Drawer View-->
+    <string name="view_driver_profile">View Profile</string>
+    <string name="ride_schedule">Ride Schedule</string>
+    <string name="view_map">View Map</string>
+    <string name="available">Available</string>
+    <string name="incoming_request">Incoming Request</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
 
     <!--Calendar Fragment-->
     <!--Not necessary-->

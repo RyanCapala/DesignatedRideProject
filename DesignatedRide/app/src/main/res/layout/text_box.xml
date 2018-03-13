@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="340dp"
+        android:layout_height="274dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/colorPrimary"
+        android:paddingTop="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/circle_background"
+            android:layout_width="116dp"
+            android:layout_height="114dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/primary_color_circle_shadow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/message" />
+
+        <ImageView
+            android:id="@+id/circle"
+            android:layout_width="105dp"
+            android:layout_height="105dp"
+            android:layout_alignBottom="@+id/circle_background"
+            android:layout_alignEnd="@+id/circle_background"
+            android:layout_alignStart="@+id/circle_background"
+            android:layout_alignTop="@+id/circle_background"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/primary_color_circle"
+            app:layout_constraintBottom_toBottomOf="@+id/circle_background"
+            app:layout_constraintEnd_toEndOf="@+id/circle_background"
+            app:layout_constraintStart_toStartOf="@+id/circle_background"
+            app:layout_constraintTop_toTopOf="@+id/circle_background" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImgView_driver"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_alignBottom="@+id/circle"
+            android:layout_alignEnd="@+id/circle"
+            android:layout_alignStart="@+id/circle"
+            android:layout_alignTop="@+id/circle_background"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/profile1xm"
+            app:layout_constraintBottom_toBottomOf="@+id/circle"
+            app:layout_constraintEnd_toEndOf="@+id/circle"
+            app:layout_constraintStart_toStartOf="@+id/circle"
+            app:layout_constraintTop_toTopOf="@+id/circle" />
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/incoming_request"
+            android:textColor="@color/colorTextWhite"
+            android:textSize="26sp"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/rider_name"
+            android:layout_width="174dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:padding="5dp"
+            android:text="Bruce Wayne"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/declineButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/message" />
+
+        <Button
+            android:id="@+id/acceptButton"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginStart="24dp"
+            android:background="@color/colorAccentWhiteBrown"
+            android:padding="5dp"
+            android:text="@string/accept"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/declineButton"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@color/colorAccentWhiteBrown"
+            android:padding="5dp"
+            android:text="@string/decline"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/acceptButton" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</android.support.constraint.ConstraintLayout>

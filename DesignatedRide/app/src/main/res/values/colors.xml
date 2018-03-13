@@ -8,6 +8,7 @@
     <color name="colorTextBlue">#3ba5e1</color>
     <color name="colorGrey">#e3e3e3</color>
     <color name="colorDarkGray">#a9a9a9</color>
+    <color name="colorTransparentBlack">#1a000000</color>
 
     <color name="colorTextBlack">#000000</color>
     <color name="colorTextWhite">#ffffff</color>

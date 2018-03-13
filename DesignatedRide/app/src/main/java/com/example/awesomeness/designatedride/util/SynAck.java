@@ -33,10 +33,10 @@ public class SynAck extends AppCompatActivity {
     private AlertDialog dialogBox;
 
     //Widgets
-    private Button yesButton;
-    private Button noButton;
-    private TextView txt;
-    private View confirm_dialog_view;
+    private Button acceptButton;
+    private Button declineButton;
+    private TextView riderName;
+    private View text_box;
 
     private Timer timer;
 
@@ -45,7 +45,12 @@ public class SynAck extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String userid;
     private String key;
+    private String pairKey;
+    private String riderRating;
+    private String message;
     private Query obtainKey;
+    private Query obtainRiderRating;
+    private Query obtainPairKey;
 
     private Map aWriteInfo;
     private Map aExchangeInfo;
@@ -65,6 +70,32 @@ public class SynAck extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 key = dataSnapshot.getValue(String.class);
+                obtainPairKey = mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY);
+                obtainPairKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        pairKey = dataSnapshot.getValue(String.class);
+                        obtainRiderRating = mDatabaseReference.child(Constants.TEXT_BOX).child(pairKey).child(Constants.USER_RATING);
+                        obtainRiderRating.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                riderRating = dataSnapshot.getValue(String.class);
+                                message = riderRating + "\n" + "Now";
+                                riderName.setText(message);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -75,9 +106,7 @@ public class SynAck extends AppCompatActivity {
 
         confirmation = new AlertDialog.Builder(SynAck.this);
         initWidgets();
-        String message = "Rider Available" + "\n" + "Give Ride?";
-        txt.setText(message);
-        confirmation.setView(confirm_dialog_view);
+        confirmation.setView(text_box);
         dialogBox = confirmation.create();
         dialogBox.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -97,7 +126,7 @@ public class SynAck extends AppCompatActivity {
             }
         },10000);
 
-        yesButton.setOnClickListener(new View.OnClickListener() {
+        acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogBox.dismiss();
@@ -110,7 +139,7 @@ public class SynAck extends AppCompatActivity {
             }
         });
 
-        noButton.setOnClickListener(new View.OnClickListener() {
+        declineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogBox.dismiss();
@@ -126,10 +155,10 @@ public class SynAck extends AppCompatActivity {
 
     private void initWidgets()
     {
-        confirm_dialog_view = getLayoutInflater().inflate(R.layout
-                .confirmation_dialog, null);
-        yesButton = (Button)confirm_dialog_view.findViewById(R.id.yesButton);
-        noButton = (Button)confirm_dialog_view.findViewById(R.id.noButton);
-        txt = (TextView)confirm_dialog_view.findViewById(R.id.textAlert);
+        text_box = getLayoutInflater().inflate(R.layout
+                .text_box, null);
+        acceptButton = (Button)text_box.findViewById(R.id.acceptButton);
+        declineButton = (Button)text_box.findViewById(R.id.declineButton);
+        riderName = (TextView)text_box.findViewById(R.id.rider_name);
     }
 }

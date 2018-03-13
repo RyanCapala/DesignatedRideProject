@@ -109,14 +109,13 @@
             android:layout_height="wrap_content"/>
 
         <ImageView
-            android:id="@+id/carIcon"
+            android:id="@+id/car_Icon"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginTop="465dp"
             android:layout_alignParentStart="true"
-            android:paddingStart="60dp"
-            android:src="@drawable/icon_car_white"
-            android:tint="@color/colorDarkGray"/>
+            android:paddingStart="45dp"
+            android:src="@drawable/icon_car_white" />
 
     </RelativeLayout>
 

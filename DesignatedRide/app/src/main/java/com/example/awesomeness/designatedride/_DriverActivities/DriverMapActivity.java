@@ -4,10 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationListener;
@@ -126,6 +123,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private DatabaseReference mChildDropOff;
     private ChildEventListener mChildEventListener;
     private ChildEventListener riderEventListener;
+    private DatabaseReference connectionEvenListener;
     private Query obtainKey;
     private Query obtainRating;
     private Query obtainPacket;
@@ -157,10 +155,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         mDatabase = FirebaseDatabase.getInstance();
 
+
         mDatabaseReference = mDatabase.getReference();
         mChildLocation = mDatabase.getReference();
         mChildAvailable = mDatabase.getReference();
         mChildDropOff = mDatabase.getReference();
+        connectionEvenListener = mDatabase.getReference();
 
         //Creates write locations depending if the user is current available or un-available(giving a ride)
         mAvailableGeoLocationRef = mChildAvailable.child(Constants.AVAILABLE_GEOLOCATION);
@@ -177,8 +177,23 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         initWidgets();
 
+        initializeConnection();
+
         //function reads database to get user's rating and geo location key
-        getKeyNodes();
+        //Currently commented out because LifeCycle of App:
+        //        ---------> OnCreate()
+        //        |           OnStart() <---------- OnRestart()
+        //        |           OnResume()                |
+        //        |        Activity Starts              |
+        //    App Killed <------ OnPause()              |
+        //        |<------------ OnStop()-------------->|
+        //                       OnDestroy()
+        //
+        // Starts from top to bottom.
+        // getKeyNodes already exists in OnResume() which is called before the activity starts.
+        //
+        
+        //getKeyNodes();
     }
 
 
@@ -473,147 +488,148 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                         }
 
 
-                                } else if (isAdvancedBooking.equals("true") && seqAck == 8) {
-                                    //Create a listener on the database.  If the Packet node of the user we created changes for any reason
-                                    //Determine which node did and respond to it accordingly.
+                                } else if(isAdvancedBooking != null && seqAck != null) {
+                                    if (isAdvancedBooking.equals("true") && seqAck == 8) {
+                                        //Create a listener on the database.  If the Packet node of the user we created changes for any reason
+                                        //Determine which node did and respond to it accordingly.
 
-                                    mGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
-                                        @Override
-                                        public void onComplete(String key, DatabaseError error) {
+                                        mGeoFire.setLocation(key, new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), new GeoFire.CompletionListener() {
+                                            @Override
+                                            public void onComplete(String key, DatabaseError error) {
 
-                                        }
-                                    });
+                                            }
+                                        });
 
 
-                                    mChildEventListener = mDatabaseReference.child(Constants.PACKET).child(key).addChildEventListener(new ChildEventListener() {
-                                        @Override
-                                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                        mChildEventListener = mDatabaseReference.child(Constants.PACKET).child(key).addChildEventListener(new ChildEventListener() {
+                                            @Override
+                                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                                        }
+                                            }
 
-                                        @Override
-                                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                                            if (dataSnapshot.getKey().equals(Constants.SEQ_ACK)) {
-                                                seqAck = dataSnapshot.getValue(Integer.class);
-                                                if (seqAck == 9) {
-                                                    preventButton();
-                                                    mDatabaseReference.child(Constants.PACKET).child(Constants.PAIR_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                                            pairKey = dataSnapshot.getValue(String.class);
-                                                            mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(10);
-                                                        }
+                                            @Override
+                                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                                if (dataSnapshot.getKey().equals(Constants.SEQ_ACK)) {
+                                                    seqAck = dataSnapshot.getValue(Integer.class);
+                                                    if (seqAck == 9) {
+                                                        preventButton();
+                                                        mDatabaseReference.child(Constants.PACKET).child(Constants.PAIR_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                pairKey = dataSnapshot.getValue(String.class);
+                                                                mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(10);
+                                                            }
 
-                                                        @Override
-                                                        public void onCancelled(DatabaseError databaseError) {
+                                                            @Override
+                                                            public void onCancelled(DatabaseError databaseError) {
 
-                                                        }
-                                                    });
+                                                            }
+                                                        });
 
-                                                }
-                                                else if (seqAck == 11) {
-                                                    obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
-                                                    obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                                            riderKey = dataSnapshot.getValue(String.class);
-                                                            mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
-                                                                @Override
-                                                                public void onLocationResult(String key, GeoLocation location) {
-                                                                    if(location != null) {
-                                                                        marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
-                                                                        marker.setTag(riderKey);
+                                                    } else if (seqAck == 11) {
+                                                        obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
+                                                        obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                riderKey = dataSnapshot.getValue(String.class);
+                                                                mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                                                    @Override
+                                                                    public void onLocationResult(String key, GeoLocation location) {
+                                                                        if (location != null) {
+                                                                            marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                                            marker.setTag(riderKey);
+                                                                        }
                                                                     }
-                                                                }
 
-                                                                @Override
-                                                                public void onCancelled(DatabaseError databaseError) {
+                                                                    @Override
+                                                                    public void onCancelled(DatabaseError databaseError) {
 
-                                                                }
-                                                            });
+                                                                    }
+                                                                });
 
-                                                        }
+                                                            }
 
-                                                        @Override
-                                                        public void onCancelled(DatabaseError databaseError) {
+                                                            @Override
+                                                            public void onCancelled(DatabaseError databaseError) {
 
-                                                        }
-                                                    });
+                                                            }
+                                                        });
 
-                                                    mLocation.getLocation(pairKey, new com.firebase.geofire.LocationCallback() {
-                                                        @Override
-                                                        public void onLocationResult(String key, GeoLocation location) {
-                                                            LocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_red)));
-                                                            LocMarker.setTag(pairKey);
-                                                        }
+                                                        mLocation.getLocation(pairKey, new com.firebase.geofire.LocationCallback() {
+                                                            @Override
+                                                            public void onLocationResult(String key, GeoLocation location) {
+                                                                LocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_red)));
+                                                                LocMarker.setTag(pairKey);
+                                                            }
 
-                                                        @Override
-                                                        public void onCancelled(DatabaseError databaseError) {
+                                                            @Override
+                                                            public void onCancelled(DatabaseError databaseError) {
 
-                                                        }
-                                                    });
+                                                            }
+                                                        });
 
-                                                    riderEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).addChildEventListener(new ChildEventListener() {
-                                                        @Override
-                                                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                                        riderEventListener = mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).addChildEventListener(new ChildEventListener() {
+                                                            @Override
+                                                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                                                        }
+                                                            }
 
-                                                        @Override
-                                                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                                                            mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
-                                                                @Override
-                                                                public void onLocationResult(String key, GeoLocation location) {
-                                                                    marker.remove();
-                                                                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
-                                                                }
+                                                            @Override
+                                                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                                                mGeoFire.getLocation(riderKey, new com.firebase.geofire.LocationCallback() {
+                                                                    @Override
+                                                                    public void onLocationResult(String key, GeoLocation location) {
+                                                                        marker.remove();
+                                                                        marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                                                                    }
 
-                                                                @Override
-                                                                public void onCancelled(DatabaseError databaseError) {
+                                                                    @Override
+                                                                    public void onCancelled(DatabaseError databaseError) {
 
-                                                                }
-                                                            });
-                                                        }
+                                                                    }
+                                                                });
+                                                            }
 
-                                                        @Override
-                                                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                                            @Override
+                                                            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                                                        }
+                                                            }
 
-                                                        @Override
-                                                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                                                            @Override
+                                                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                                                        }
+                                                            }
 
-                                                        @Override
-                                                        public void onCancelled(DatabaseError databaseError) {
+                                                            @Override
+                                                            public void onCancelled(DatabaseError databaseError) {
 
-                                                        }
-                                                    });
-                                                    mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(3);
+                                                            }
+                                                        });
+                                                        mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(3);
+                                                    }
                                                 }
                                             }
-                                        }
 
-                                        @Override
+                                            @Override
 
-                                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                                        }
+                                            }
 
-                                        @Override
-                                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                                            @Override
+                                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                                        }
+                                            }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
 
-                                        }
-                                    });
+                                            }
+                                        });
 
-                                    mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(9);
+                                        mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.SEQ_ACK).setValue(9);
 
+                                    }
                                 }
 
                             }
@@ -650,6 +666,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         } else {
             Toast.makeText(this, "Location permissions not granted!", Toast.LENGTH_SHORT).show();
         }
+        
+        getKeyNodes();
+        
+        // Read onPause() first for a better understanding of onResume() comment
+        // Since we deleted the listener we have to re-attach that listener to be able to update
+        // the rider's information if they move.  We also need to re-initialize the map as all previous information
+        // such as marker would have been removed and need to be replaced.
         obtainKey = mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY);
         obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -766,6 +789,16 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         super.onPause();
         paused();
         stopLocationUpdates();
+        
+        // This code may seem strange because if identical read operations such as obtainKey was previously done in
+        // getKeyNodes() function earlier on.  Why am I doing it again?
+        // The answer: Firebase is garbage as it doesn't read asynchronously.  
+        // This means even though I put code for Firebase to read and obtain these values, there is no guarantee it actually has
+        // done those read operations yet and the current variable can be null. Thus for any value you must always
+        // do a read operation and within that read operation put the code you need it to do.  This ensures that it has obtained
+        // that value first before doing any type of changes.
+        // So all this code is really doing is removing a listener if the driver is giving out a ride currently.
+        // i.e. If the driver is giving out a ride and they leave this activity stop putting markers on the map.
         obtainKey = mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY);
         obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -776,14 +809,17 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         pairKey = dataSnapshot.getValue(String.class);
-                        if(pairKey != null) {
+                        if(pairKey.equals("false")) {
+
+                        }
+                        else {
                             obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
                             obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     riderKey = dataSnapshot.getValue(String.class);
-                                    if(riderKey != null) {
-                                        if(riderEventListener != null)
+                                    if (riderKey != null) {
+                                        if (riderEventListener != null)
                                             mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).removeEventListener(riderEventListener);
                                     }
                                 }
@@ -794,6 +830,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                 }
                             });
                         }
+
                     }
 
                     @Override
@@ -808,6 +845,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
             }
         });
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -867,6 +909,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         navigationView = findViewById(R.id.nav_view);
         driverName = findViewById(R.id.driver_name);
 
+        // If they click the View Map button bring them back to the map
         viewMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -874,15 +917,16 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
+        // If they click the View Profile button take them to their profile
         viewProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DriverMapActivity.this, DriverProfileActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
+        // Changes the Name of the driver to their name.
         obtainfirstName = mDatabaseReference.child(Constants.USER).child(userid).child(Constants.PROFILE).child(Constants.FIRSTNAME);
         obtainfirstName.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -922,6 +966,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
+    //Function gets important string values needed to be able to traverse the users information within database.
     private void getKeyNodes(){
         obtainKey = mDatabaseReference.child(Constants.DRIVER).child(userid).child(Constants.GEOKEY);
         obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -997,6 +1042,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mDatabaseReference.child(Constants.PACKET).child(key).removeValue();
     }
 
+    // Changes Availability button text and color depending on their Availability
     private void checkIsOn(){
         if(isAvailable != null) {
             if (isAvailable.equals("true")) {
@@ -1040,11 +1086,18 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         }
 
                         initButton();
+
+                        // With this packet information toggle availability button
                         checkIsOn();
+
+                        // Prevent the driver from being able to set themselves to be available as
+                        // they are either giving a rider or the packet was created outside the driver map
+                        // activity
                         if(seqAck != null){
-                            if(seqAck == 3)
+                            if(seqAck == 3 || seqAck == 8)
                                 preventButton();
                         }
+                        
                         //Calls getDeviceLocation a second time.  This is because the first time it runs
                         //is to set up the map (initialize it to their position) but, the second time is to start the
                         //read,write and listen operations to the database.
@@ -1069,7 +1122,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
 
-
+    // This function is called if no Packet exists within the database, i.e. They hit the Availability button.
     private void setPacket() {
         aExchangeInfo = new HashMap();
         aWriteInfo = new HashMap();
@@ -1081,6 +1134,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         //   isAdvancedBooking -> false
         //   isAvailable ->       true
         //   userRating ->        (current rating)
+        //   pairKey ->            false
         //   seqAck ->             8
         /////////////////////////////////////////
 
@@ -1107,10 +1161,21 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         isAdvancedBooking = "false";
         pairKey = "false";
 
+        // If the app is killed. Remove their geolocation from being queued by a rider.
+        // i.e. If they hit the Availability button and exit the app remove their information.
+        // This will also remove this information from the database if there is a long network issue
+        // with server and client.
+        mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).onDisconnect().removeValue();
+
+
+        // Toggle the availability button text
         checkIsOn();
+
+        // get the device location
         getDeviceLocation();
     }
 
+    // Function resets all values back to null
     private void resetValues(){
         isAvailable = null;
         seqAck = null;
@@ -1124,7 +1189,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onClick(View view) {
                 if (isAvailable != null) {
-                    if (isAvailable.equals("true")) {
+                        if (isAvailable.equals("true")) {
                         stopLocationUpdates();
                         resetValues();
                         turnOff();
@@ -1148,34 +1213,55 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 
+    // Function returns whether the activity is OnPause() or OnResume(), Essentially are they on this activity currently.
     public static boolean activityOn() {
         return activity;
     }
 
+    // Function returns true if they are on this activity.
     public static void resumed() {
         activity = true;
     }
 
+    // Function returns false if they are no longer on this activity.
     public static void paused() {
         activity= false;
     }
 
+
+    // Function switches the text of Availability button to say Unavailable and changes the color of the car icon to grey
     private void turnOff() {
         Available.setText(unavailable);
         carIcon.getDrawable().setColorFilter(getResources().getColor(R.color.colorDarkGray),PorterDuff.Mode.SRC_ATOP);
     }
+
+    // Function switches the text of Availability button to say Available and changes the color of the car icon to blue
     private void turnOn(){
         Available.setText(available);
         carIcon.getDrawable().setColorFilter(getResources().getColor(R.color.colorTextBlue),PorterDuff.Mode.SRC_ATOP);
     }
 
+    // Function disables the Availability button and changes the color of the car icon to grey.
+    // This function is used to prevent someone who is unavailable (for example, currently giving a ride) from using the button
     private void preventButton(){
         Available.setOnClickListener(null);
         carIcon.getDrawable().setColorFilter(getResources().getColor(R.color.colorDarkGray),PorterDuff.Mode.SRC_ATOP);
     }
+
+    private void initializeConnection(){
+        connectionEvenListener.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }
-
-
 
 
 

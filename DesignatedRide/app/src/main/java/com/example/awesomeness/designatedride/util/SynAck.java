@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,7 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -39,6 +39,7 @@ public class SynAck extends AppCompatActivity {
     private View text_box;
 
     private Timer timer;
+    private Date time;
 
     private DatabaseReference mDatabaseReference;
     private FirebaseDatabase mDatabase;
@@ -52,6 +53,8 @@ public class SynAck extends AppCompatActivity {
     private Query obtainRiderRating;
     private Query obtainPairKey;
 
+    private Map writeInfo;
+    private Map exchangeInfo;
     private Map aWriteInfo;
     private Map aExchangeInfo;
 
@@ -80,7 +83,8 @@ public class SynAck extends AppCompatActivity {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 riderRating = dataSnapshot.getValue(String.class);
-                                message = riderRating + "\n" + "Now";
+                                time = Calendar.getInstance().getTime();
+                                message = riderRating + "\n" + time.toString();
                                 riderName.setText(message);
                             }
 
@@ -109,9 +113,6 @@ public class SynAck extends AppCompatActivity {
         confirmation.setView(text_box);
         dialogBox = confirmation.create();
         dialogBox.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        aExchangeInfo = new HashMap();
-        aWriteInfo = new HashMap();
 
         dialogBox.show();
 
@@ -162,3 +163,4 @@ public class SynAck extends AppCompatActivity {
         riderName = (TextView)text_box.findViewById(R.id.rider_name);
     }
 }
+

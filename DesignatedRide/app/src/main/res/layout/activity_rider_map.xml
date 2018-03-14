@@ -12,16 +12,62 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/setPickupBtn_ridermap"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:textStyle="normal"
-        android:text="Set Pickup" />
+      <EditText
+          android:id="@+id/pickUp"
+          android:layout_width="300dp"
+          android:layout_height="wrap_content"
+          android:layout_above="@+id/destination"
+          android:layout_alignStart="@+id/destination"
+          android:layout_marginBottom="15dp"
+          android:background="@color/colorAccentWhiteBrown"
+          android:ems="10"
+          android:hint="Pick Up:"
+          android:inputType="textPostalAddress"
+          android:textColorHint="@color/colorTextBlue" />
+
+      <EditText
+          android:id="@+id/destination"
+          android:layout_width="300dp"
+          android:layout_height="wrap_content"
+          android:layout_above="@+id/time"
+          android:layout_alignStart="@+id/time"
+          android:layout_marginBottom="12dp"
+          android:background="@color/colorAccentWhiteBrown"
+          android:ems="10"
+          android:hint="Destination:"
+          android:inputType="textPostalAddress"
+          android:textColorHint="@color/colorTextBlue" />
+
+      <EditText
+          android:id="@+id/time"
+          android:layout_width="300dp"
+          android:layout_height="wrap_content"
+          android:layout_above="@+id/setPickupBtn_ridermap"
+          android:layout_alignStart="@+id/setPickupBtn_ridermap"
+          android:layout_marginBottom="25dp"
+          android:background="@color/colorAccentWhiteBrown"
+          android:ems="10"
+          android:hint="Time:"
+          android:inputType="time"
+          android:textColorHint="@color/colorTextBlue" />
+
+      <Button
+          android:id="@+id/setPickupBtn_ridermap"
+          android:layout_width="300dp"
+          android:layout_height="40dp"
+          android:layout_alignParentBottom="true"
+          android:layout_centerHorizontal="true"
+          android:layout_marginBottom="14dp"
+          android:text="@string/rider_map_string"
+          android:textColor="@color/colorTextWhite" />
+
+  </RelativeLayout>
+
+
+
 
 </FrameLayout>

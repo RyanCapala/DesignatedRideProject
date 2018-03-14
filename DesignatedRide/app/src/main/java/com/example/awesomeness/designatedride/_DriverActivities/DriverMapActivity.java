@@ -58,6 +58,7 @@ import java.util.Map;
 import java.util.Timer;
 
 
+
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "DriverMapActivity";
@@ -177,8 +178,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         initWidgets();
 
-        initializeConnection();
-
         //function reads database to get user's rating and geo location key
         //Currently commented out because LifeCycle of App:
         //        ---------> OnCreate()
@@ -192,7 +191,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         // Starts from top to bottom.
         // getKeyNodes already exists in OnResume() which is called before the activity starts.
         //
-        
+
         //getKeyNodes();
     }
 
@@ -353,6 +352,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                         else if (seqAck == 3) {
                                                             Toast.makeText(DriverMapActivity.this, "Connected with Rider", Toast.LENGTH_LONG).show();
                                                             preventButton();
+                                                            savePacket();
                                                             obtainPairKey = mDatabaseReference.child(Constants.PACKET).child(key).child(Constants.PAIR_KEY);
                                                             obtainPairKey.addListenerForSingleValueEvent(new ValueEventListener() {
                                                                 @Override
@@ -464,6 +464,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                             Toast.makeText(DriverMapActivity.this,"A rider is viewing you",Toast.LENGTH_LONG).show();
                                                         }
                                                         //7 means an error has happened.
+                                                        else if(seqAck == 7){
+                                                            Toast.makeText(DriverMapActivity.this,"Availability turned off",Toast.LENGTH_LONG).show();
+                                                        }
                                                         //8 means the packet is being created.
                                                     }
                                                 }
@@ -513,6 +516,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                     seqAck = dataSnapshot.getValue(Integer.class);
                                                     if (seqAck == 9) {
                                                         preventButton();
+                                                        killPacket();
                                                         mDatabaseReference.child(Constants.PACKET).child(Constants.PAIR_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -527,6 +531,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                                         });
 
                                                     } else if (seqAck == 11) {
+                                                        savePacket();
                                                         obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
                                                         obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
@@ -666,9 +671,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         } else {
             Toast.makeText(this, "Location permissions not granted!", Toast.LENGTH_SHORT).show();
         }
-        
+
         getKeyNodes();
-        
+
         // Read onPause() first for a better understanding of onResume() comment
         // Since we deleted the listener we have to re-attach that listener to be able to update
         // the rider's information if they move.  We also need to re-initialize the map as all previous information
@@ -789,10 +794,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         super.onPause();
         paused();
         stopLocationUpdates();
-        
+
         // This code may seem strange because if identical read operations such as obtainKey was previously done in
         // getKeyNodes() function earlier on.  Why am I doing it again?
-        // The answer: Firebase is garbage as it doesn't read asynchronously.  
+        // The answer: Firebase is garbage as it doesn't read asynchronously.
         // This means even though I put code for Firebase to read and obtain these values, there is no guarantee it actually has
         // done those read operations yet and the current variable can be null. Thus for any value you must always
         // do a read operation and within that read operation put the code you need it to do.  This ensures that it has obtained
@@ -1097,7 +1102,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             if(seqAck == 3 || seqAck == 8)
                                 preventButton();
                         }
-                        
+
                         //Calls getDeviceLocation a second time.  This is because the first time it runs
                         //is to set up the map (initialize it to their position) but, the second time is to start the
                         //read,write and listen operations to the database.
@@ -1161,12 +1166,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         isAdvancedBooking = "false";
         pairKey = "false";
 
-        // If the app is killed. Remove their geolocation from being queued by a rider.
+        // If the app is killed. Remove their geolocation from being queried by a rider.
         // i.e. If they hit the Availability button and exit the app remove their information.
         // This will also remove this information from the database if there is a long network issue
         // with server and client.
         mDatabaseReference.child(Constants.AVAILABLE_GEOLOCATION).child(key).onDisconnect().removeValue();
-
+        killPacket();
 
         // Toggle the availability button text
         checkIsOn();
@@ -1213,7 +1218,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 
-    // Function returns whether the activity is OnPause() or OnResume(), Essentially are they on this activity currently.
+    // Function returns whether the activity is OnPause() or OnResume(), i.e. are they on this activity currently.
     public static boolean activityOn() {
         return activity;
     }
@@ -1248,6 +1253,21 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         carIcon.getDrawable().setColorFilter(getResources().getColor(R.color.colorDarkGray),PorterDuff.Mode.SRC_ATOP);
     }
 
+    // Function deletes Packet associated with driver in database if they exit the app
+    private void killPacket(){
+        mDatabaseReference.child(Constants.PACKET).child(key).onDisconnect().setValue(7);
+        mDatabaseReference.child(Constants.PACKET).child(key).onDisconnect().removeValue();
+    }
+
+    // Function stops Packet associated with driver from being deleted from database if they exit the app
+    private void savePacket(){
+        mDatabaseReference.child(Constants.PACKET).child(key).onDisconnect().cancel();
+    }
+
+    private void databaseErrorMessages(DatabaseError databaseError) {
+
+    }
+
     private void initializeConnection(){
         connectionEvenListener.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1262,6 +1282,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 }
+
+
+
 
 
 

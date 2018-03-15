@@ -526,15 +526,16 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                 }
                             });
                         }
-                        //ToDO: currently writing incomplete information
+                        //ToDO: have time function acquire date as well
+                        //ToDo: allow user to choose their location after placing map markers as I've notice putting vague things such as UNLV actually sets the address for the UNLV police
                         else if(checkAddress(destinationAddress,destinationLocation) && checkAddress(pickUpAddress,pickUpLocation) && !checkTime(timeItOccurs)){
                             Intent intent = new Intent("SYN");
-                            intent.putExtra("name","");
-                            intent.putExtra("address",destinationLocation);
+                            intent.putExtra("name",destinationAddress.get(0).getFeatureName());
+                            intent.putExtra("address",destinationAddress.get(0).getAddressLine(0));
                             intent.putExtra("time",timeItOccurs);
                             intent.putExtra("date","");
                             intent.putExtra("status","yes");
-                            intent.putExtra("notes","");
+                            intent.putExtra("notes","no additional notes");
                             sendBroadcast(intent);
                         }
                     }

@@ -25,7 +25,7 @@
           android:layout_marginBottom="15dp"
           android:background="@color/colorAccentWhiteBrown"
           android:ems="10"
-          android:hint="Pick Up:"
+          android:hint="@string/rider_map_pickup_hint"
           android:inputType="textPostalAddress"
           android:textColorHint="@color/colorTextBlue" />
 
@@ -38,7 +38,7 @@
           android:layout_marginBottom="12dp"
           android:background="@color/colorAccentWhiteBrown"
           android:ems="10"
-          android:hint="Destination:"
+          android:hint="@string/rider_map_destination_hint"
           android:inputType="textPostalAddress"
           android:textColorHint="@color/colorTextBlue" />
 
@@ -51,7 +51,7 @@
           android:layout_marginBottom="25dp"
           android:background="@color/colorAccentWhiteBrown"
           android:ems="10"
-          android:hint="Time:"
+          android:hint="@string/rider_map_time_hint"
           android:inputType="time"
           android:textColorHint="@color/colorTextBlue" />
 
@@ -62,7 +62,7 @@
           android:layout_alignParentBottom="true"
           android:layout_centerHorizontal="true"
           android:layout_marginBottom="14dp"
-          android:text="@string/rider_map_string"
+          android:text="@string/rider_map_request_button"
           android:textColor="@color/colorTextWhite" />
 
   </RelativeLayout>

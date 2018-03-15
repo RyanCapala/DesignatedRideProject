@@ -2,6 +2,7 @@ package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -525,8 +526,16 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                 }
                             });
                         }
-                        else if(checkAddress(destinationAddress,destinationLocation) && checkAddress(pickUpAddress,pickUpLocation) && checkTime(timeItOccurs)){
-                            //ToDO: send information to appointment manager as it can't be handled by the map. Via Broadcast & Receiver?
+                        //ToDO: currently writing incomplete information
+                        else if(checkAddress(destinationAddress,destinationLocation) && checkAddress(pickUpAddress,pickUpLocation) && !checkTime(timeItOccurs)){
+                            Intent intent = new Intent("SYN");
+                            intent.putExtra("name","");
+                            intent.putExtra("address",destinationLocation);
+                            intent.putExtra("time",timeItOccurs);
+                            intent.putExtra("date","");
+                            intent.putExtra("status","yes");
+                            intent.putExtra("notes","");
+                            sendBroadcast(intent);
                         }
                     }
                     } catch(IOException e){
@@ -752,12 +761,16 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
-            @Override
-            public void onComplete(String key, DatabaseError error) {
+        if(timeItOccurs != null) {
+            if(checkTime(timeItOccurs)) {
+                mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
 
+                    }
+                });
             }
-        });
+        }
 
         //ToDo: Fix camera
         //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
@@ -1066,7 +1079,8 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
                 int currentTime = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                 int timeDiff = formatAgain.get(Calendar.HOUR_OF_DAY) - currentTime;
-                return (timeDiff <= 1);
+                
+                return (Math.abs(timeDiff) <= 1);
             } catch (ParseException e) {
                 Toast.makeText(RiderMapActivity.this, "Time format entered incorrectly", Toast.LENGTH_LONG).show();
             }
@@ -1103,6 +1117,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         mDatabaseReference.child(Constants.GEO_LOCATION).child(mPushKey).onDisconnect().cancel();
     }
 }
+
 
 
 

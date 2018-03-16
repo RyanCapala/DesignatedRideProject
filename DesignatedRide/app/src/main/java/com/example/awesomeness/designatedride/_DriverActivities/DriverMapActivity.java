@@ -58,7 +58,6 @@ import java.util.Map;
 import java.util.Timer;
 
 
-
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "DriverMapActivity";
@@ -814,26 +813,27 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         pairKey = dataSnapshot.getValue(String.class);
-                        if(pairKey.equals("false")) {
+                        if(pairKey != null) {
+                            if (pairKey.equals("false")) {
 
-                        }
-                        else {
-                            obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
-                            obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    riderKey = dataSnapshot.getValue(String.class);
-                                    if (riderKey != null) {
-                                        if (riderEventListener != null)
-                                            mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).removeEventListener(riderEventListener);
+                            } else {
+                                obtainRiderKey = mDatabaseReference.child(Constants.PAIR).child(pairKey).child(Constants.RIDER_KEY);
+                                obtainRiderKey.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        riderKey = dataSnapshot.getValue(String.class);
+                                        if (riderKey != null) {
+                                            if (riderEventListener != null)
+                                                mDatabaseReference.child(Constants.GEO_LOCATION).child(riderKey).removeEventListener(riderEventListener);
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
                         }
 
                     }
@@ -1282,9 +1282,5 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 }
-
-
-
-
 
 

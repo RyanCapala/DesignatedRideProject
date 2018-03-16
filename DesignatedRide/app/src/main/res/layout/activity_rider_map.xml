@@ -1,5 +1,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,62 +11,104 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-  <RelativeLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="vertical">
 
-      <EditText
-          android:id="@+id/pickUp"
-          android:layout_width="300dp"
-          android:layout_height="wrap_content"
-          android:layout_above="@+id/destination"
-          android:layout_alignStart="@+id/destination"
-          android:layout_marginBottom="15dp"
-          android:background="@color/colorAccentWhiteBrown"
-          android:ems="10"
-          android:hint="@string/rider_map_pickup_hint"
-          android:inputType="textPostalAddress"
-          android:textColorHint="@color/colorTextBlue" />
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:padding="7dp"
+            android:background="@drawable/textboxcontainer"
+            android:orientation="horizontal">
 
-      <EditText
-          android:id="@+id/destination"
-          android:layout_width="300dp"
-          android:layout_height="wrap_content"
-          android:layout_above="@+id/time"
-          android:layout_alignStart="@+id/time"
-          android:layout_marginBottom="12dp"
-          android:background="@color/colorAccentWhiteBrown"
-          android:ems="10"
-          android:hint="@string/rider_map_destination_hint"
-          android:inputType="textPostalAddress"
-          android:textColorHint="@color/colorTextBlue" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:text="@string/rider_map_pickup_label"
+                android:textColor="@color/colorTextBlue"
+                android:textSize="18sp" />
 
-      <EditText
-          android:id="@+id/time"
-          android:layout_width="300dp"
-          android:layout_height="wrap_content"
-          android:layout_above="@+id/setPickupBtn_ridermap"
-          android:layout_alignStart="@+id/setPickupBtn_ridermap"
-          android:layout_marginBottom="25dp"
-          android:background="@color/colorAccentWhiteBrown"
-          android:ems="10"
-          android:hint="@string/rider_map_time_hint"
-          android:inputType="time"
-          android:textColorHint="@color/colorTextBlue" />
+            <EditText
+                android:id="@+id/pickUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/rider_map_pickup_hint"
+                android:inputType="textPostalAddress"
+                android:textColorHint="@color/colorTextBlack"
+                android:background="@android:color/transparent"
+                android:textSize="18sp" />
+        </LinearLayout>
 
-      <Button
-          android:id="@+id/setPickupBtn_ridermap"
-          android:layout_width="300dp"
-          android:layout_height="40dp"
-          android:layout_alignParentBottom="true"
-          android:layout_centerHorizontal="true"
-          android:layout_marginBottom="14dp"
-          android:text="@string/rider_map_request_button"
-          android:textColor="@color/colorTextWhite" />
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:padding="7dp"
+            android:background="@drawable/textboxcontainer"
+            android:orientation="horizontal">
 
-  </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:text="@string/rider_map_destination_label"
+                android:textColor="@color/colorTextBlue"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/destination"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="@string/rider_map_destination_hint"
+                android:inputType="textPostalAddress"
+                android:textColorHint="@color/colorTextBlack"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:padding="7dp"
+            android:background="@drawable/textboxcontainer"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:text="@string/rider_map_time_label"
+                android:textColor="@color/colorTextBlue"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/rider_map_time_hint"
+                android:background="@android:color/transparent"
+                android:inputType="time"
+                android:textColorHint="@color/colorTextBlack"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
 
 
+        <Button
+            android:id="@+id/setPickupBtn_ridermap"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="14dp"
+            android:text="@string/rider_map_request_button"
+            android:textColor="@color/colorTextWhite" />
+
+    </LinearLayout>
 
 
 </FrameLayout>

@@ -67,6 +67,9 @@
     <string name="view_appt_rider_appointment_text_view">%1$s\\n%2$s</string>
 
     <!--Rider Map Activity-->
+    <string name="rider_map_pickup_label">Pick Up:</string>
+    <string name="rider_map_destination_label">Destination:</string>
+    <string name="rider_map_time_label">Time:</string>
     <string name="rider_map_request_button">Request Ride</string>
     <string name="rider_map_time_hint">Time</string>
     <string name="rider_map_destination_hint">Destination</string>

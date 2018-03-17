@@ -39,6 +39,15 @@ public class Constants {
     public static final String PAIR_KEY                 = "pairKey";
     public static final String TEXT_BOX                 = "TextBox";
     public static final String DRIVER_KEY               = "driverKey";
+    public static final String PREFERENCE_LOCATION      = "PreferenceLocation";
+    public static final String ONLINE                   = "Online";
+    public static final String CONNECTED                = "connected";
+    public static final String PREFERENCE               = "Preference";
+    public static final String DISTANCE                 = "distance";
+    public static final String TIME                     = "Time";
+    public static final String TO                       = "to";
+    public static final String FROM                     = "from";
+
 
     public static final String INTENT_KEY               = "userid";
     public static final String INTENT_KEY_NAME          = "username";

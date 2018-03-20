@@ -66,7 +66,6 @@ public class RiderActivity extends AppCompatActivity {
     private ImageButton viewProfileBtn;
     private ImageButton requestrideBtn;
     private ImageButton calendarBtn;
-    private ImageButton settingsBtn;
 
     private View parentView;    //for snackbar
 
@@ -153,16 +152,6 @@ public class RiderActivity extends AppCompatActivity {
                 DialogFragment newFragment = new AppointmentManagerFragment();
                 //newFragment.show(getSupportFragmentManager(), "missiles");
                 newFragment.show(getFragmentManager(), "");
-
-            }
-        });
-
-
-
-
-        settingsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
             }
         });
@@ -256,7 +245,6 @@ public class RiderActivity extends AppCompatActivity {
         viewProfileBtn = (ImageButton) findViewById(R.id.viewProfileImgBtn_rider);
         requestrideBtn = (ImageButton) findViewById(R.id.requestRideImgBtn_rider);
         calendarBtn = (ImageButton) findViewById(R.id.calendarImgBtn_rider);
-        settingsBtn = (ImageButton) findViewById(R.id.settingsImgBtn_rider);
         mProgress = new ProgressDialog(this);
         parentView = findViewById(R.id.activity_rider_layout);
     }

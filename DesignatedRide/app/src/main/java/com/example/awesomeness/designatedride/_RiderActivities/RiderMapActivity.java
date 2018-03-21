@@ -1177,7 +1177,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         //    //findViewById(R.id.setPickupBtn_ridermap).getLocationOnScreen(locationOnScreen);
 
         //    // left, top, right, bottom
-        mMap.setPadding(0, 0, 0, 150);
+        mMap.setPadding(0, 0, 0, 0);
 
     }
 

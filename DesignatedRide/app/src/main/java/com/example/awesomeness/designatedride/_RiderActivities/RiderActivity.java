@@ -66,6 +66,8 @@ public class RiderActivity extends AppCompatActivity {
     private ImageButton viewProfileBtn;
     private ImageButton requestrideBtn;
     private ImageButton calendarBtn;
+    private TextView userFirstNameTV;
+    private TextView userAddressTV;
 
     private View parentView;    //for snackbar
 
@@ -97,9 +99,7 @@ public class RiderActivity extends AppCompatActivity {
         getProfileImage();
         //Intent intent = getIntent();
         //String uname = intent.getStringExtra(Constants.INTENT_KEY_NAME);
-        String uname = getFNameFromShrPref(mUser.getUid());
-        Snackbar.make(parentView, "Welcome " + uname + "!", Snackbar.LENGTH_LONG).show();
-
+        setUserSpecificText();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -247,6 +247,8 @@ public class RiderActivity extends AppCompatActivity {
         calendarBtn = (ImageButton) findViewById(R.id.calendarImgBtn_rider);
         mProgress = new ProgressDialog(this);
         parentView = findViewById(R.id.activity_rider_layout);
+        userFirstNameTV = findViewById(R.id.riderActivityUserFirstName_tv);
+        userAddressTV = findViewById(R.id.riderActivityAddress_textview);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -311,6 +313,21 @@ public class RiderActivity extends AppCompatActivity {
         *
          */
 
+
+    }
+
+    // TODO: 3/20/2018 load/adduser address
+    private void setUserSpecificText(){
+        String uname = getFNameFromShrPref(mUser.getUid());
+        Snackbar.make(parentView, "Welcome " + uname + "!", Snackbar.LENGTH_LONG).show();
+
+        if(uname != null && uname.length() > 0){
+            userFirstNameTV.setText(uname + '!');
+        }
+
+        // GetAddress
+        // String address = ...
+        // userAddressTV.setText();
 
     }
 

@@ -2,6 +2,7 @@ package com.example.awesomeness.designatedride.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -110,7 +111,12 @@ public class StartLogoActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 uName = dataSnapshot.child(Constants.FIRSTNAME).getValue(String.class);
                 mode = dataSnapshot.child(Constants.USERMODE).getValue(String.class);
-                Log.d(TAG, "onDataChange: NAME" + uName + ", MODE:" + mode);
+                SharedPreferences sp = getSharedPreferences(Constants.SF_UNAME_PREF, Context.MODE_PRIVATE);
+                SharedPreferences.Editor spe = sp.edit();
+                spe.putString(uid, uName);
+                spe.commit();
+
+                Log.d(TAG, "onDataChange: MODE:" + mode + ", NAME:" + uName);
                 gotoCorrectView();
             }
 
@@ -132,8 +138,8 @@ public class StartLogoActivity extends AppCompatActivity {
     }
     private void gotoActivity(Class activityClass) {
         Intent intent = new Intent(StartLogoActivity.this, activityClass);
-        Log.d(TAG, "gotoActivity: " + uName);
-        intent.putExtra(Constants.INTENT_KEY_NAME, uName);
+        //Log.d(TAG, "gotoActivity: " + uName);
+        //intent.putExtra(Constants.INTENT_KEY_NAME, uName);
         startActivity(intent);
         finish();
     }

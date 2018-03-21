@@ -1,7 +1,9 @@
 package com.example.awesomeness.designatedride.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -146,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                                 //Check user mode if "Rider" or "Driver"
                                 //then, send user to each specific page.
 
-                                GetUserType();
+                                getUserData();
                                 UserDataHelper.saveUserInfo(getApplicationContext(), email, pwd, mode);
 
                             }
@@ -161,43 +163,31 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }//End of loginUser
 
-    private String GetUserType() {
-        getUserName();
-        mDatabaseReference.
-                child(Constants.USER).
-                child(uid).
-                child(Constants.PROFILE).
-                child(Constants.USERMODE).
-                addValueEventListener(new ValueEventListener() {
+    private void getUserData() {
+        //get username
+        mDatabaseReference
+                .child(Constants.USER)
+                .child(uid)
+                .child(Constants.PROFILE)
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        mode = dataSnapshot.getValue(String.class);
-                        if (mode.equals(Constants.DRIVER)) {
+                        uName = dataSnapshot.child(Constants.FIRSTNAME).getValue(String.class);
+                        mode = dataSnapshot.child(Constants.USERMODE).getValue(String.class);
+                        SharedPreferences sp = getSharedPreferences(Constants.SF_UNAME_PREF, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor spe = sp.edit();
+                        spe.putString(uid, uName);
+                        spe.commit();
 
-                            gotoActivity(DriverActivity.class, true);
-
-                            clearEditText();
-
-                        } else if (mode.equals(Constants.RIDER)) {
-
-                            gotoActivity(RiderActivity.class, true);
-                            clearEditText();
-
-                        } else {
-                            Toast.makeText(LoginActivity.this,
-                                    "Credentials Not Valid!",
-                                    Toast.LENGTH_LONG).show();
-                            clearEditText();
-                        }
-
+                        Log.d(TAG, "onDataChange: MODE:" + mode + ", NAME:" + uName);
+                        gotoCorrectView();
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
+                        Log.d(TAG, "onCancelled: getUserName was cancelled: " + databaseError.getMessage());
                     }
                 });
-        return mode;
     }
 
     private void initWidgets() {
@@ -243,23 +233,11 @@ public class LoginActivity extends AppCompatActivity {
     private boolean checkPwd(String pwd) {
         return (pwd.matches("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{3,}") && pwd.length() >= 8);
     }
-
-    private void getUserName() {
-        //get username
-        mDbRef
-                .child(Constants.USER)
-                .child(uid)
-                .child(Constants.PROFILE)
-                .child(Constants.FIRSTNAME).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                uName = dataSnapshot.getValue(String.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+    private void gotoCorrectView(){
+        switch (mode){
+            case Constants.DRIVER: gotoActivity(DriverActivity.class, true); break;
+            case Constants.RIDER: gotoActivity(RiderActivity.class, true); break;
+        }
     }
+
 }

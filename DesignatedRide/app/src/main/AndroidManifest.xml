@@ -61,7 +61,8 @@
         <!-- Rider Activities -->
         <activity
             android:name="._RiderActivities.RiderActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name="._RiderActivities.RiderMapActivity"
             android:label="@string/title_activity_rider_map" />

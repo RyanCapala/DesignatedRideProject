@@ -235,7 +235,23 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void gotoCorrectView(){
         switch (mode){
-            case Constants.DRIVER: gotoActivity(DriverActivity.class, true); break;
+            case Constants.DRIVER:
+                 mDatabaseReference.child(Constants.DRIVER).child(uid).child(Constants.GEOKEY).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    String driverKey = dataSnapshot.getValue(String.class);
+                                    if(driverKey != null) {
+                                        mDatabaseReference.child(Constants.ONLINE).child(driverKey).child(Constants.CONNECTED).setValue("true");
+                                        mDatabaseReference.child(Constants.ONLINE).child(driverKey).child(Constants.CONNECTED).onDisconnect().removeValue();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                gotoActivity(DriverActivity.class, true); break;
             case Constants.RIDER: gotoActivity(RiderActivity.class, true); break;
         }
     }

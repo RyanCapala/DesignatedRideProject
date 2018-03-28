@@ -47,6 +47,7 @@ public class Constants {
     public static final String TIME                     = "Time";
     public static final String TO                       = "to";
     public static final String FROM                     = "from";
+    public static final String COMMUNICATION            = "Communication";
 
 
     public static final String INTENT_KEY               = "userid";

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -30,7 +31,12 @@ public class Receiver extends BroadcastReceiver {
                 writer.writeLine(intent.getStringExtra("name"));
                 writer.writeLine(intent.getStringExtra("address"));
                 writer.writeLine(intent.getStringExtra("time"));
-                writer.writeLine(intent.getStringExtra("date"));
+                String date = intent.getStringExtra("date");
+                String month = intent.getStringExtra("month");
+                MonthInterpreter monthInterpreter = new MonthInterpreter();
+                month = monthInterpreter.getName(Integer.parseInt(month));
+                String formattedDate = month + " " + date;
+                writer.writeLine(formattedDate);
                 writer.writeLine(intent.getStringExtra("status"));
                 writer.writeLine(intent.getStringExtra("notes"));
                 writer.close();

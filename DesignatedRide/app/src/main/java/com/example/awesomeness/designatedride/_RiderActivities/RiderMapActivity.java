@@ -50,6 +50,19 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.DirectionsApi;
+import com.google.maps.DistanceMatrixApi;
+import com.google.maps.DistanceMatrixApiRequest;
+import com.google.maps.GeolocationApiRequest;
+import com.google.maps.PendingResult;
+import com.google.maps.PlaceDetailsRequest;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DistanceMatrix;
+import com.google.maps.GeocodingApi;
+import com.google.maps.PlacesApi;
+import com.google.maps.model.GeocodingResult;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApiRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,6 +75,8 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.model.PlaceDetails;
+import com.google.maps.model.TravelMode;
 
 
 import java.io.IOException;
@@ -79,8 +94,10 @@ import java.util.Timer;
 public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "RiderMapActivity";
+    private static final String API_KEY = "AIzaSyBQGYYk0KmrijL1JHdn8iu8X_lXWp9IPh4";
     private static final long DES_TIME = 10000; //milliseconds
     private static final long EXP_TIME = 5000;
+    private static final Double radius = 0.5;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -139,7 +156,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     private Integer filter;
     private Integer temp;
     private Long distance;
-    private Integer radius;
     private String preferedTime;
     private String mPushKey;
     private String pairKey;
@@ -147,6 +163,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     private String pickUpLocation;
     private String timeItOccurs;
     private String appointmentDate;
+    private String appointmentMonth;
     private String online;
 
     //Alert Box
@@ -176,7 +193,13 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     private DatabaseReference mDriverReference;
     private ChildEventListener childEventListener;
     private ChildEventListener driverEventListener;
-    private Geocoder geoCoder;
+    private DistanceMatrixApiRequest distanceMatrixApiRequest;
+    private GeocodingApiRequest geocodingApiRequestDestination;
+    private GeocodingApiRequest geocodingApiRequestPickUp;
+    private DistanceMatrix distanceMatrix;
+    private GeocodingResult geocodingDestinationResult[];
+    private GeocodingResult geocodingPickUpResult[];
+    private GeoApiContext context;
 
     private Query obtainKey;
     private Query obtainRating;
@@ -227,36 +250,44 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
         initWidgets();
 
+        context = new GeoApiContext.Builder().apiKey(API_KEY).build();
+
         setPickupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(RiderMapActivity.this, "Requested a ride!", Toast.LENGTH_SHORT).show();
-                geoCoder = new Geocoder(RiderMapActivity.this);
                 try {
-                    //Check that the information they typed makes sense.
                     if (checkPickUp(pickUp, destination, time)) {
 
-                        //Remove any previously created map markers.
                         if(destinationMarker != null)
                             destinationMarker.remove();
 
                         if(pickUpMarker != null)
                             pickUpMarker.remove();
 
-                        //Reset the camera
                         getDeviceLocation();
 
-                        //Obtain the addresses
-                        pickUpAddress = geoCoder.getFromLocationName(pickUpLocation, 1);
-                        destinationAddress = geoCoder.getFromLocationName(destinationLocation, 1);
+                        geocodingApiRequestDestination = GeocodingApi.newRequest(context);
+                        geocodingApiRequestPickUp = GeocodingApi.newRequest(context);
 
-                        //Check to see if it is for pickup and that the destination location makes sense
-                        if (checkAddress(destinationAddress,destinationLocation) && checkTime(timeItOccurs)) {
+                        geocodingApiRequestDestination.address(destinationLocation);
+                        geocodingApiRequestPickUp.address(pickUpLocation);
 
-                            //get the location's longitude and latitude
-                            location = destinationAddress.get(0);
-                            Longitude = location.getLongitude();
-                            Latitude = location.getLatitude();
+                        geocodingDestinationResult = geocodingApiRequestDestination.awaitIgnoreError();
+                        geocodingPickUpResult = geocodingApiRequestPickUp.awaitIgnoreError();
+
+                        if (checkAddress(geocodingDestinationResult,destinationLocation) && checkTime(timeItOccurs)) {
+
+                            Toast.makeText(RiderMapActivity.this, "Requested A Ride!", Toast.LENGTH_SHORT).show();
+
+                            Longitude = geocodingDestinationResult[0].geometry.location.lng;
+                            Latitude = geocodingDestinationResult[0].geometry.location.lat;
+
+                            // RRuG N RPkPa
+                            // N iCm & WPmRak & WPkPam
+                            // UN RRkUR WTmURr
+                            // N Q PdS
+                            //<---> N RRkUR WtmURr & N Cm & WPmRak & WPkPam
+                            //<---> N Q PdS & FDQ
 
                             obtainKey = mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.GEOKEY);
                             obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -265,46 +296,27 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
                                     key = dataSnapshot.getValue(String.class);
 
-                                    //Checking to see if information already exists within the database
-                                    obtainPairKey = mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY);
-                                    obtainPairKey.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            if(!dataSnapshot.exists()){
-                                                //generate a random key
-                                                mPushKey = FirebaseDatabase.getInstance().getReference(Constants.TEXT_BOX + "/" + Constants.PAIR_KEY + "/").push().getKey();
-                                                killText();
-                                                mDatabaseReference.child(Constants.PAIR).child(mPushKey).child(Constants.RIDER_KEY).setValue(key);
-                                                mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY).setValue(mPushKey);
-
-                                                //store the location within random key
-                                                mGeoFire.setLocation(mPushKey, new GeoLocation(Latitude, Longitude), new GeoFire.CompletionListener() {
-                                                    @Override
-                                                    public void onComplete(String key, DatabaseError error) {
-
-                                                    }
-                                                });
-                                            }
-                                            else {
-                                                mPushKey = dataSnapshot.getValue(String.class);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-                                    //All this is doing is getting all nearby drivers and color coding them depending on what they are currently doing.
-                                    //i.e. If another (user) rider is interacting with that drivers map marker it will turn them blue, else it will turn them white.
-                                    //This isn't persistent and only determines what was happening at the time of the query.
                                     obtainRating = mDatabaseReference.child(Constants.RIDER).child(key).child(Constants.USER_RATING);
                                     obtainRating.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             riderRating = dataSnapshot.getValue(String.class);
+
+                                            mPushKey = FirebaseDatabase.getInstance().getReference(Constants.TEXT_BOX + "/" + Constants.PAIR_KEY + "/").push().getKey();
+                                            mDatabaseReference.child(Constants.PAIR).child(mPushKey).child(Constants.RIDER_KEY).setValue(key);
+                                            mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY).setValue(mPushKey);
+
+                                            mGeoFire.setLocation(mPushKey, new GeoLocation(Latitude, Longitude), new GeoFire.CompletionListener() {
+                                                @Override
+                                                public void onComplete(String key, DatabaseError error) {
+
+                                                }
+                                            });
+
                                             mDatabaseReference.child(Constants.TEXT_BOX).child(mPushKey).child(Constants.USER_RATING).setValue(riderRating);
+
+                                            killText();
+
                                             mGeoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
                                                 @Override
                                                 public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
@@ -318,17 +330,34 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                                             filter = dataSnapshot.getValue(Integer.class);
                                                             if (filter != null) {
-                                                                if (filter == 0) {
-                                                                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Latitude, Longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car_white)));
-                                                                } else
-                                                                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Latitude, Longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
-                                                                marker.setTag(driverKey);
-                                                                availableDrivers.add(marker);
+                                                                obtainDistance = mDatabaseReference.child(Constants.PREFERENCE).child(driverKey).child(Constants.DISTANCE);
+                                                                obtainDistance.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                        distance = dataSnapshot.getValue(Long.class);
+                                                                        if(distance != null) {
+                                                                            if(distance >= radius){
+                                                                                if (filter == 0) {
+                                                                                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Latitude, Longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car_white)));
+                                                                                } else
+                                                                                    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Latitude, Longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+                                                                                marker.setTag(driverKey);
+                                                                                availableDrivers.add(marker);
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
                                                             }
 
                                                             if(availableDrivers.size() == 0){
-
+                                                                Toast.makeText(RiderMapActivity.this,"No Drivers Available",Toast.LENGTH_LONG).show();
                                                             }
+
                                                             removeFields();
                                                         }
 
@@ -367,8 +396,9 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                                 }
                                             });
 
-                                            //If a rider clicks the driver's map marker it just generates a text box.  If they hit yes
-                                            //it starts the process of communication with that driver.  If they hit no it doesn't
+                                            // RPcdS WPcdS6
+                                            // UN RPcdUR N ceL Out WPdPam
+
                                             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                                 @Override
                                                 public boolean onMarkerClick(Marker marker) {
@@ -394,7 +424,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                                             dialogBox.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                             dialogBox.show();
 
-                                                            //If they hit yes begin information exchange
                                                             acceptButton.setOnClickListener(new View.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(View v) {
@@ -415,17 +444,24 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                                                                     mDatabaseReference.child(Constants.PAIR).child(driverKey).removeValue();
                                                                                     availableDrivers.remove(driverMarker);
                                                                                     driverMarker.remove();
+
                                                                                 } else if (seqAck == 2) {
                                                                                     mDatabaseReference.child(Constants.PACKET).child(Constants.PAIR_KEY).setValue(mPushKey);
                                                                                     mDatabaseReference.child(Constants.TEXT_BOX).child(mPushKey).removeValue();
                                                                                     transactions(seqAck,3);
+
                                                                                 } else if (seqAck == 3) {
                                                                                     saveText();
+
+                                                                                    mDatabaseReference.child(Constants.PAIR).child(mPushKey).child(Constants.DRIVER_KEY).setValue(driverKey);
+
                                                                                     for (int j = 0; j < availableDrivers.size(); j++) {
                                                                                         driver = availableDrivers.get(j);
                                                                                         driver.remove();
                                                                                     }
+
                                                                                     Toast.makeText(RiderMapActivity.this, "Connected with Driver", Toast.LENGTH_LONG).show();
+
                                                                                     mGeoFire.getLocation(driverKey, new com.firebase.geofire.LocationCallback() {
                                                                                         @Override
                                                                                         public void onLocationResult(String key, GeoLocation location) {
@@ -532,7 +568,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                                                 }
                                                             });
 
-                                                            //No button brings back marker, and removes text box
                                                             declineButton.setOnClickListener(new View.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(View v) {
@@ -573,26 +608,35 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                             });
                         }
 
-                        else if(checkAddress(destinationAddress,destinationLocation) && checkAddress(pickUpAddress,pickUpLocation) && !checkTime(timeItOccurs)){
+                        else if(checkAddress(geocodingDestinationResult,destinationLocation) && checkAddress(geocodingPickUpResult,pickUpLocation) && !checkTime(timeItOccurs)){
                             Intent intent = new Intent("SYN");
-                            intent.putExtra("name",destinationAddress.get(0).getFeatureName());
-                            intent.putExtra("address",destinationAddress.get(0).getAddressLine(0));
+
+                            Toast.makeText(RiderMapActivity.this, "Requested Advanced Booking!", Toast.LENGTH_SHORT).show();
+
+                            PlaceDetailsRequest placeDetailsRequest = PlacesApi.placeDetails(context,geocodingDestinationResult[0].placeId);
+                            PlaceDetails placeDetails = placeDetailsRequest.awaitIgnoreError();
+
+                            intent.putExtra("name", placeDetails.name);
+                            intent.putExtra("address",geocodingDestinationResult[0].formattedAddress);
                             intent.putExtra("time",timeItOccurs);
                             intent.putExtra("date",appointmentDate);
+                            intent.putExtra("month",appointmentMonth);
                             intent.putExtra("status","yes");
                             intent.putExtra("notes","no additional notes");
                             sendBroadcast(intent);
 
-                            location = pickUpAddress.get(0);
+                            mPushKey = FirebaseDatabase.getInstance().getReference(Constants.TEXT_BOX + "/" + Constants.PAIR_KEY + "/").push().getKey();
+                            mDatabaseReference.child(Constants.PAIR).child(mPushKey).child(Constants.RIDER_KEY).setValue(key);
+                            mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY).setValue(mPushKey);
 
-                            mGeoFire.setLocation(key, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                            mGeoFire.setLocation(mPushKey, new GeoLocation(geocodingPickUpResult[0].geometry.location.lat, geocodingPickUpResult[0].geometry.location.lng), new GeoFire.CompletionListener() {
                                 @Override
                                 public void onComplete(String key, DatabaseError error) {
 
                                 }
                             });
 
-                            mGeoQuery = mPreferencedGeoFire.queryAtLocation(new GeoLocation(location.getLatitude(), location.getLongitude()), 0.5);
+                            mGeoQuery = mPreferencedGeoFire.queryAtLocation(new GeoLocation(geocodingPickUpResult[0].geometry.location.lat, geocodingPickUpResult[0].geometry.location.lng), radius);
 
                             mGeoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
                                 @Override
@@ -621,7 +665,13 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                                             }
 
                                                             if (toTime != null && fromTime != null && toTime.size() > 0 && fromTime.size() < 0) {
-                                                                if (availableTimes(toTime, fromTime)) {
+                                                                distanceMatrixApiRequest = DistanceMatrixApi.newRequest(context);
+                                                                com.google.maps.model.LatLng origin = new com.google.maps.model.LatLng(Latitude,Longitude);
+                                                                com.google.maps.model.LatLng destOrigin = new com.google.maps.model.LatLng(geocodingDestinationResult[0].geometry.location.lat,geocodingDestinationResult[0].geometry.location.lng);
+                                                                distanceMatrix = distanceMatrixApiRequest.origins(origin,destOrigin).destinations(pickUpLocation).language("en-US").mode(TravelMode.DRIVING).avoid(DirectionsApi.RouteRestriction.TOLLS).avoid(DirectionsApi.RouteRestriction.FERRIES).awaitIgnoreError();
+                                                                long RtoDTime = distanceMatrix.rows[0].elements[0].duration.inSeconds;
+                                                                long StoRTime = distanceMatrix.rows[1].elements[0].duration.inSeconds;
+                                                                if (availableTimes(toTime, fromTime, RtoDTime, StoRTime)) {
 
                                                                     obtainColor = mDatabaseReference.child(Constants.CONNECTED).child(driverKey).child(Constants.ONLINE);
                                                                     obtainColor.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -694,9 +744,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
                         }
                     }
-                } catch(IOException e){
-                    Toast.makeText(RiderMapActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();
-
                 } catch(IllegalArgumentException e){
                     Toast.makeText(RiderMapActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();
                 }
@@ -723,7 +770,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
             Toast.makeText(this, "Location permissions not granted!", Toast.LENGTH_SHORT).show();
         }
 
-        //If the rider is being given a ride and left the activity then comes back.  Put back map markers.
         obtainKey = mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.GEOKEY);
         obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -742,6 +788,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                     driverKey = dataSnapshot.getValue(String.class);
                                     if (driverKey != null) {
                                         removeFields();
+
                                         mGeoFire.getLocation(driverKey, new com.firebase.geofire.LocationCallback() {
                                             @Override
                                             public void onLocationResult(String key, GeoLocation location) {
@@ -834,6 +881,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
             }
         });
+
         getDeviceLocation();
     }
 
@@ -849,8 +897,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
             }
         }
 
-        // If the rider is being given a ride and they leave the map stop putting map markers down on
-        // a map that no longer exists
         obtainKey = mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.GEOKEY);
         obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1051,7 +1097,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                         }
                                     });
 
-                                    mGeoQuery = mAvailableGeoFire.queryAtLocation(new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), 0.5);
+                                    mGeoQuery = mAvailableGeoFire.queryAtLocation(new GeoLocation(currentLocation.getLatitude(), currentLocation.getLongitude()), radius);
                                 }
                             }
 
@@ -1107,45 +1153,41 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         box3 = findViewById(R.id.box3);
         mProgressDialog = new ProgressDialog(RiderMapActivity.this);
 
-        //After the user is done typing check to see if it's a valid address and put a map marker
-        //If it's not then we don't care as another function will handle that.  The reason for this
-        //is the focus is always out thus there will always be an IOException.
         pickUp.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                pickUpLocation = pickUp.getText().toString().trim();
-                geoCoder = new Geocoder(RiderMapActivity.this);
-                try{
-                    pickUpAddress = geoCoder.getFromLocationName(pickUpLocation, 1);
-                    if(checkAddress(pickUpAddress,pickUpLocation)) {
-                        location = pickUpAddress.get(0);
-                        if(mMap != null) {
-                            pickUpMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
-                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                if (!pickUp.getText().toString().isEmpty()) {
+                    pickUpLocation = pickUp.getText().toString().trim();
+                    geocodingApiRequestPickUp = GeocodingApi.newRequest(context);
+                    geocodingApiRequestPickUp.address(pickUpLocation);
+                    geocodingPickUpResult = geocodingApiRequestPickUp.awaitIgnoreError();
+                    if (checkAddress(geocodingPickUpResult, pickUpLocation)) {
+                        if (mMap != null) {
+                            pickUpMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(geocodingPickUpResult[0].geometry.location.lat, geocodingPickUpResult[0].geometry.location.lng)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_blue)));
+                            LatLng latLng = new LatLng(geocodingPickUpResult[0].geometry.location.lat, geocodingPickUpResult[0].geometry.location.lng);
                             moveCamera(latLng, mMap.getCameraPosition().zoom);
                         }
                     }
-                }catch(IOException e){ }
+                }
             }
         });
 
-        //Same as previous
         destination.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                destinationLocation = destination.getText().toString().trim();
-                geoCoder = new Geocoder(RiderMapActivity.this);
-                try{
-                    destinationAddress = geoCoder.getFromLocationName(destinationLocation, 1);
-                    if(checkAddress(destinationAddress,destinationLocation)) {
-                        location = destinationAddress.get(0);
-                        if(mMap != null) {
-                            destinationMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_red)));
-                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                if (!destination.getText().toString().isEmpty()) {
+                    destinationLocation = destination.getText().toString().trim();
+                    geocodingApiRequestDestination = GeocodingApi.newRequest(context);
+                    geocodingApiRequestDestination.address(destinationLocation);
+                    geocodingDestinationResult = geocodingApiRequestDestination.awaitIgnoreError();
+                    if (checkAddress(geocodingDestinationResult, destinationLocation)) {
+                        if (mMap != null) {
+                            destinationMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(geocodingDestinationResult[0].geometry.location.lat, geocodingDestinationResult[0].geometry.location.lng)).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_red)));
+                            LatLng latLng = new LatLng(geocodingDestinationResult[0].geometry.location.lat, geocodingDestinationResult[0].geometry.location.lng);
                             moveCamera(latLng, mMap.getCameraPosition().zoom);
                         }
                     }
-                }catch(IOException e){ }
+                }
             }
         });
 
@@ -1156,7 +1198,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    // This just enables the arrow at the top of the action bar to go back
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -1197,7 +1238,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                             }
                         });
 
-                        mGeoQuery = mAvailableGeoFire.queryAtLocation(new GeoLocation(location.getLatitude(), location.getLongitude()), 0.5);
+                        mGeoQuery = mAvailableGeoFire.queryAtLocation(new GeoLocation(location.getLatitude(), location.getLongitude()), radius);
                     }
                 }
 
@@ -1208,7 +1249,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         };
     }
 
-    //Removes all text boxes that were initialized
     private void removeFields(){
         setPickupBtn.setVisibility(View.GONE);
         box1.setVisibility(View.GONE);
@@ -1216,7 +1256,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         box3.setVisibility(View.GONE);
     }
 
-    // Returns all text boxes that were initialized
     private void returnFields(){
         setPickupBtn.setVisibility(View.VISIBLE);
         box1.setVisibility(View.VISIBLE);
@@ -1224,7 +1263,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         box3.setVisibility(View.VISIBLE);
     }
 
-    // ToDO: Possibly move to checker.java at some point? Depending on how much more code is added
     private boolean checkPickUp(EditText pickUpField, EditText destinationField, EditText timeField){
         boolean flag = true;
         pickUpLocation = pickUpField.getText().toString().trim();
@@ -1244,11 +1282,9 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
             flag = false;
         }
 
-        return true;
+        return flag;
     }
 
-    //Just checks to see they put the time format in properly and if the difference with the current time is an
-    //hour it must be for pickUp and not advanced booking
     private boolean checkTime(String time){
         if(time.length() == 6) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hhmmaa", Locale.ENGLISH);
@@ -1257,25 +1293,28 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                 Date format = simpleDateFormat.parse(time);
                 Calendar formatAgain = Calendar.getInstance();
                 formatAgain.setTime(format);
-
                 int currentTime = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                 int hourDiff = formatAgain.get(Calendar.HOUR_OF_DAY) - currentTime;
                 int currentMinutes = Calendar.getInstance().get(Calendar.MINUTE);
                 int minuteDiff = formatAgain.get(Calendar.MINUTE) - currentMinutes;
 
-                hourDiff = Math.abs(hourDiff) + Math.abs(minuteDiff);
+                hourDiff = Math.abs(hourDiff);
 
                 if(currentTime > formatAgain.get(Calendar.HOUR_OF_DAY)){
-                    appointmentDate =  (Calendar.DATE + 1) + " " + Calendar.MONTH;
+                    appointmentDate =  (Calendar.DATE + 1) + "";
+                    appointmentMonth = Calendar.MONTH + "";
                     return false;
                 }
+
                 else{
-                    if(hourDiff <= 1 || hourDiff >= 23){
-                        appointmentDate = Calendar.DATE + " " + Calendar.MONTH;
+                    if(hourDiff == 0 || (hourDiff == 1 && minuteDiff == 0) || hourDiff == 23){
+                        appointmentDate = Calendar.DATE + "";
+                        appointmentMonth = Calendar.MONTH + "";
                         return true;
                     }
                     else{
-                        appointmentDate = (Calendar.DATE + 1) + " " + Calendar.MONTH;
+                        appointmentDate = (Calendar.DATE + 1) + "";
+                        appointmentMonth = Calendar.MONTH + "";
                         return false;
                     }
                 }
@@ -1291,16 +1330,17 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-    //Checks to see if address is valid address
-    private boolean checkAddress(List<Address> address, String addressLocation){
-        if(address == null || address.size() <= 0){
+    private boolean checkAddress(GeocodingResult[] address, String addressLocation){
+        if((address == null || address.length == 0) && !addressLocation.isEmpty()){
             Toast.makeText(RiderMapActivity.this,addressLocation + " is not a valid address",Toast.LENGTH_LONG).show();
             return false;
         }
-        else return true;
+        if(addressLocation.isEmpty())
+            return false;
+
+        return true;
     }
 
-    //wipes the database of stale information on disconnect
     private void killText(){
         mDatabaseReference.child(Constants.TEXT_BOX).child(mPushKey).onDisconnect().removeValue();
         mDatabaseReference.child(Constants.PAIR).child(mPushKey).onDisconnect().removeValue();
@@ -1320,7 +1360,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY).removeValue();
     }
 
-    //save data
     private void saveText(){
         mDatabaseReference.child(Constants.PAIR).child(mPushKey).onDisconnect().cancel();
         mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY).onDisconnect().cancel();
@@ -1328,7 +1367,8 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         mDatabaseReference.child(Constants.GEO_LOCATION).child(mPushKey).onDisconnect().cancel();
     }
 
-    private boolean availableTimes(List<String> to, List<String> from){
+    //ToDO: do conversion for all times by adding the minutes of RtoD and StoR to fromTimeCalendar before if statement
+    private boolean availableTimes(List<String> to, List<String> from, Long RtoD, Long StoR){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hhmmaa", Locale.ENGLISH);
         try {
             Date formatTime = simpleDateFormat.parse(timeItOccurs);
@@ -1355,7 +1395,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
         return false;
     }
-
 
     private void transactions(final int seqNumber, final int value){
             mDriverReference.runTransaction(new Transaction.Handler() {

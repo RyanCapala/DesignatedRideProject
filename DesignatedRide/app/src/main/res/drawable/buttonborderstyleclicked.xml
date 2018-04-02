@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape android:shape="rectangle"
     xmlns:android="http://schemas.android.com/apk/res/android" >
-    <stroke android:width="5dp" android:color="@color/buttonBorderColor" />
-    <solid android:color="@color/buttonInnerColor" />
+    <gradient
+        android:startColor="@color/colorGradientStart"
+        android:endColor="@color/colorGradientEnd"
+        android:angle="0" />
     <corners
-        android:bottomLeftRadius="4dp"
-        android:bottomRightRadius="4dp"
-        android:topLeftRadius="4dp"
-        android:topRightRadius="4dp" />
+        android:bottomLeftRadius="30dp"
+        android:bottomRightRadius="30dp"
+        android:topLeftRadius="30dp"
+        android:topRightRadius="30dp" />
+
 </shape>

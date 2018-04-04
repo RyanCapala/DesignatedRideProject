@@ -45,9 +45,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activities.StartPageActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />

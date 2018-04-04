@@ -57,12 +57,13 @@ public class StartLogoActivity extends AppCompatActivity {
         mDatabaseReference.keepSynced(true);
         checkForSavedState();
     }
+
     private void checkForSavedState() {
         UserDataHelper.AccountInfoContainer container = UserDataHelper.loadLocalUser(getApplicationContext());
         Log.d(TAG, "checkForSavedState: USERINFO:" + container.email + container.password + container.userType);
 
         if (container.containsInvalidData()) {
-            gotoActivity(StartPageActivity.class);
+            gotoActivity(LoginActivity.class);
             Log.d(TAG, "checkForSavedState: Did not find saved state");
             return;
         }
@@ -92,7 +93,7 @@ public class StartLogoActivity extends AppCompatActivity {
                             getUserData();
                         } else {
                             Log.d(TAG, "onComplete: No previous state loaded");
-                            gotoActivity(StartPageActivity.class);
+                            gotoActivity(LoginActivity.class);
                         }
 
 
@@ -147,7 +148,7 @@ public class StartLogoActivity extends AppCompatActivity {
                 });
                 gotoActivity(DriverActivity.class); break;
             case Constants.RIDER: gotoActivity(RiderActivity.class); break;
-            default: gotoActivity(StartPageActivity.class);
+            default: gotoActivity(LoginActivity.class);
                 Toast.makeText(StartLogoActivity.this,
                         "Credentials Not Valid!", Toast.LENGTH_LONG).show();
         }

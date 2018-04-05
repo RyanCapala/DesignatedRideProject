@@ -11,13 +11,13 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccentWhiteBrown" />
+        android:background="@color/colorMainbackground" />
 
     <View
         android:id="@+id/rider_activity_toplayer_view"
         android:layout_width="match_parent"
         android:layout_height="140dp"
-        android:background="@color/colorPrimary" />
+        android:background="@drawable/maincolorgradient" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -65,7 +65,7 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/profilebuttondark"
+                android:background="@drawable/buttonbordernormal"
                 android:src="@drawable/icon_profile"
                 app:layout_constraintRight_toLeftOf="@id/calendarImgBtn_rider"
                 app:layout_constraintTop_toTopOf="@id/calendarImgBtn_rider" />
@@ -89,7 +89,7 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/profilebuttondark"
+                android:background="@drawable/buttonbordernormal"
                 android:src="@drawable/icon_notes_white"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="parent"
@@ -114,7 +114,7 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/profilebuttondark"
+                android:background="@drawable/buttonbordernormal"
                 android:src="@drawable/icon_car_white"
                 app:layout_constraintLeft_toRightOf="@id/calendarImgBtn_rider"
                 app:layout_constraintTop_toTopOf="@id/calendarImgBtn_rider" />
@@ -139,7 +139,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
-                android:background="@color/colorTextWhite"
                 android:orientation="horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

@@ -53,7 +53,7 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
         initializeMap();
         runExampleAppt();
         setAppt();
-        
+
         reqRideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

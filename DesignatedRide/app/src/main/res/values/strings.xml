@@ -23,7 +23,7 @@
     <string name="login_page_email_hint">awesome@email.com</string>
     <string name="login_page_password_hint">password</string>
     <string name="login_page_login_button_text">LOG IN</string>
-    <string name="login_page_forgot_password_text">forgot password? reset here</string>
+    <string name="login_page_forgot_password_text">forgot password</string>
     <string name="login_page_not_a_member_text">not a member? sign up here</string>
     <string name="designated_ride_logo_descriptor">Designated Ride Logo</string>
 

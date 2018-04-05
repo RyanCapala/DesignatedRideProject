@@ -1,9 +1,11 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,7 +35,7 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
 
     // Widgets
     private Button reqRideButton;
-
+    private ActionBar actionBar;
     //file
     private String fileName;
 
@@ -51,6 +53,7 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
         initializeMap();
         runExampleAppt();
         setAppt();
+        
         reqRideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,5 +171,6 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
 
     private void initWidgets() {
         reqRideButton = findViewById(R.id.viewAppointmentRiderRequestRide_btn);
+        actionBar = getActionBar();
     }
 }

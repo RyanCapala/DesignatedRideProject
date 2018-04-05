@@ -22,8 +22,8 @@
             app:layout_constraintGuide_begin="200dp" />
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@drawable/maincolorgradient"
             app:layout_constraintBottom_toTopOf="@id/loginPageGuideLine"
             app:layout_constraintEnd_toEndOf="parent"

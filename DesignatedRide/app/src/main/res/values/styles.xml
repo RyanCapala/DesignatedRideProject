@@ -10,11 +10,13 @@
         <item name="android:textColorSecondary">@color/colorTextBlack</item>
         <item name="buttonStyle">@style/AppTheme.Widget.Button</item>
         <item name="android:actionBarStyle">@style/GAB</item>
+        <item name="android:windowContentOverlay">@null</item>
         <item name="actionBarStyle">@style/GAB</item>
     </style>
 
     <style name="GAB" parent="Base.Widget.AppCompat.ActionBar">
         <item name="android:background">@drawable/maincolorgradient</item>
+        <item name="elevation">0dp</item>
         <item name="background">@drawable/maincolorgradient</item>
     </style>
 

@@ -1,12 +1,14 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.Manifest;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
@@ -15,11 +17,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Guideline;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,9 +126,10 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     EditText time;
     EditText destination;
     EditText pickUp;
-    LinearLayout box1;
-    LinearLayout box2;
-    LinearLayout box3;
+    Guideline guideline;
+//    LinearLayout box1;
+//    LinearLayout box2;
+//    LinearLayout box3;
 
     //List
     private ArrayList<Marker> availableDrivers;
@@ -249,7 +255,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         availableDrivers = new ArrayList<>();
 
         initWidgets();
-
+        removeFields();
         context = new GeoApiContext.Builder().apiKey(API_KEY).build();
 
         setPickupBtn.setOnClickListener(new View.OnClickListener() {
@@ -1148,9 +1154,10 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         destination = findViewById(R.id.destination);
         time = findViewById(R.id.time);
         pickUp = findViewById(R.id.pickUp);
-        box1 = findViewById(R.id.box1);
-        box2 = findViewById(R.id.box2);
-        box3 = findViewById(R.id.box3);
+        guideline = findViewById(R.id.riderMapGuideline);
+//        box1 = findViewById(R.id.box1);
+//        box2 = findViewById(R.id.box2);
+//        box3 = findViewById(R.id.box3);
         mProgressDialog = new ProgressDialog(RiderMapActivity.this);
 
         pickUp.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -1251,16 +1258,24 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
     private void removeFields(){
         setPickupBtn.setVisibility(View.GONE);
-        box1.setVisibility(View.GONE);
-        box2.setVisibility(View.GONE);
-        box3.setVisibility(View.GONE);
+//        box1.setVisibility(View.GONE);
+//        box2.setVisibility(View.GONE);
+//        box3.setVisibility(View.GONE);
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams)guideline.getLayoutParams();
+        params.guideBegin=-10;
+        guideline.setLayoutParams(params);
     }
 
     private void returnFields(){
         setPickupBtn.setVisibility(View.VISIBLE);
-        box1.setVisibility(View.VISIBLE);
-        box2.setVisibility(View.VISIBLE);
-        box3.setVisibility(View.VISIBLE);
+//        box1.setVisibility(View.VISIBLE);
+//        box2.setVisibility(View.VISIBLE);
+//        box3.setVisibility(View.VISIBLE);
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams)guideline.getLayoutParams();
+        Resources r = getResources();
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 140, r.getDisplayMetrics());
+        params.guideBegin=(int)px;
+        guideline.setLayoutParams(params);
     }
 
     private boolean checkPickUp(EditText pickUpField, EditText destinationField, EditText timeField){

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@mipmap/shapes1"
+    tools:context="com.example.awesomeness.designatedride.util.Pref">
+
+    <LinearLayout
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/fromTime"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/advanced_booking_from"
+            android:inputType="textCapWords"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.011" />
+
+        <EditText
+            android:id="@+id/toTime"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/advanced_booking_to"
+            android:inputType="textCapWords"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fromTime"
+            app:layout_constraintVertical_bias="0.024" />
+
+        <EditText
+            android:id="@+id/distance"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:hint="@string/preference_distance"
+            android:inputType="textEmailAddress"
+            android:padding="15dp"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/cursor_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toTime"
+            app:layout_constraintVertical_bias="0.033" />
+
+
+        <Button
+            android:id="@+id/updatePreferences"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_borders"
+            android:text="@string/update_preferences"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/distance"
+            app:layout_constraintVertical_bias="0.112" />
+
+        <TextView
+            android:id="@+id/closeTV_rUpdate"
+            android:text="@string/close"
+            android:textAlignment="center"
+            android:textSize="24dp"
+            android:padding="10dp"
+            android:textStyle="italic"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+
+    </LinearLayout>
+
+</ScrollView>

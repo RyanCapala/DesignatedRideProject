@@ -219,6 +219,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         if (isStatus) {
                                             gotoActivity(RiderActivity.class);
                                         } else {
+                                            Intent intent = new Intent("PREF");
+                                            sendBroadcast(intent);
                                             gotoActivity(DriverActivity.class);
                                         }
                                     }
@@ -405,4 +407,5 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 }
+
 

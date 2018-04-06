@@ -219,8 +219,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         if (isStatus) {
                                             gotoActivity(RiderActivity.class);
                                         } else {
-                                            Intent intent = new Intent("PREF");
-                                            sendBroadcast(intent);
+                                             mDatabaseReference.child(Constants.ONLINE).child(mPushKey).child(Constants.CONNECTED).setValue("true");
+                                             mDatabaseReference.child(Constants.ONLINE).child(mPushKey).child(Constants.CONNECTED).onDisconnect().removeValue();
                                             gotoActivity(DriverActivity.class);
                                         }
                                     }

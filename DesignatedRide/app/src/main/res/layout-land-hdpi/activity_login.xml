@@ -15,9 +15,9 @@
 
 
         <ImageView
-            android:id="@+id/bkg_img_ldpi"
+            android:id="@+id/bkg_img_hdpi"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:background="@mipmap/login_bkg_img_land"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,33 +26,33 @@
 
         <ImageView
             android:id="@+id/loginPageLogo_iv"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
             android:layout_gravity="center"
-            android:background="@mipmap/drlogin_logo"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/designated_ride_logo_descriptor"
             android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="@+id/bkg_img_ldpi"
+            android:src="@mipmap/drlogin_logo"
+            app:layout_constraintBottom_toBottomOf="@+id/bkg_img_hdpi"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bkg_img_ldpi" />
+            app:layout_constraintTop_toBottomOf="@+id/bkg_img_hdpi" />
 
         <LinearLayout
             android:id="@+id/loginPageAppName_linlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="120dp"
             android:orientation="horizontal"
-            android:layout_marginTop="140dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-
             <ImageView
                 android:src="@mipmap/drlogin_title"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp" />
+                android:layout_height="28dp" />
 
         </LinearLayout>
 
@@ -60,8 +60,8 @@
         <!--EMAIL-->
         <ImageView
             android:id="@+id/loginPageEmailIcon_iv"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_marginStart="5dp"
             android:background="@mipmap/drlogin_username"
             app:layout_constraintBottom_toBottomOf="@id/userEmailET_log"
@@ -71,16 +71,16 @@
         <EditText
             android:id="@+id/userEmailET_log"
             android:layout_width="230dp"
-            android:layout_height="15dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/edittextstyle"
             android:cursorVisible="true"
             android:hint="@string/login_page_email_hint"
             android:inputType="textEmailAddress"
             android:textCursorDrawable="@drawable/cursor_color"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintLeft_toRightOf="@id/loginPageEmailIcon_iv"
             app:layout_constraintTop_toBottomOf="@id/loginPageAppName_linlay" />
@@ -89,7 +89,6 @@
             android:id="@+id/loginPageUsernameSeparator"
             android:layout_width="250dp"
             android:layout_height="2dp"
-            android:layout_marginTop="2dp"
             android:background="@color/colorAccentDark"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -98,8 +97,8 @@
         <!--PASSWORD-->
         <ImageView
             android:id="@+id/loginPagePasswordIcon_iv"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_marginStart="5dp"
             android:src="@mipmap/drlogin_password"
             app:layout_constraintBottom_toBottomOf="@id/userPassET_log"
@@ -109,7 +108,7 @@
         <EditText
             android:id="@+id/userPassET_log"
             android:layout_width="210dp"
-            android:layout_height="15dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/edittextstyle"
@@ -117,7 +116,7 @@
             android:hint="@string/login_page_password_hint"
             android:inputType="textPassword"
             android:textCursorDrawable="@drawable/cursor_color"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintLeft_toRightOf="@id/loginPagePasswordIcon_iv"
             app:layout_constraintTop_toBottomOf="@+id/loginPageUsernameSeparator" />
@@ -126,7 +125,6 @@
             android:id="@+id/loginPagePasswordSeparator"
             android:layout_width="250dp"
             android:layout_height="2dp"
-            android:layout_marginTop="2dp"
             android:background="@color/colorAccentDark"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -145,42 +143,31 @@
 
 
         <!--HELP TEXT-->
-        <LinearLayout
-            android:id="@+id/help_text_linear_layout"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/forgotPasswordTV_log"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userLoginBtn_log">
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/login_page_forgot_password_text"
+            android:textColor="@color/helpTextColor"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userLoginBtn_log" />
 
-            <TextView
-                android:id="@+id/forgotPasswordTV_log"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="40dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/login_page_forgot_password_text"
-                android:textColor="@color/helpTextColor"
-                android:textSize="14sp"
-                app:layout_constraintLeft_toLeftOf="parent" />
-
-            <TextView
-                android:id="@+id/registerLinkTV_log"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_weight="1"
-                android:layout_marginRight="40dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/login_page_not_a_member_text"
-                android:textColor="@color/helpTextColor"
-                android:textSize="14sp" />
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/registerLinkTV_log"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/login_page_not_a_member_text"
+            android:textColor="@color/helpTextColor"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/forgotPasswordTV_log" />
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

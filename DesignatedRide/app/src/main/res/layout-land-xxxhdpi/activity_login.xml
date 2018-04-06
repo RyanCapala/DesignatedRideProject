@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMainbackground"
+    android:background="@color/colorMainbackground2"
     android:fillViewport="true"
     android:orientation="vertical"
     tools:context="com.example.awesomeness.designatedride.activities.LoginActivity">
@@ -13,12 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<android.support.constraint.Guideline-->
-            <!--android:id="@+id/loginPageGuideLine"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="horizontal"-->
-            <!--app:layout_constraintGuide_begin="200dp" />-->
 
         <ImageView
             android:id="@+id/bkg_img"
@@ -54,20 +48,13 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name_first_word"
-                android:textColor="@color/titleFontColor"
-                android:textSize="25sp" />
 
-            <TextView
+            <ImageView
+                android:src="@mipmap/drlogin_title"
+                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name_second_word"
-                android:textColor="@color/titleFontColor"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                android:layout_height="38dp" />
+
         </LinearLayout>
 
 
@@ -166,7 +153,7 @@
             android:fontFamily="sans-serif-medium"
             android:text="@string/login_page_forgot_password_text"
             android:textColor="@color/helpTextColor"
-            android:textSize="17sp"
+            android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/userLoginBtn_log" />
@@ -180,7 +167,7 @@
             android:fontFamily="sans-serif-medium"
             android:text="@string/login_page_not_a_member_text"
             android:textColor="@color/helpTextColor"
-            android:textSize="17sp"
+            android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/forgotPasswordTV_log" />

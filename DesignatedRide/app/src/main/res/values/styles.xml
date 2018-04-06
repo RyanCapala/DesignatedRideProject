@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,12 +9,14 @@
         <item name="android:textColorPrimary">@color/colorTextWhite</item>
         <item name="android:textColorSecondary">@color/colorTextBlack</item>
         <item name="buttonStyle">@style/AppTheme.Widget.Button</item>
-        <item name="android:actionBarStyle">@style/GAB</item>
+        <item name="android:editTextStyle">@style/AppTheme.Widget.EditText</item>
+        <item name="editTextStyle">@style/AppTheme.Widget.EditText</item>
+        <item name="android:actionBarStyle">@style/GradientActionBar</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="actionBarStyle">@style/GAB</item>
+        <item name="actionBarStyle">@style/GradientActionBar</item>
     </style>
 
-    <style name="GAB" parent="Base.Widget.AppCompat.ActionBar">
+    <style name="GradientActionBar" parent="Base.Widget.AppCompat.ActionBar">
         <item name="android:background">@drawable/maincolorgradient</item>
         <item name="elevation">0dp</item>
         <item name="background">@drawable/maincolorgradient</item>
@@ -23,6 +25,8 @@
     <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:editTextStyle">@style/AppTheme.Widget.EditText</item>
+        <item name="editTextStyle">@style/AppTheme.Widget.EditText</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -31,6 +35,7 @@
         <item name="android:displayOptions">showHome</item>
     </style>
 
+    <!-- STANDARD WIDGET STYLES -->
     <style name="AppTheme.Widget.Button" parent="@android:style/Widget.Button">
         <item name="android:background">@drawable/buttonstyleselector</item>
         <item name="android:fontFamily">sans-serif-medium</item>
@@ -42,6 +47,9 @@
         <item name="android:textColor">@color/buttonTextDefault</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+    <style name="AppTheme.Widget.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorTextBlack</item>
     </style>
 
     <style name="AppTheme.HeaderDark">

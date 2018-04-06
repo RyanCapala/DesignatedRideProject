@@ -161,7 +161,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     private Integer seqAck;
     private Integer filter;
     private Integer temp;
-    private Long distance;
+    private Double distance;
     private String preferedTime;
     private String isAvailable;
     private String mPushKey;
@@ -263,7 +263,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
         initWidgets();
 
-        removeFields();
+        //removeFields();
 
         context = new GeoApiContext.Builder().apiKey(API_KEY).build();
 
@@ -355,7 +355,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                                                     @Override
                                                                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                                                        distance = dataSnapshot.getValue(Long.class);
+                                                                        distance = dataSnapshot.getValue(Double.class);
 
                                                                         if(distance != null) {
                                                                             if(distance >= radius){
@@ -712,7 +712,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                            distance = dataSnapshot.getValue(Long.class);
+                                            distance = dataSnapshot.getValue(Double.class);
 
                                             if(distance != null){
                                                 if(distance >= radius){

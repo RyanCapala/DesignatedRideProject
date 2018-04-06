@@ -42,5 +42,10 @@ public class Receiver extends BroadcastReceiver {
                 writer.close();
 
         }
+
+        else if(intentName.equals("PREF")){
+            Intent switchIntent = new Intent(context, Pref.class);
+            context.startActivity(switchIntent);
+        }
     }
 }

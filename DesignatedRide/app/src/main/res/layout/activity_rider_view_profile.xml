@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccentWhiteBrown"
+    android:background="@color/colorMainbackground"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.awesomeness.designatedride._RiderActivities.RiderViewProfileActivity"
     tools:showIn="@layout/activity_rider_view_profile">
@@ -84,7 +84,7 @@
 
         <!--General Information-->
         <TextView
-            style="@style/AppTheme.HeaderDark"
+            style="@style/AppTheme.HeaderGradient"
             android:text="@string/rider_profile_header_general_info"
             android:layout_marginBottom="5dp"/>
 
@@ -102,7 +102,7 @@
 
         <!--Medical Information-->
         <TextView
-            style="@style/AppTheme.HeaderDark"
+            style="@style/AppTheme.HeaderGradient"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
             android:text="@string/rider_profile_header_medical_info" />
@@ -116,7 +116,7 @@
 
         <!--Public Profile-->
         <TextView
-            style="@style/AppTheme.HeaderDark"
+            style="@style/AppTheme.HeaderGradient"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
             android:text="@string/rider_profile_header_public_info" />

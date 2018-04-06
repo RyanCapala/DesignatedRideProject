@@ -26,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class StartLogoActivity extends AppCompatActivity {
@@ -44,6 +45,11 @@ public class StartLogoActivity extends AppCompatActivity {
     private String uid;
     private String mode;
     private String uName;
+    private String driverKey;
+    private Long distance;
+
+    private Query obtainKey;
+    private Query checkDistance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,13 +137,32 @@ public class StartLogoActivity extends AppCompatActivity {
     private void gotoCorrectView(){
         switch (mode){
             case Constants.DRIVER:
-                 mDatabaseReference.child(Constants.DRIVER).child(uid).child(Constants.GEOKEY).addListenerForSingleValueEvent(new ValueEventListener() {
+                obtainKey = mDatabaseReference.child(Constants.DRIVER).child(uid).child(Constants.GEOKEY);
+                obtainKey.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String driverKey = dataSnapshot.getValue(String.class);
+                        driverKey = dataSnapshot.getValue(String.class);
                         if(driverKey != null) {
                             mDatabaseReference.child(Constants.ONLINE).child(driverKey).child(Constants.CONNECTED).setValue("true");
                             mDatabaseReference.child(Constants.ONLINE).child(driverKey).child(Constants.CONNECTED).onDisconnect().removeValue();
+
+                            checkDistance = mDatabaseReference.child(Constants.PREFERENCE).child(driverKey).child(Constants.DISTANCE);
+                            checkDistance.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    distance = dataSnapshot.getValue(Long.class);
+                                    if(distance == null) {
+                                        Intent intent = new Intent("PREF");
+                                        sendBroadcast(intent);
+                                    }
+                                        gotoActivity(DriverActivity.class);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
                         }
                     }
 
@@ -146,7 +171,7 @@ public class StartLogoActivity extends AppCompatActivity {
 
                     }
                 });
-                gotoActivity(DriverActivity.class); break;
+                break;
             case Constants.RIDER: gotoActivity(RiderActivity.class); break;
             default: gotoActivity(LoginActivity.class);
                 Toast.makeText(StartLogoActivity.this,

@@ -116,5 +116,6 @@
     <!--Not necessary-->
     <string name="addCalDes">ADD CAL</string>
     <string name="viewCalDes">VIEW CAL</string>
+    <string name="home_address_text">Default Location home address goes here, Las Vegas NV 89119</string>
 
 </resources>

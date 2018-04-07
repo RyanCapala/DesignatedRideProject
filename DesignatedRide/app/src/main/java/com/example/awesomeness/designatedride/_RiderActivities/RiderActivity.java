@@ -339,26 +339,26 @@ public class RiderActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            adjustUserImageHeight(TOP_LAYER_LENGTH_DP_PORTRAIT);
-        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            adjustUserImageHeight(TOP_LAYER_LENGTH_DP_LANDSCAPE);
-        }
-    }
-
-    private void adjustUserImageHeight(int newDP){
-        int px = dpToPixels(newDP);
-        int height = profileImage.getHeight();
-        ViewGroup.MarginLayoutParams margParams = (ViewGroup.MarginLayoutParams)profileImage.getLayoutParams();
-        margParams.setMargins(0,px-height/2,0,8);
-        View topLayer = findViewById(R.id.rider_activity_toplayer_view);
-        topLayer.getLayoutParams().height = px;
-        topLayer.setLayoutParams(topLayer.getLayoutParams());
-        Log.d(TAG, "adjustUserImageHeight: " +newDP +", " + height);
-    }
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+//            adjustUserImageHeight(TOP_LAYER_LENGTH_DP_PORTRAIT);
+//        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+//            adjustUserImageHeight(TOP_LAYER_LENGTH_DP_LANDSCAPE);
+//        }
+//    }
+//
+//    private void adjustUserImageHeight(int newDP){
+//        int px = dpToPixels(newDP);
+//        int height = profileImage.getHeight();
+//        ViewGroup.MarginLayoutParams margParams = (ViewGroup.MarginLayoutParams)profileImage.getLayoutParams();
+//        margParams.setMargins(0,px-height/2,0,8);
+//        View topLayer = findViewById(R.id.rider_activity_toplayer_view);
+//        topLayer.getLayoutParams().height = px;
+//        topLayer.setLayoutParams(topLayer.getLayoutParams());
+//        Log.d(TAG, "adjustUserImageHeight: " +newDP +", " + height);
+//    }
     private int dpToPixels(int dp){
         Resources r = getResources();
         int px = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());

@@ -1,2 +1,2 @@
 include ':app'
-startParameter.offline=true
+startParameter.offline=false

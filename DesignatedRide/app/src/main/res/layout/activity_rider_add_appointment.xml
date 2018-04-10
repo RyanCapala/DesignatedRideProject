@@ -6,176 +6,321 @@
     android:layout_height="match_parent"
     tools:context="com.example.awesomeness.designatedride._RiderActivities.AddAppointmentActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="241dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
 
-        <EditText
-            android:id="@+id/hospitalName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/view_appt_rider_hospital_name"
-            android:inputType="textPersonName"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.052"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <EditText
-            android:id="@+id/destinationAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/view_appt_rider_hospital_address"
-            android:inputType="textPersonName"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.052"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/hospitalName"
-            app:layout_constraintVertical_bias="0.035" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/view_appt_rider_time" />
-
-            <ImageButton
-                android:id="@+id/appoitmentTimeButon"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                app:srcCompat="@android:drawable/ic_menu_my_calendar" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/appointmentTimeView"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:text="" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginBottom="144dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-        app:layout_constraintVertical_bias="0.315">
-
-        <TextView
-            android:id="@+id/advancedBookingTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/view_appt_rider_advanced_book_status_default_text" />
-
-        <RadioGroup
-            android:id="@+id/advancedBookingStatusRadioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="59dp"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/yesRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/yes" />
-
-            <RadioButton
-                android:id="@+id/noRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/no" />
-
-        </RadioGroup>
-    </LinearLayout>
-
+    <!--Appointment Name-->
     <EditText
-        android:id="@+id/appointmentNotes"
-        android:layout_width="match_parent"
+        android:id="@+id/apptEditApptName_et"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:gravity="top|start"
-        android:hint="@string/view_appt_rider_note"
-        android:inputType="textMultiLine"
-        android:lines="2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edittextstyle"
+        android:cursorVisible="true"
+        android:hint="@string/editAppt_appointment_title"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:textColor="@color/colorTextBlue"
+        android:textColorHint="@color/colorTextBlue"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:textSize="19sp"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent" />
+
+    <View
+        android:id="@+id/apptEditApptNameSeparator_view"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorAccentDark"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        app:layout_constraintLeft_toLeftOf="@+id/apptEditApptName_et"
+        app:layout_constraintRight_toRightOf="@+id/apptEditApptName_et"
+        app:layout_constraintTop_toBottomOf="@+id/apptEditApptName_et" />
+
+    <!--Location-->
+    <TextView
+        android:id="@+id/heading1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/editApptLocationHeader"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/apptEditLocationLine1_et"
+        app:layout_constraintRight_toRightOf="@id/apptEditLocationLine1_et"
+        app:layout_constraintTop_toBottomOf="@id/apptEditApptNameSeparator_view" />
+    <EditText
+        android:id="@+id/apptEditLocationName_et"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/edittextstyle"
+        android:cursorVisible="true"
+        android:hint="@string/editAppt_destination_name"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:textColor="@color/colorTextBlue"
+        android:textColorHint="@color/colorTextBlue"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/heading1"/>
+    <View
+        android:id="@+id/apptEditLocationNameSeparator_view"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorAccentDark"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        app:layout_constraintLeft_toLeftOf="@+id/apptEditLocationLine1_et"
+        app:layout_constraintRight_toRightOf="@+id/apptEditLocationLine1_et"
+        app:layout_constraintTop_toBottomOf="@+id/apptEditLocationName_et" />
+    <!--Location Line 1-->
+    <EditText
+        android:id="@+id/apptEditLocationLine1_et"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/edittextstyle"
+        android:cursorVisible="true"
+        android:hint="@string/editAppt_destination_address"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:textColor="@color/colorTextBlue"
+        android:textColorHint="@color/colorTextBlue"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/apptEditLocationName_et" />
+
+    <View
+        android:id="@+id/apptEditLocationLine1Separator_view"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorAccentDark"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        app:layout_constraintLeft_toLeftOf="@+id/apptEditLocationLine1_et"
+        app:layout_constraintRight_toRightOf="@+id/apptEditLocationLine1_et"
+        app:layout_constraintTop_toBottomOf="@+id/apptEditLocationLine1_et" />
+
+    <!--Location Line 2-->
+    <EditText
+        android:id="@+id/apptEditLocationLine2_et"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/edittextstyle"
+        android:cursorVisible="true"
+        android:hint="@string/editAppt_city_state_zip"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:textColor="@color/colorTextBlue"
+        android:textColorHint="@color/colorTextBlue"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/apptEditLocationLine1Separator_view" />
+
+    <View
+        android:id="@+id/apptEditLocationLine2Separator_view"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorAccentDark"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        app:layout_constraintLeft_toLeftOf="@+id/apptEditLocationLine2_et"
+        app:layout_constraintRight_toRightOf="@+id/apptEditLocationLine2_et"
+        app:layout_constraintTop_toBottomOf="@+id/apptEditLocationLine2_et" />
+
+    <!--DATE/TIME-->
+    <TextView
+        android:id="@+id/header2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/editAppt_date_and_time"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/apptEditApptName_et"
+        app:layout_constraintRight_toRightOf="@id/apptEditApptName_et"
+        app:layout_constraintTop_toBottomOf="@id/apptEditLocationLine2Separator_view" />
+
+    <!--Month-->
+    <EditText
+        android:id="@+id/apptEditDateMonth_et"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/edittextstyle"
+        android:cursorVisible="true"
+        android:hint="@string/editAppt_month"
+        android:textColor="@color/colorTextBlue"
+        android:textColorHint="@color/colorTextBlue"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/header2"
+        app:layout_constraintTop_toBottomOf="@id/header2" />
+
+    <View
+        android:id="@+id/apptEditDateMonthSeparator_view"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorAccentDark"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        app:layout_constraintLeft_toLeftOf="@+id/apptEditDateMonth_et"
+        app:layout_constraintRight_toRightOf="@+id/apptEditDateMonth_et"
+        app:layout_constraintTop_toBottomOf="@+id/apptEditDateMonth_et" />
+
+    <!--Day-->
+    <EditText
+        android:id="@+id/apptEditDateDay_et"
+        android:layout_width="25dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/edittextstyle"
+        android:cursorVisible="true"
+        android:hint="@string/editAppt_day"
+        android:textColor="@color/colorTextBlue"
+        android:textColorHint="@color/colorTextBlue"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toRightOf="@id/apptEditDateMonth_et"
+        app:layout_constraintTop_toBottomOf="@id/header2" />
+
+    <View
+        android:id="@+id/apptEditDateDaySeparator_view"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorAccentDark"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        app:layout_constraintLeft_toLeftOf="@+id/apptEditDateDay_et"
+        app:layout_constraintRight_toRightOf="@+id/apptEditDateDay_et"
+        app:layout_constraintTop_toBottomOf="@+id/apptEditDateDay_et" />
+
+    <!--Year-->
+    <EditText
+        android:id="@+id/apptEditDateYear_et"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/edittextstyle"
+        android:cursorVisible="true"
+        android:hint="@string/editAppt_year"
+        android:textColor="@color/colorTextBlue"
+        android:textColorHint="@color/colorTextBlue"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toRightOf="@id/apptEditDateDay_et"
+        app:layout_constraintTop_toBottomOf="@id/header2" />
+
+    <View
+        android:id="@+id/apptEditDateYearSeparator_view"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorAccentDark"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        app:layout_constraintLeft_toLeftOf="@+id/apptEditDateYear_et"
+        app:layout_constraintRight_toRightOf="@+id/apptEditDateYear_et"
+        app:layout_constraintTop_toBottomOf="@+id/apptEditDateYear_et" />
+
+    <!--Time-->
+    <Button
+        android:id="@+id/apptEditDateTime_et"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/edittextstyle"
+        android:hint="@string/editAppt_defaultTime"
+        android:onClick="showTimePickerDialog"
+        android:textColor="@color/colorTextBlue"
+        android:textColorHint="@color/colorTextBlue"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toRightOf="@id/apptEditDateYear_et"
+        app:layout_constraintTop_toBottomOf="@id/header2" />
+
+    <View
+        android:id="@+id/apptEditDateTimeSeparator_view"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorAccentDark"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        app:layout_constraintLeft_toLeftOf="@+id/apptEditDateTime_et"
+        app:layout_constraintRight_toRightOf="@+id/apptEditDateTime_et"
+        app:layout_constraintTop_toBottomOf="@+id/apptEditDateTime_et" />
+
+    <!--NOTES-->
+    <!--Location-->
+    <TextView
+        android:id="@+id/heading3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/editAppt_other_notes"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/apptEditSV_LinLay"
+        app:layout_constraintRight_toRightOf="@id/apptEditSV_LinLay"
+        app:layout_constraintTop_toBottomOf="@id/apptEditDateMonthSeparator_view" />
+
+    <LinearLayout
+        android:id="@+id/apptEditSV_LinLay"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/heading3">
+
+        <ScrollView
+            android:id="@+id/apptEditNotes_scrollview"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp">
+
+            <EditText
+                android:id="@+id/apptEditNotes_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittextstyle"
+                android:cursorVisible="true"
+                android:hint="@string/editAppt_notes_default_text"
+                android:textColor="@color/colorTextBlue"
+                android:textColorHint="@color/colorTextBlue"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:textSize="12sp" />
+        </ScrollView>
+    </LinearLayout>
 
     <Button
-        android:id="@+id/addAppointmentConfirmButton"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/confirm"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appointmentNotes"
-        app:layout_constraintVertical_bias="0.859" />
+        android:id="@+id/apptEditSave_btn"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="5dp"
+        android:text="@string/editAppt_save_btn_text"
+        app:layout_constraintLeft_toLeftOf="@id/apptEditApptName_et"
+        app:layout_constraintRight_toLeftOf="@id/apptEditCancel_btn"
+        app:layout_constraintTop_toBottomOf="@id/apptEditSV_LinLay" />
 
     <Button
-        android:id="@+id/cancelAppointmentConfirmButton"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.675"
-        app:layout_constraintStart_toEndOf="@+id/addAppointmentConfirmButton"
-        app:layout_constraintTop_toBottomOf="@+id/appointmentNotes"
-        app:layout_constraintVertical_bias="0.859" />
-
-
+        android:id="@+id/apptEditCancel_btn"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="10dp"
+        android:text="@string/editAppt_cancel_btn_text"
+        app:layout_constraintLeft_toRightOf="@id/apptEditSave_btn"
+        app:layout_constraintRight_toRightOf="@+id/apptEditApptName_et"
+        app:layout_constraintTop_toBottomOf="@id/apptEditSV_LinLay" />
 </android.support.constraint.ConstraintLayout>

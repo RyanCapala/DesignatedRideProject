@@ -49,78 +49,77 @@ public class RiderAddAppointmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_add_appointment);
 
-        final EditText hospitalName = (EditText) findViewById(R.id.hospitalName);
-        final EditText hospitalAddress = (EditText) findViewById(R.id.destinationAddress);
-        final RadioGroup radioGroup = (RadioGroup) findViewById(R.id.advancedBookingStatusRadioGroup);
-        radioGroup.check(R.id.yesRadioButton);
-        final EditText appointmentNotes = (EditText) findViewById(R.id.appointmentNotes);
+        //final EditText hospitalName = (EditText) findViewById(R.id.hospitalName);
+        //final EditText hospitalAddress = (EditText) findViewById(R.id.destinationAddress);
+        //final RadioGroup radioGroup = (RadioGroup) findViewById(R.id.advancedBookingStatusRadioGroup);
+        //final EditText appointmentNotes = (EditText) findViewById(R.id.appointmentNotes);
 
         time = "";
         date = "";
 
 
-        Button confirmButton = (Button) findViewById(R.id.addAppointmentConfirmButton);
+        Button confirmButton = (Button) findViewById(R.id.apptEditSave_btn);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
-                int fileCount = 0;
-                String name = hospitalName.getText().toString();
-                String address = hospitalAddress.getText().toString();
-                boolean status =  radioGroup.getCheckedRadioButtonId() == R.id.yesRadioButton;
-                String notes = appointmentNotes.getText().toString();
+      //          int fileCount = 0;
+      //          String name = hospitalName.getText().toString();
+      //          String address = hospitalAddress.getText().toString();
+      //          boolean status = radioGroup.getCheckedRadioButtonId() == R.id.yesRadioButton;
+      //          String notes = appointmentNotes.getText().toString();
+//
+      //          if (name.equals("") || address.equals("") || date.equals("") || time.equals("")) {
+      //              Toast.makeText(getApplicationContext(), "Field(s) is empty", Toast.LENGTH_SHORT).show();
+      //              return;
+      //          }
+//
+      //          String fileName = new SimpleDateFormat("yyyy_dd_MM_HH_mm_ss", Locale.US).format(new Date()) + FILENAME_POSTFIX;
+//
+      //          HandleFileReadWrite writer = new HandleFileReadWrite();
+      //          //write to file name to metadata
+      //          writer.open(RiderAddAppointmentActivity.this, metaFile, HandleFileReadWrite.fileOperator.OPEN_APPEND);
+      //          writer.writeLine(fileName);
+      //          writer.close();
+//
+      //          writer.open(RiderAddAppointmentActivity.this, fileName, HandleFileReadWrite.fileOperator.OPEN_WRITE);
+      //          writer.writeLine(name);
+      //          writer.writeLine(address);
+      //          writer.writeLine(time);
+      //          writer.writeLine(date);
+      //          writer.writeLine(status ? "yes" : "no");
+      //          writer.writeLine(notes);
+      //          writer.close();
+//
+      //          finish();
+      //      }
+      //  });
+//
+      //  Button cancelButton = (Button) findViewById(R.id.cancelAppointmentConfirmButton);
+      //  cancelButton.setOnClickListener(new View.OnClickListener() {
+      //      @Override
+      //      public void onClick(View view) {
+      //          finish();
+      //      }
+      //});
 
-                if (name.equals("") || address.equals("") || date.equals("") || time.equals("")) {
-                    Toast.makeText(getApplicationContext(),"Field(s) is empty", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                String fileName = new SimpleDateFormat("yyyy_dd_MM_HH_mm_ss", Locale.US).format(new Date()) + FILENAME_POSTFIX;
-
-                HandleFileReadWrite writer = new HandleFileReadWrite();
-                //write to file name to metadata
-                writer.open(RiderAddAppointmentActivity.this, metaFile, HandleFileReadWrite.fileOperator.OPEN_APPEND);
-                writer.writeLine(fileName);
-                writer.close();
-
-                writer.open(RiderAddAppointmentActivity.this, fileName, HandleFileReadWrite.fileOperator.OPEN_WRITE);
-                writer.writeLine(name);
-                writer.writeLine(address);
-                writer.writeLine(time);
-                writer.writeLine(date);
-                writer.writeLine(status ? "yes" : "no");
-                writer.writeLine(notes);
-                writer.close();
-
-                finish();
+        //ImageButton appointmentTime = (ImageButton) findViewById(R.id.appoitmentTimeButon);
+        //appointmentTime.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View view) {
+//
+        //        DialogFragment newFragment = new DatePickerFragment();
+        //        newFragment.show(getFragmentManager(), Constants.DATE_PICKER_TAG);
+//
+        //        newFragment = new TimePickerFragment();
+        //        newFragment.show(getFragmentManager(), Constants.TIME_PICKER_TAG);
+//
+//
             }
         });
 
-        Button cancelButton = (Button) findViewById(R.id.cancelAppointmentConfirmButton);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        ImageButton appointmentTime = (ImageButton) findViewById(R.id.appoitmentTimeButon);
-        appointmentTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                DialogFragment newFragment = new DatePickerFragment();
-                newFragment.show(getFragmentManager(), Constants.DATE_PICKER_TAG);
-
-                newFragment = new TimePickerFragment();
-                newFragment.show(getFragmentManager(), Constants.TIME_PICKER_TAG);
-
-
-            }
-        });
-
-        appointmentTimeView = (TextView) findViewById(R.id.appointmentTimeView);
+       // appointmentTimeView = (TextView) findViewById(R.id.appointmentTimeView);
 
     }
 
@@ -181,6 +180,11 @@ public class RiderAddAppointmentActivity extends AppCompatActivity {
             date = "";
             appointmentTimeView.setText("");
         }
+    }
+
+    public void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getFragmentManager(), "timePicker");
     }
     //
 

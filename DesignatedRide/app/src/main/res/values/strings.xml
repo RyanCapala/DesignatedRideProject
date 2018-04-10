@@ -118,4 +118,20 @@
     <string name="viewCalDes">VIEW CAL</string>
     <string name="home_address_text">Default Location home address goes here, Las Vegas NV 89119</string>
 
+    <!--Edit Appointment Activity-->
+    <string name="editApptLocationHeader">LOCATION</string>
+    <string name="editAppt_appointment_title">Appointment Title</string>
+    <string name="editAppt_destination_name">Destination Name</string>
+    <string name="editAppt_destination_address">Destination Address</string>
+    <string name="editAppt_city_state_zip">City, State Zip</string>
+    <string name="editAppt_date_and_time">DATE &amp; TIME</string>
+    <string name="editAppt_month">MONTH</string>
+    <string name="editAppt_day">DAY</string>
+    <string name="editAppt_year">YEAR</string>
+    <string name="editAppt_defaultTime">00:00 AM</string>
+    <string name="editAppt_other_notes">OTHER NOTES</string>
+    <string name="editAppt_notes_default_text">Tap to add notes</string>
+    <string name="editAppt_save_btn_text">Save</string>
+    <string name="editAppt_cancel_btn_text">Cancel</string>
+
 </resources>

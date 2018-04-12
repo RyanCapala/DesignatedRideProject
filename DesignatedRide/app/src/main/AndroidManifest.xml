@@ -75,8 +75,12 @@
         <activity android:name="._RiderActivities.RiderViewAppointmentActivity"
             android:label="APPT_VIEW"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <activity android:name="._RiderActivities.RiderViewAppointmentActivityWrapper" />
-        <activity android:name="._RiderActivities.RiderAddAppointmentActivity"/>
+
+        <activity android:name="._RiderActivities.RiderAddAppointmentActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <!-- Driver Activities -->
         <activity
             android:name="._DriverActivities.DriverActivity"
@@ -88,7 +92,8 @@
             android:name="._DriverActivities.DriverProfileActivity"
             android:label="@string/driver_profile"
             android:windowSoftInputMode="stateAlwaysHidden" />
-         <activity android:name=".util.Pref" />
+
+        <activity android:name=".util.Pref" />
 
         <activity android:name=".util.SynAck" />
 

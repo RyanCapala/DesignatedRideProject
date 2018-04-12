@@ -43,6 +43,7 @@ public class AppointmentManagerFragment extends DialogFragment {
                 //go to new activity
                 Intent nextActivity = new Intent(getActivity().getApplicationContext(), RiderAddAppointmentActivity.class);
                 startActivity(nextActivity);
+                //getActivity().finish();
             }
         });
 
@@ -53,6 +54,7 @@ public class AppointmentManagerFragment extends DialogFragment {
                 Log.i(TAG, "View button clicked");
                 Intent nextActivity = new Intent(getActivity().getApplicationContext(), RiderViewAppointmentActivityWrapper.class);
                 startActivity(nextActivity);
+                //getActivity().finish();
             }
         });
 

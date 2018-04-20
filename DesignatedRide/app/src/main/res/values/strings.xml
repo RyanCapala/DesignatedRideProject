@@ -116,7 +116,7 @@
     <!--Not necessary-->
     <string name="addCalDes">ADD CAL</string>
     <string name="viewCalDes">VIEW CAL</string>
-    <string name="home_address_text">Default Location home address goes here, Las Vegas NV 89119</string>
+    <string name="home_address_text">12 Grimmauld Place, London, England</string>
 
     <!--Edit Appointment Activity-->
     <string name="editApptLocationHeader">LOCATION</string>

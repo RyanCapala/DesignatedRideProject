@@ -62,10 +62,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- Rider Activities -->
+
+        <!--android:configChanges="orientation|screenSize"-->
         <activity
             android:name="._RiderActivities.RiderActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|screenSize"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name="._RiderActivities.RiderMapActivity"
             android:label="@string/title_activity_rider_map" />
@@ -97,6 +99,11 @@
         <activity
             android:name="._DriverActivities.DriverProfileActivity"
             android:label="@string/driver_profile"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="._DriverActivities.DriverViewProfileActivity"
+            android:label="@string/title_activity_rider_view_profile"
+            android:parentActivityName="._DriverActivities.DriverActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity android:name=".util.Pref" />

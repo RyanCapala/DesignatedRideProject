@@ -42,10 +42,16 @@
     <string name="rider_profile_med_info_insurance_company">Insurance Company</string>
     <string name="rider_profile_med_info_ride_coverage">Rider Coverage</string>
     <string name="rider_profile_med_info_gen_doctor_name">Doctor\'s Name</string>
+    <!--car info-->
+    <string name="driver_profile_header_vehicle_info">Vehicle Information</string>
+    <string name="driver_profile_car_make">Car Make</string>
+    <string name="driver_profile_car_model">Car Model</string>
+    <string name="driver_profile_car_year">Car Year</string>
+    <string name="driver_profile_wheelchair_access">Wheelchair Access</string>
     <!--public info-->
     <string name="rider_profile_public_info_public_name">Name</string>
     <string name="rider_profile_public_info_wheelchair_required">Wheelchair Required</string>
-
+    <string name="driver_profile_rating">Rating</string>
     <!--View Appointment Rider-->
     <string name="view_appt_rider_request_ride_btn_text">Request Ride</string>
     <string name="view_appt_rider_dest_logo_desc">marker dest logo</string>
@@ -108,6 +114,7 @@
     <string name="ride_schedule">Ride Schedule</string>
     <string name="view_map">View Map</string>
     <string name="available">Available</string>
+    <string name="view_availability">Availability</string>
     <string name="incoming_request">Incoming Request</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
@@ -116,7 +123,7 @@
     <!--Not necessary-->
     <string name="addCalDes">ADD CAL</string>
     <string name="viewCalDes">VIEW CAL</string>
-    <string name="home_address_text">Default Location home address goes here, Las Vegas NV 89119</string>
+    <string name="home_address_text">12 Grimmauld Place, London, England</string>
 
     <!--Edit Appointment Activity-->
     <string name="editApptLocationHeader">LOCATION</string>

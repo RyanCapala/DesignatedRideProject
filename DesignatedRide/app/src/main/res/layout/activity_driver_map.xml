@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/colorAccentWhiteBrown"
+        android:background="@color/colorTextWhite"
         android:fitsSystemWindows="true">
 
             <RelativeLayout
@@ -60,7 +60,6 @@
 
                 </LinearLayout>
 
-
                 <Button
                     android:id="@+id/view_driver_profile"
                     android:layout_width="fill_parent"
@@ -71,20 +70,46 @@
                     android:gravity="end|center_vertical"
                     android:paddingEnd="55dp"
                     android:text="@string/view_driver_profile"
+                    android:fontFamily="sans-serif-thin"
                     android:textColor="@color/colorPrimary"
                     android:textSize="25sp" />
+
+                <View
+                    android:id="@+id/apptEditLocationLine1Separator_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="55dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_below="@+id/view_driver_profile"
+                    android:background="@color/colorPrimary"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
+                    />
 
                 <Button
                     android:id="@+id/ride_schedule"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/view_driver_profile"
+                    android:layout_below="@+id/apptEditLocationLine1Separator_view"
                     android:background="@android:color/transparent"
                     android:gravity="end|center_vertical"
                     android:paddingEnd="55dp"
                     android:text="@string/ride_schedule"
+                    android:fontFamily="sans-serif-thin"
                     android:textColor="@color/colorPrimary"
                     android:textSize="25sp" />
+
+                <View
+                    android:id="@+id/apptEditLocationLine2Separator_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="55dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_below="@id/ride_schedule"
+                    android:background="@color/colorPrimary"
+                    />
 
                 <Button
                     android:id="@+id/view_map"
@@ -95,32 +120,58 @@
                     android:gravity="end|center_vertical"
                     android:paddingEnd="55dp"
                     android:text="@string/view_map"
+                    android:fontFamily="sans-serif-thin"
                     android:textColor="@color/colorPrimary"
                     android:textSize="25sp" />
+
+                <View
+                    android:id="@+id/apptEditLocationLine3Separator_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="55dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_below="@id/view_map"
+                    android:background="@color/colorPrimary"
+                    />
+
+
+                <Button
+                    android:id="@+id/view_availability"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/apptEditLocationLine3Separator_view"
+                    android:background="@android:color/transparent"
+                    android:gravity="end|center_vertical"
+                    android:paddingEnd="55dp"
+                    android:text="@string/view_availability"
+                    android:fontFamily="sans-serif-thin"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="25sp" />
+
 
                 <ImageView
                     android:id="@+id/car_Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_marginTop="65dp"
-                    android:layout_below="@id/view_map"
+                    android:layout_below="@id/view_availability"
                     android:layout_alignParentStart="true"
                     android:paddingStart="45dp"
-                    android:src="@drawable/icon_car_white" />
+                    android:src="@mipmap/icon_gray_car" />
+
                 <Button
                     android:id="@+id/available"
                     android:gravity="end|center_vertical"
                     android:paddingEnd="55dp"
                     android:layout_marginTop="50dp"
                     android:text="@string/available"
-                    android:layout_below="@id/view_map"
+                    android:layout_below="@id/view_availability"
                     android:background="@android:color/transparent"
                     android:textSize="20sp"
                     android:textColor="@color/colorPrimary"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"/>
-
-
 
             </RelativeLayout>
 

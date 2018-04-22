@@ -56,10 +56,13 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activities.ForgotPasswordActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/forgot_password"
+            />
+
         <activity
             android:name=".activities.ChangePasswordActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/change_password"
+            />
 
         <!-- Rider Activities -->
 
@@ -122,3 +125,4 @@
     </application>
 
 </manifest>
+

@@ -4,6 +4,8 @@
     <string name="title_activity_rider_view_profile">User Profile</string>
     <string name="title_activity_rider_map">Request Ride</string>
     <string name="title_activity_driver_map">DRIVERMAP</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="change_password">Change Password</string>
 
     <!--StartLogoPage-->
     <string name="start_page_welcome">@string/app_name</string>
@@ -107,6 +109,7 @@
     <string name="update_pwd">Update Password</string>
     <string name="close">Close</string>
     <string name="reset_pwd">Reset Password</string>
+    <string name="submit">Submit</string>
 
     
     <!--Driver Drawer View-->
@@ -142,3 +145,4 @@
     <string name="editAppt_cancel_btn_text">Cancel</string>
 
 </resources>
+

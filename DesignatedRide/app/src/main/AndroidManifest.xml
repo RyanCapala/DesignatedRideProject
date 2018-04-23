@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.awesomeness.designatedride">
 
+    <supports-screens
+        android:xlargeScreens="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -50,16 +56,21 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activities.ForgotPasswordActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/forgot_password"
+            />
+
         <activity
             android:name=".activities.ChangePasswordActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/change_password"
+            />
 
         <!-- Rider Activities -->
+
+        <!--android:configChanges="orientation|screenSize"-->
         <activity
             android:name="._RiderActivities.RiderActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|screenSize"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name="._RiderActivities.RiderMapActivity"
             android:label="@string/title_activity_rider_map" />
@@ -92,6 +103,11 @@
             android:name="._DriverActivities.DriverProfileActivity"
             android:label="@string/driver_profile"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="._DriverActivities.DriverViewProfileActivity"
+            android:label="@string/title_activity_rider_view_profile"
+            android:parentActivityName="._DriverActivities.DriverActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity android:name=".util.Pref" />
 
@@ -109,3 +125,4 @@
     </application>
 
 </manifest>
+

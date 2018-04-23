@@ -102,7 +102,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     private static final String API_KEY = "AIzaSyBQGYYk0KmrijL1JHdn8iu8X_lXWp9IPh4";
     private static final long DES_TIME = 10000; //milliseconds
     private static final long EXP_TIME = 5000;
-    private static final Double radius = 0.5;
+    private static final Double radius = 900.0;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -311,14 +311,15 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
                                     key = dataSnapshot.getValue(String.class);
 
-                                    obtainRating = mDatabaseReference.child(Constants.RIDER).child(key).child(Constants.USER_RATING);
+                                    obtainRating = mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.USER_RATING);
                                     obtainRating.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                                             riderRating = dataSnapshot.getValue(String.class);
 
-                                            mPushKey = FirebaseDatabase.getInstance().getReference(Constants.TEXT_BOX + "/" + Constants.PAIR_KEY + "/").push().getKey();
+                                            mPushKey = FirebaseDatabase.getInstance().getReference(Constants.TEXT_BOX + "/").push().getKey();
+                                            mDatabaseReference.child(Constants.TEXT_BOX).child(mPushKey).child(Constants.USER_RATING).setValue(riderRating);
                                             mDatabaseReference.child(Constants.PAIR).child(mPushKey).child(Constants.RIDER_KEY).setValue(key);
                                             mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY).setValue(mPushKey);
                                             mDatabaseReference.child(Constants.PAIR).child(mPushKey).child(Constants.IS_ADVANCED_BOOKING).setValue("false");
@@ -329,8 +330,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
                                                 }
                                             });
-
-                                            mDatabaseReference.child(Constants.TEXT_BOX).child(mPushKey).child(Constants.USER_RATING).setValue(riderRating);
 
                                             killText();
 
@@ -378,12 +377,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                                                     }
                                                                 });
                                                             }
-
-                                                            if(availableDrivers.size() == 0){
-                                                                Toast.makeText(RiderMapActivity.this,"No Drivers Available",Toast.LENGTH_LONG).show();
-                                                            }
-                                                            else
-                                                            removeFields();
                                                         }
 
                                                         @Override
@@ -419,7 +412,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                                 public void onGeoQueryError(DatabaseError error) {
 
                                                 }
-                                            });
+                                        });
 
                                             // RPcdS WPcdS6
                                             // UN RPcdUR N ceL Out WPdPam
@@ -1725,6 +1718,12 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
                 hourDiff = Math.abs(hourDiff);
 
+                if(hourDiff == 0 || hourDiff == 1 || hourDiff == 23){
+                    appointmentDate = Calendar.DATE + "";
+                    appointmentMonth = Calendar.MONTH + "";
+                    return true;
+                }
+
                 if(currentTime > formatAgain.get(Calendar.HOUR_OF_DAY)){
                     appointmentDate =  (Calendar.DATE + 1) + "";
                     appointmentMonth = Calendar.MONTH + "";
@@ -1732,16 +1731,9 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                 }
 
                 else{
-                    if(hourDiff == 0 || (hourDiff == 1 && minuteDiff == 0) || hourDiff == 23){
-                        appointmentDate = Calendar.DATE + "";
-                        appointmentMonth = Calendar.MONTH + "";
-                        return true;
-                    }
-                    else{
-                        appointmentDate = (Calendar.DATE + 1) + "";
-                        appointmentMonth = Calendar.MONTH + "";
-                        return false;
-                    }
+                    appointmentDate = (Calendar.DATE + 1) + "";
+                    appointmentMonth = Calendar.MONTH + "";
+                    return false;
                 }
 
 
@@ -1862,7 +1854,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                             Toast.makeText(RiderMapActivity.this,"Driver is no longer available",Toast.LENGTH_LONG).show();
                             killRaceCondition();
                         }
-                        else if(((data == 2 || data == 3) && value == 1) || (value == 6 && (data == 1 || data ==2 || data == 3))){
+                        else if(((data == 2 || data == 3) && value == 1) || (value == 6 && (data == 1 || data == 2 || data == 3))){
                             Toast.makeText(RiderMapActivity.this,"Driver has already been paired with another rider",Toast.LENGTH_LONG).show();
                             killRaceCondition();
                         }
@@ -1882,6 +1874,10 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
     }
 }
+
+
+
+
 
 
 

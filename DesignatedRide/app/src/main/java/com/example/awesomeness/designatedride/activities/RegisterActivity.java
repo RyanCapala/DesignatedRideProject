@@ -174,6 +174,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 drInfo.put(Constants.GEOKEY, mPushKey);
                                 writeInfo.put(Constants.DRIVER + "/" + userid + "/",
                                         drInfo);
+                                mDatabaseReference.child(Constants.PREFERENCE).child(mPushKey).child(Constants.DISTANCE).setValue(1000.0);
                             } else {
                                 writeInfo.put(Constants.RIDER + "/" + userid + "/",
                                         drInfo);
@@ -407,5 +408,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 }
+
 
 

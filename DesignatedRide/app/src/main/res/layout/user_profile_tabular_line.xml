@@ -9,6 +9,7 @@
     <TextView
         style="@style/AppTheme.TabularLabel"
         android:text="DEFAULT_TABULAR_LABEL"
+        android:textColor="@color/colorTextBlue"
         app:layout_constraintRight_toLeftOf="@id/space0" />
 
     <android.support.v4.widget.Space
@@ -23,5 +24,6 @@
     <TextView
         style="@style/AppTheme.TabularItem"
         android:text="DEFAULT_TABULAR_ITEM"
+        android:textColor="@color/colorTextBlack"
         app:layout_constraintLeft_toRightOf="@+id/space0" />
 </android.support.constraint.ConstraintLayout>

@@ -13,7 +13,13 @@
     <color name="colorGrey">#e3e3e3</color>
     <color name="colorDarkGray">#a9a9a9</color>
     <color name="colorTransparentBlack">#1a000000</color>
-
+    <!--Appointment View Colors-->
+    <color name="colorApptViewDateCircle">#5daae6</color>
+    <color name="colorApptViewTimeHospName">#f6486e</color>
+    <color name="colorApptViewTopLine">#2f3134</color>
+    <color name="colorApptViewNotes">#676364</color>
+    <color name="colorApptViewSeparator">#eda462</color>
+    <!-- - -->
     <color name="colorTextBlack">#000000</color>
     <color name="colorTextWhite">#ffffff</color>
 

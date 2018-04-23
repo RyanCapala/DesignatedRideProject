@@ -8,8 +8,8 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/appointmentsfloatingActionButton"
-        android:layout_width="52dp"
-        android:layout_height="46dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -18,28 +18,25 @@
         android:focusable="true"
         app:borderWidth="0dp"
         app:elevation="6dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.004"
         app:pressedTranslationZ="0dp"
         app:srcCompat="@mipmap/rider_appointments_icon_addappt" />
 
     <ListView
         android:id="@+id/appointmentsListView"
-        android:layout_width="match_parent"
-        android:layout_height="449dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:divider="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appointmentsfloatingActionButton"
-        app:layout_constraintVertical_bias="0.0">
+>
 
     </ListView>
 </android.support.constraint.ConstraintLayout>

@@ -23,7 +23,7 @@ public class RiderViewAppointmentItemDetail extends ArrayAdapter<String> {
     }
 
     static class ViewHolder {
-        ImageView circleImage;
+        TextView circleImage;
         TextView name;
         TextView location;
         TextView note;
@@ -42,7 +42,7 @@ public class RiderViewAppointmentItemDetail extends ArrayAdapter<String> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.fragment_rider_appointmentview_item_detail, parent, false);
 
-            viewHolder.circleImage = (ImageView) convertView.findViewById(R.id.imageView8);
+            viewHolder.circleImage = (TextView) convertView.findViewById(R.id.imageView8);
             viewHolder.name = (TextView) convertView.findViewById(R.id.appointmentNameTextView);
             viewHolder.location = (TextView) convertView.findViewById(R.id.appointmentLocationTextView);
             viewHolder.note = (TextView) convertView.findViewById(R.id.viewAppointmentRiderNotesText_tv);
@@ -55,7 +55,7 @@ public class RiderViewAppointmentItemDetail extends ArrayAdapter<String> {
         }
 
         //
-        viewHolder.circleImage.setImageResource(R.drawable.appointment_date_circle);
+     //   viewHolder.circleImage.setImageResource(R.drawable.appointment_date_circle);
         viewHolder.name.setText("TESTING");
         viewHolder.location.setText("HOSPITAL LOCATION");
         //viewHolder.note.setText("Some Notes");

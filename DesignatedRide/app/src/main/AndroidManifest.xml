@@ -56,10 +56,13 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activities.ForgotPasswordActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/forgot_password"
+            />
+
         <activity
             android:name=".activities.ChangePasswordActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/change_password"
+            />
 
         <!-- Rider Activities -->
 
@@ -100,6 +103,11 @@
             android:name="._DriverActivities.DriverProfileActivity"
             android:label="@string/driver_profile"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="._DriverActivities.DriverViewProfileActivity"
+            android:label="@string/title_activity_rider_view_profile"
+            android:parentActivityName="._DriverActivities.DriverActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity android:name=".util.Pref" />
 
@@ -117,3 +125,4 @@
     </application>
 
 </manifest>
+

@@ -1,6 +1,8 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
+import android.app.Fragment;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +34,20 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
 
 
         //
+        //
+
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.appointmentsfloatingActionButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent nextActivity = new Intent(getApplicationContext(), RiderAddAppointmentActivity.class);
+                startActivity(nextActivity);
+                finish();
+            }
+        });
+
+
+        //
         Toast.makeText(getApplicationContext(), "Hold on appointment to delete!", Toast.LENGTH_SHORT).show();
         //
 
@@ -43,7 +59,6 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
 
         final List<String> sList = new ArrayList<>();
 
-
         if (reader.isExist()) {
             String line = reader.readLine();
             while (line != null) {
@@ -54,9 +69,20 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
         }
         reader.close();
 
-        final ListView apmtListView = (ListView) findViewById(R.id.appointmentsListView);
+        for (int i=0; i<5; i++) {
+            sList.add("0x" + i);
+        }
+
+        /*apmtListView = (ListView) findViewById(R.id.appointmentsListView);
         ListAdapter displayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, buildString(sList));
-        apmtListView.setAdapter(displayAdapter);
+        apmtListView.setAdapter(displayAdapter);*/
+
+        ListAdapter listAdapter = new RiderViewAppointmentItemDetail(this, buildString(sList));
+        final ListView apmtListView = (ListView) findViewById(R.id.appointmentsListView);
+
+        apmtListView.setAdapter(listAdapter);
+
+
         apmtListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -97,6 +123,8 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
                 return true;
             }
         });
+
+
     }
 
     private String[] buildString(List<String> sList) {

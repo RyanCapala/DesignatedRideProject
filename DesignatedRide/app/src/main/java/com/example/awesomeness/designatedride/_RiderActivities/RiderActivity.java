@@ -157,10 +157,12 @@ public class RiderActivity extends AppCompatActivity {
         calendarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 DialogFragment newFragment = new AppointmentManagerFragment();
                 //newFragment.show(getSupportFragmentManager(), "missiles");
                 newFragment.show(getFragmentManager(), "");
-
+                */
+                gotoActivity(RiderViewAppointmentActivityWrapper.class);
             }
         });
 

@@ -171,17 +171,16 @@
                 app:layout_constraintTop_toBottomOf="@id/apptEditLocationLine2Separator_view" />
 
             <!--Month-->
-            <EditText
+            <TextView
                 android:id="@+id/apptEditDateMonth_tv"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
                 android:background="@color/colorMainbackground"
-                android:cursorVisible="true"
-                android:hint="@string/editAppt_month"
+                android:gravity="center"
+                android:onClick="showDatePickerDialog"
+                android:text="@string/editAppt_month"
                 android:textColor="@color/colorTextBlue"
-                android:textColorHint="@color/colorTextBlue"
-                android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="12sp"
                 app:layout_constraintLeft_toLeftOf="@id/header2"
                 app:layout_constraintTop_toBottomOf="@id/header2" />
@@ -198,18 +197,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/apptEditDateMonth_tv" />
 
             <!--Day-->
-            <EditText
+            <TextView
                 android:id="@+id/apptEditDateDay_tv"
                 android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="7dp"
                 android:background="@color/colorMainbackground"
-                android:cursorVisible="true"
-                android:hint="@string/editAppt_day"
+                android:gravity="center"
+                android:onClick="showDatePickerDialog"
+                android:text="@string/editAppt_day"
                 android:textColor="@color/colorTextBlue"
-                android:textColorHint="@color/colorTextBlue"
-                android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="12sp"
                 app:layout_constraintLeft_toRightOf="@id/apptEditDateMonth_tv"
                 app:layout_constraintTop_toBottomOf="@id/header2" />
@@ -226,18 +224,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/apptEditDateDay_tv" />
 
             <!--Year-->
-            <EditText
+            <TextView
                 android:id="@+id/apptEditDateYear_tv"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="7dp"
                 android:background="@color/colorMainbackground"
-                android:cursorVisible="true"
-                android:hint="@string/editAppt_year"
+                android:gravity="center"
+                android:text="@string/editAppt_year"
+                android:onClick="showDatePickerDialog"
                 android:textColor="@color/colorTextBlue"
-                android:textColorHint="@color/colorTextBlue"
-                android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="12sp"
                 app:layout_constraintLeft_toRightOf="@id/apptEditDateDay_tv"
                 app:layout_constraintTop_toBottomOf="@id/header2" />

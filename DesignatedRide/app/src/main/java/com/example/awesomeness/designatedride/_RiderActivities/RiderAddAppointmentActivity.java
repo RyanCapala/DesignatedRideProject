@@ -30,6 +30,7 @@ import com.example.awesomeness.designatedride.util.MonthInterpreter;
 import org.w3c.dom.Text;
 
 import java.sql.Time;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,14 +39,24 @@ import java.util.TimeZone;
 
 public class RiderAddAppointmentActivity extends AppCompatActivity {
 
+    private static final String TAG = "RiderAddAppt";
     private final static String metaFile = "appointments_metadata.txt";
     private final static String FILENAME_POSTFIX = ".txt";
     private static String time;
     private static String date;
 
 
-
-
+    private static EditText appointmentName;
+    private static  EditText destinationName;
+    private static  EditText destinationAddress;
+    private static  EditText destinationAddrLineTwo;
+    private static  EditText notesET;
+    private static  TextView dateDay;
+    private static  TextView dateMonth;
+    private static  TextView dateYear;
+    private static  TextView dateTime;
+    private static  Button confirmButton;
+    private static  Button cancelButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,19 +68,19 @@ public class RiderAddAppointmentActivity extends AppCompatActivity {
         date = "";
 
         // Widgets
-        final EditText appointmentName = findViewById(R.id.apptEditApptName_et);
-        final EditText destinationName = findViewById(R.id.apptEditLocationName_et);
-        final EditText destinationAddress = findViewById(R.id.apptEditLocationLine1_et);
-        final EditText destinationAddrLineTwo = findViewById(R.id.apptEditLocationLine2_et);
-        final EditText notesET = findViewById(R.id.apptEditNotes_et);
+        appointmentName = findViewById(R.id.apptEditApptName_et);
+        destinationName = findViewById(R.id.apptEditLocationName_et);
+        destinationAddress = findViewById(R.id.apptEditLocationLine1_et);
+        destinationAddrLineTwo = findViewById(R.id.apptEditLocationLine2_et);
+        notesET = findViewById(R.id.apptEditNotes_et);
 
-        final TextView dateDay = findViewById(R.id.apptEditDateDay_tv);
-        final TextView dateMonth = findViewById(R.id.apptEditDateMonth_tv);
-        final TextView dateYear = findViewById(R.id.apptEditDateYear_tv);
-        final TextView dateTime = findViewById(R.id.apptEditDateTime_tv);
+        dateDay = findViewById(R.id.apptEditDateDay_tv);
+        dateMonth = findViewById(R.id.apptEditDateMonth_tv);
+        dateYear = findViewById(R.id.apptEditDateYear_tv);
+        dateTime = findViewById(R.id.apptEditDateTime_tv);
 
-        final Button confirmButton = findViewById(R.id.apptEditSave_btn);
-        final Button cancelButton = findViewById(R.id.apptEditCancel_btn);
+        confirmButton = findViewById(R.id.apptEditSave_btn);
+        cancelButton = findViewById(R.id.apptEditCancel_btn);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +160,6 @@ public class RiderAddAppointmentActivity extends AppCompatActivity {
             final Calendar c = Calendar.getInstance();
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
-
             // Create a new instance of TimePickerDialog and return it
             return new TimePickerDialog(getActivity(), R.style.AlertDialogTheme, this, hour, minute,
                     DateFormat.is24HourFormat(getActivity()));
@@ -158,6 +168,14 @@ public class RiderAddAppointmentActivity extends AppCompatActivity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
             time = hourOfDay + ":" + minute;
+            Log.d(TAG, "onTimeSet: User picked " + time);
+            Boolean isAM = hourOfDay < 12;
+            String ampm = isAM ? " AM" : " PM";
+            hourOfDay = isAM ? hourOfDay : hourOfDay - 12;
+            String minuteStr = String.format("%02d", minute);
+            String timeString = hourOfDay + ":" + minuteStr + ampm;
+            dateTime.setText(timeString);
+
         }
 
         @Override
@@ -187,7 +205,11 @@ public class RiderAddAppointmentActivity extends AppCompatActivity {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             date = (new MonthInterpreter()).getName(month) + " " + day + ", " + year;
-
+            DateFormatSymbols dfs = new DateFormatSymbols();
+            String monthStr = dfs.getMonths()[month];
+            dateDay.setText(String.format(Locale.getDefault(),"%02d", day));
+            dateMonth.setText(monthStr);
+            dateYear.setText(String.format(Locale.getDefault(),"%d", year));
            // appointmentTimeView.setText(time + "\n" + date);
         }
 
@@ -201,6 +223,11 @@ public class RiderAddAppointmentActivity extends AppCompatActivity {
     public void showTimePickerDialog(View v) {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getFragmentManager(), "timePicker");
+    }
+
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getFragmentManager(), "datePicker");
     }
     //
 

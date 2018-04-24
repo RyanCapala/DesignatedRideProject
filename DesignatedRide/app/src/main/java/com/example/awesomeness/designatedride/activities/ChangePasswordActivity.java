@@ -114,7 +114,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }//End of onCreate
 
     private void initWidgets() {
-        userPwd = (EditText) findViewById(R.id.passwrodET_reg);
+        userPwd = (EditText) findViewById(R.id.passwordET_reg);
         verifyPwd = (EditText) findViewById(R.id.verifyPwdET_reg);
         loginBtn = (Button) findViewById(R.id.userLoginBtn_log);
         mProgressDialog = new ProgressDialog(this);

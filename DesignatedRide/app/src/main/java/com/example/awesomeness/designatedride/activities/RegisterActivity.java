@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -50,8 +51,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText userPwd;
     private EditText verifyPwd;
     private Button registerBtn;
-    private TextView loginLinkTV;
-    private ToggleButton toggleButton;
+    //private ToggleButton toggleButton;
+    private SwitchCompat riderDriverSwitch; // switch off = rider
     private ScrollView scrollView;
 
     //Firebase
@@ -62,7 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String mPushKey;
     private ProgressDialog mProgressDialog;
     private Uri resultUri = null;
-    private boolean isStatus;   // toggle position for rider or driver
+    //private boolean isStatus;   // toggle position for rider or driver
     //private StorageReference mFirebaseStorage; //will be used for image storage
     //public static final int GALLERY_CODE = 1; //will be used for images
 
@@ -89,28 +90,28 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        loginLinkTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gotoActivity(LoginActivity.class);
-            }
-        });
+        //loginLinkTV.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View v) {
+        //        gotoActivity(LoginActivity.class);
+        //    }
+        //});
 
-        toggleButton.setOnCheckedChangeListener(new CompoundButton
-                .OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Toast.makeText(RegisterActivity.this, "Rider", Toast.LENGTH_LONG)
-                            .show();
-                    isStatus = isChecked;
-                } else {
-                    Toast.makeText(RegisterActivity.this, "Driver", Toast.LENGTH_LONG)
-                            .show();
-                    isStatus = isChecked;
-                }
-            }
-        });
+        //toggleButton.setOnCheckedChangeListener(new CompoundButton
+        //        .OnCheckedChangeListener() {
+        //    @Override
+        //    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        //        if (isChecked) {
+        //            Toast.makeText(RegisterActivity.this, "Rider", Toast.LENGTH_LONG)
+        //                    .show();
+        //            isStatus = isChecked;
+        //        } else {
+        //            Toast.makeText(RegisterActivity.this, "Driver", Toast.LENGTH_LONG)
+        //                    .show();
+        //            isStatus = isChecked;
+        //        }
+        //    }
+        //});
 
         if (TextUtils.isEmpty(userPwd.getText().toString().trim())) {
             pwdMessage(true, false);
@@ -145,7 +146,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Map userInfo = new HashMap();
                             Map drInfo = new HashMap();
 
-                            if (isStatus)
+                            if (!riderDriverSwitch.isChecked())
                                 uMode = "Rider";
                             else
                                 uMode = "Driver";
@@ -217,7 +218,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         UserDataHelper.saveUserInfo
                                                 (getApplicationContext(), user.getEmail
                                                         (), pwd, uMode);
-                                        if (isStatus) {
+                                        if (uMode.equals("Rider")) {
                                             gotoActivity(RiderActivity.class);
                                         } else {
                                              mDatabaseReference.child(Constants.ONLINE).child(mPushKey).child(Constants.CONNECTED).setValue("true");
@@ -311,12 +312,12 @@ public class RegisterActivity extends AppCompatActivity {
         firstName = (EditText) findViewById(R.id.firstNameET_reg);
         lastName = (EditText) findViewById(R.id.lastNameET_reg);
         userEmailET = (EditText) findViewById(R.id.emailET_reg);
-        userPwd = (EditText) findViewById(R.id.passwrodET_reg);
+        userPwd = (EditText) findViewById(R.id.passwordET_reg);
         verifyPwd = (EditText) findViewById(R.id.verifyPwdET_reg);
         registerBtn = (Button) findViewById(R.id.registerBtn_reg);
-        loginLinkTV = (TextView) findViewById(R.id.loginLinkTV_reg);
         scrollView = (ScrollView) findViewById(R.id.scrollView_reg);
-        toggleButton = (ToggleButton) findViewById(R.id.toggleBtn_log);
+       // toggleButton = (ToggleButton) findViewById(R.id.toggleBtn_log);
+        riderDriverSwitch = findViewById(R.id.toggleBtn_log);
         scrollView = (ScrollView) findViewById(R.id.scrollView_reg);
     }
 

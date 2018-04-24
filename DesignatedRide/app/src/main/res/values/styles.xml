@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccentWhiteBrown</item>
+        <item name="colorAccent">@color/colorApptViewSeparator</item>
         <item name="android:textColorPrimary">@color/colorTextWhite</item>
         <item name="android:textColorSecondary">@color/colorTextBlack</item>
         <item name="buttonStyle">@style/AppTheme.Widget.Button</item>
@@ -114,5 +114,10 @@
         <item name="borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
     </style>
 
+    <style name="ThemeSwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/colorGradientStart</item>
+        <item name="colorSwitchThumbNormal">@color/colorGradientStart</item>
+        <item name="android:colorForeground">#f6d086</item>
+    </style>
 
 </resources>

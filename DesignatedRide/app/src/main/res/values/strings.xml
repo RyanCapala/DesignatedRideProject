@@ -14,7 +14,9 @@
     <string name="register_page_already_account">already have an account? login here</string>
     <string name="register_page_first_name_hint">First Name</string>
     <string name="register_page_last_name_hint">Last Name</string>
-    <string name="register_page_email_hint">awesome@email.com</string>
+    <string name="register_page_username_hint">Username</string>
+    <string name="register_page_email_hint">Email</string>
+    <string name="register_page_email_confirm_hint">Confirm Email</string>
     <string name="register_page_password_hint">Password</string>
     <string name="register_page_verify_password_hint">Verify Password</string>
     <string name="register_page_register_button_text">Register</string>

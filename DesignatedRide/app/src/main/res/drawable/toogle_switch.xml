@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/rider_xm"
+        android:drawable="@color/colorTextWhite"
         android:state_checked="true"/>
     <item
-        android:drawable="@drawable/driver_xm"
+        android:drawable="@color/colorTextBlue"
         android:state_checked="false"/>
 
 </selector>

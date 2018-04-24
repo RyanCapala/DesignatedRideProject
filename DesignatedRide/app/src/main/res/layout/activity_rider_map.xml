@@ -7,155 +7,175 @@
     android:background="@drawable/maincolorgradient"
     tools:context="com.example.awesomeness.designatedride._RiderActivities.RiderMapActivity">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/riderMapGuideline"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="140dp"/>
-
-    <!--Pickup-->
-    <ImageView
-        android:id="@+id/icon1"
-        android:layout_width="20dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/location"
-        app:layout_constraintBottom_toBottomOf="@id/pickUp"
-        app:layout_constraintLeft_toLeftOf="@id/pickupseparator"
-        app:layout_constraintTop_toTopOf="@id/pickUp" />
-
-    <EditText
-        android:id="@+id/pickUp"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:background="@null"
-        android:cursorVisible="true"
-        android:hint="@string/rider_map_pickup_hint"
-        android:inputType="textPostalAddress"
-        android:paddingEnd="5dp"
-        android:paddingStart="5dp"
-        android:textColorHint="@color/colorTextBlack"
-        android:textCursorDrawable="@drawable/cursor_color"
-        android:textSize="14sp"
-        app:layout_constraintLeft_toRightOf="@id/icon1"
-        app:layout_constraintRight_toRightOf="@id/pickupseparator"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/pickupseparator"
-        android:layout_width="280dp"
-        android:layout_height="3dp"
-        android:background="@color/colorTextWhite"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pickUp" />
-
-    <!--Destination-->
-    <ImageView
-        android:id="@+id/icon2"
-        android:layout_width="20dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/location"
-        app:layout_constraintBottom_toBottomOf="@id/destination"
-        app:layout_constraintLeft_toLeftOf="@id/destinationseparator"
-        app:layout_constraintTop_toTopOf="@id/destination" />
-
-    <EditText
-        android:id="@+id/destination"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:background="@null"
-        android:cursorVisible="true"
-        android:hint="@string/rider_map_destination_hint"
-        android:inputType="textPostalAddress"
-        android:textColorHint="@color/colorTextBlack"
-        android:textCursorDrawable="@drawable/cursor_color"
-        android:textSize="14sp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        app:layout_constraintLeft_toRightOf="@id/icon2"
-        app:layout_constraintRight_toRightOf="@id/destinationseparator"
-        app:layout_constraintTop_toBottomOf="@id/pickupseparator" />
-
-    <View
-        android:id="@+id/destinationseparator"
-        android:layout_width="280dp"
-        android:layout_height="3dp"
-        android:background="@color/colorTextWhite"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/destination" />
-
-    <!--Time-->
-
-    <ImageView
-        android:id="@+id/icon3"
-        android:layout_width="20dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/icon_clock"
-        app:layout_constraintBottom_toBottomOf="@id/time"
-        app:layout_constraintLeft_toLeftOf="@id/timeseparator"
-        app:layout_constraintTop_toTopOf="@id/time" />
-
-    <EditText
-        android:id="@+id/time"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:background="@null"
-        android:cursorVisible="true"
-        android:hint="@string/rider_map_time_hint"
-        android:inputType="datetime"
-        android:textColorHint="@color/colorTextBlack"
-        android:textCursorDrawable="@drawable/cursor_color"
-        android:textSize="14sp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        app:layout_constraintRight_toRightOf="@id/timeseparator"
-        app:layout_constraintLeft_toRightOf="@id/icon3"
-        app:layout_constraintTop_toBottomOf="@id/destinationseparator" />
-
-    <View
-        android:id="@+id/timeseparator"
-        android:layout_width="280dp"
-        android:layout_height="3dp"
-        android:background="@color/colorTextWhite"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/time" />
-
-    <!--End of edittexts-->
-
-
-
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@id/riderMapGuideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/riderMapGuideline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="190dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/riderMapGuideline" />
+        app:layout_constraintTop_toBottomOf="@id/riderMapGuideline">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:isScrollContainer="false">
+            <!--Pickup-->
+            <ImageView
+                android:id="@+id/icon1"
+                android:layout_width="25dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@mipmap/white_location_pin"
+                app:layout_constraintBottom_toBottomOf="@id/pickUp"
+                app:layout_constraintLeft_toLeftOf="@id/pickupseparator"
+                app:layout_constraintTop_toTopOf="@id/pickUp" />
+
+            <EditText
+                android:id="@+id/pickUp"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:background="@null"
+                android:cursorVisible="true"
+                android:hint="@string/rider_map_pickup_hint"
+                android:inputType="textPostalAddress"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:textColor="@color/colorTextWhite"
+                android:textColorHint="@color/colorTextWhite"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toRightOf="@id/icon1"
+                app:layout_constraintRight_toRightOf="@id/pickupseparator"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/pickupseparator"
+                android:layout_width="280dp"
+                android:layout_height="3dp"
+                android:background="@color/colorTextWhite"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pickUp" />
+
+            <!--Destination-->
+            <ImageView
+                android:id="@+id/icon2"
+                android:layout_width="25dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@mipmap/white_location_pin"
+                app:layout_constraintBottom_toBottomOf="@id/destination"
+                app:layout_constraintLeft_toLeftOf="@id/destinationseparator"
+                app:layout_constraintTop_toTopOf="@id/destination" />
+
+            <EditText
+                android:id="@+id/destination"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:background="@null"
+                android:cursorVisible="true"
+                android:hint="@string/rider_map_destination_hint"
+                android:inputType="textPostalAddress"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:textSize="14sp"
+                android:textColor="@color/colorTextWhite"
+                android:textColorHint="@color/colorTextWhite"
+                app:layout_constraintLeft_toRightOf="@id/icon2"
+                app:layout_constraintRight_toRightOf="@id/destinationseparator"
+                app:layout_constraintTop_toBottomOf="@id/pickupseparator" />
+
+            <View
+                android:id="@+id/destinationseparator"
+                android:layout_width="280dp"
+                android:layout_height="3dp"
+                android:background="@color/colorTextWhite"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/destination" />
+
+            <!--Time-->
+
+            <ImageView
+                android:id="@+id/icon3"
+                android:layout_width="25dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@mipmap/white_clock"
+                app:layout_constraintBottom_toBottomOf="@id/time"
+                app:layout_constraintLeft_toLeftOf="@id/timeseparator"
+                app:layout_constraintTop_toTopOf="@id/time" />
+
+            <EditText
+                android:id="@+id/time"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:background="@null"
+                android:cursorVisible="true"
+                android:hint="@string/rider_map_time_hint"
+                android:inputType="datetime"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:textColor="@color/colorTextWhite"
+                android:textColorHint="@color/colorTextWhite"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toRightOf="@id/icon3"
+                app:layout_constraintRight_toRightOf="@id/timeseparator"
+                app:layout_constraintTop_toBottomOf="@id/destinationseparator" />
+
+            <View
+                android:id="@+id/timeseparator"
+                android:layout_width="280dp"
+                android:layout_height="3dp"
+                android:background="@color/colorTextWhite"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/time" />
+
+            <!--End of edittexts-->
 
 
-    <Button
-        android:id="@+id/setPickupBtn_ridermap"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="30dp"
-        android:text="@string/rider_map_request_button"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+            <Button
+                android:id="@+id/setPickupBtn_ridermap"
+                android:layout_width="300dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/buttonborderstyleselector"
+                android:text="@string/rider_map_request_button"
+                android:textColor="@color/colorTextWhite"
+                app:layout_constraintTop_toBottomOf="@+id/timeseparator"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>

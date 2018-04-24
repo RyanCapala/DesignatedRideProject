@@ -73,6 +73,7 @@
 
         <activity
             android:name="._RiderActivities.RiderMapActivity"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_rider_map" />
         <activity
             android:name="._RiderActivities.RiderProfileActivity"

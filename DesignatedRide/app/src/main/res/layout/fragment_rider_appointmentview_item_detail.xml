@@ -14,35 +14,33 @@
         android:id="@+id/imageView8"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/appt_list_rider_default_date"
-        android:textSize="20sp"
-        android:textColor="@color/colorTextWhite"
-        android:textStyle="bold"
-        android:gravity="center"
         android:background="@drawable/appointment_date_circle"
+        android:foregroundGravity="right"
+        android:gravity="center"
+        android:text="@string/appt_list_rider_default_date"
+        android:textColor="@color/colorTextWhite"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/linearLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout"/>
+        app:layout_constraintTop_toBottomOf="@id/linearLayout"
+        app:layout_constraintTop_toTopOf="@id/linearLayout" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="250dp"
+        android:layout_width="0dp"
         android:layout_height="85dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="10dp"
         android:orientation="vertical"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="5dp"
-        android:paddingStart="10dp"
         android:paddingEnd="0dp"
+        android:paddingStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imageView9"
         app:layout_constraintStart_toEndOf="@+id/imageView8"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/appointmentNameTextView"
@@ -50,47 +48,48 @@
             android:layout_height="wrap_content"
             android:text="@string/appt_list_rider_default_name_line"
             android:textColor="@color/colorApptViewTopLine"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/appointmentLocationTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/appt_list_rider_default_time_hospname_line"
             android:textColor="@color/colorApptViewTimeHospName"
-            android:textSize="18sp"
-            android:text="@string/appt_list_rider_default_time_hospname_line" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/apointmentNoteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/appt_list_rider_default_notes_line"
-            android:textColor="@color/colorApptViewNotes"/>
+            android:textColor="@color/colorApptViewNotes" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/imageView9"
-        android:layout_width="44dp"
+        android:layout_width="25dp"
         android:layout_height="35dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="28dp"
+        android:foregroundGravity="right"
         android:src="@mipmap/rider_appointments_icon_arrow"
         app:layout_constraintBottom_toBottomOf="@id/linearLayout"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/linearLayout"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
-    <View
-        android:id="@+id/apptEditApptNameSeparator_view"
-        android:layout_width="0dp"
-        android:layout_height="3dp"
-        android:background="@color/colorApptViewSeparator"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintLeft_toLeftOf="@+id/imageView8"
-        app:layout_constraintRight_toRightOf="@+id/imageView9"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+    <!--<View-->
+        <!--android:id="@+id/apptEditApptNameSeparator_view"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="3dp"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:layout_marginStart="15dp"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:background="@color/colorApptViewSeparator"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="@+id/imageView8"-->
+        <!--app:layout_constraintRight_toRightOf="@+id/imageView9"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/linearLayout" />-->
 
 </android.support.constraint.ConstraintLayout>

@@ -32,7 +32,7 @@
                 android:id="@+id/toggleBtn_log"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:layout_gravity="center"
                 app:switchMinWidth="70dp"
                 android:theme="@style/ThemeSwitch"
@@ -55,6 +55,7 @@
         <!--First Name-->
         <EditText
             android:id="@+id/firstNameET_reg"
+            android:inputType="textCapWords"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -85,6 +86,7 @@
         <!--Last Name-->
         <EditText
             android:id="@+id/lastNameET_reg"
+            android:inputType="textCapWords"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -112,15 +114,16 @@
             app:layout_constraintRight_toRightOf="@+id/lastNameET_reg"
             app:layout_constraintTop_toBottomOf="@+id/lastNameET_reg" />
 
-        <!--Username-->
+        <!--Email-->
         <EditText
-            android:id="@+id/usernameET_reg"
+            android:id="@+id/emailET_reg"
+            android:inputType="textEmailAddress"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@color/colorMainbackground"
             android:cursorVisible="true"
-            android:hint="@string/register_page_username_hint"
+            android:hint="@string/register_page_email_hint"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
             android:textColor="@color/colorTextBlue"
@@ -138,19 +141,20 @@
             android:background="@color/colorAccentDark"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
-            app:layout_constraintLeft_toLeftOf="@+id/usernameET_reg"
-            app:layout_constraintRight_toRightOf="@+id/usernameET_reg"
-            app:layout_constraintTop_toBottomOf="@+id/usernameET_reg" />
+            app:layout_constraintLeft_toLeftOf="@+id/emailET_reg"
+            app:layout_constraintRight_toRightOf="@+id/emailET_reg"
+            app:layout_constraintTop_toBottomOf="@+id/emailET_reg" />
 
-        <!--Password-->
+        <!--Verify Email-->
         <EditText
-            android:id="@+id/passwordET_reg"
+            android:id="@+id/verifyEmailET_reg"
+            android:inputType="textEmailAddress"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@color/colorMainbackground"
             android:cursorVisible="true"
-            android:hint="@string/register_page_password_hint"
+            android:hint="@string/register_page_email_confirm_hint"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
             android:textColor="@color/colorTextBlue"
@@ -168,19 +172,53 @@
             android:background="@color/colorAccentDark"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
-            app:layout_constraintLeft_toLeftOf="@+id/passwordET_reg"
-            app:layout_constraintRight_toRightOf="@+id/passwordET_reg"
-            app:layout_constraintTop_toBottomOf="@+id/passwordET_reg" />
+            app:layout_constraintLeft_toLeftOf="@+id/verifyEmailET_reg"
+            app:layout_constraintRight_toRightOf="@+id/verifyEmailET_reg"
+            app:layout_constraintTop_toBottomOf="@+id/verifyEmailET_reg" />
 
-        <!--Pass Confirm-->
+
+        <!--Username-->
+        <!--For now, I commented this out since we didnt setup the creation of username to
+        Firebase-->
+        <!--<EditText-->
+            <!--android:id="@+id/usernameET_reg"-->
+            <!--android:layout_width="300dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:background="@color/colorMainbackground"-->
+            <!--android:cursorVisible="true"-->
+            <!--android:hint="@string/register_page_username_hint"-->
+            <!--android:paddingEnd="5dp"-->
+            <!--android:paddingStart="5dp"-->
+            <!--android:textColor="@color/colorTextBlue"-->
+            <!--android:textColorHint="@color/colorTextBlue"-->
+            <!--android:textCursorDrawable="@drawable/cursor_color"-->
+            <!--android:textSize="19sp"-->
+            <!--app:layout_constraintLeft_toRightOf="parent"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/separator2" />-->
+
+        <!--<View-->
+            <!--android:id="@+id/separator3"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="2dp"-->
+            <!--android:background="@color/colorAccentDark"-->
+            <!--android:paddingEnd="5dp"-->
+            <!--android:paddingStart="5dp"-->
+            <!--app:layout_constraintLeft_toLeftOf="@+id/usernameET_reg"-->
+            <!--app:layout_constraintRight_toRightOf="@+id/usernameET_reg"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/usernameET_reg" />-->
+
+        <!--Password-->
         <EditText
-            android:id="@+id/verifyPwdET_reg"
+            android:id="@+id/passwordET_reg"
+            android:inputType="textPassword"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@color/colorMainbackground"
             android:cursorVisible="true"
-            android:hint="@string/register_page_verify_password_hint"
+            android:hint="@string/register_page_password_hint"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
             android:textColor="@color/colorTextBlue"
@@ -198,20 +236,20 @@
             android:background="@color/colorAccentDark"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
-            app:layout_constraintLeft_toLeftOf="@+id/verifyPwdET_reg"
-            app:layout_constraintRight_toRightOf="@+id/verifyPwdET_reg"
-            app:layout_constraintTop_toBottomOf="@+id/verifyPwdET_reg" />
+            app:layout_constraintLeft_toLeftOf="@+id/passwordET_reg"
+            app:layout_constraintRight_toRightOf="@+id/passwordET_reg"
+            app:layout_constraintTop_toBottomOf="@+id/passwordET_reg" />
 
-
-        <!--Email-->
+        <!--Pass Confirm-->
         <EditText
-            android:id="@+id/emailET_reg"
+            android:id="@+id/verifyPwdET_reg"
+            android:inputType="textPassword"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@color/colorMainbackground"
             android:cursorVisible="true"
-            android:hint="@string/register_page_email_hint"
+            android:hint="@string/register_page_verify_password_hint"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
             android:textColor="@color/colorTextBlue"
@@ -229,48 +267,19 @@
             android:background="@color/colorAccentDark"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
-            app:layout_constraintLeft_toLeftOf="@+id/emailET_reg"
-            app:layout_constraintRight_toRightOf="@+id/emailET_reg"
-            app:layout_constraintTop_toBottomOf="@+id/emailET_reg" />
+            app:layout_constraintLeft_toLeftOf="@+id/verifyPwdET_reg"
+            app:layout_constraintRight_toRightOf="@+id/verifyPwdET_reg"
+            app:layout_constraintTop_toBottomOf="@+id/verifyPwdET_reg" />
 
-        <!--Email-->
-        <EditText
-            android:id="@+id/verifyEmailET_reg"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/colorMainbackground"
-            android:cursorVisible="true"
-            android:hint="@string/register_page_email_confirm_hint"
-            android:paddingEnd="5dp"
-            android:paddingStart="5dp"
-            android:textColor="@color/colorTextBlue"
-            android:textColorHint="@color/colorTextBlue"
-            android:textCursorDrawable="@drawable/cursor_color"
-            android:textSize="19sp"
-            app:layout_constraintLeft_toRightOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/separator6" />
 
-        <View
-            android:id="@+id/separator7"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:background="@color/colorAccentDark"
-            android:paddingEnd="5dp"
-            android:paddingStart="5dp"
-            app:layout_constraintLeft_toLeftOf="@+id/verifyEmailET_reg"
-            app:layout_constraintRight_toRightOf="@+id/verifyEmailET_reg"
-            app:layout_constraintTop_toBottomOf="@+id/verifyEmailET_reg" />
 
         <Button
             android:id="@+id/registerBtn_reg"
             android:layout_width="300dp"
-            android:layout_height="32dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/rounded_button"
-            android:text="@string/register_page_register_button_text"
-            app:layout_constraintTop_toTopOf="@id/separator7"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@mipmap/register_btn"
+            app:layout_constraintTop_toTopOf="@id/separator6"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 

@@ -143,6 +143,8 @@ public class RiderActivity extends AppCompatActivity {
                         RiderProfileActivity.class, LoginActivity.class);
                 profileDialogHelper.createPopupDialog();
 
+//                startActivity(new Intent(RiderActivity.this, RiderViewProfileActivity.class));
+
 
             }
         });

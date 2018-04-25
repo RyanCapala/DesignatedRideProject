@@ -7,6 +7,379 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    tools:context="com.example.awesomeness.designatedride._RiderActivities.RiderProfileActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/user_profileImgView_rdr"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/profile1xm"
+            app:civ_border_color="@color/img_ring_bkg"
+            app:civ_border_width="5dp"
+            app:civ_fill_color="#E4E6E7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/update_profile_fab_rdr"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/icon_editpen"
+            android:clickable="true"
+            app:elevation="0dp"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="@+id/user_profileImgView_rdr"
+            app:layout_constraintStart_toEndOf="@+id/user_profileImgView_rdr" />
+
+        <TextView
+            android:id="@+id/user_fullName_tv_rdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:padding="2dp"
+            android:textColor="@android:color/black"
+            android:text="Awesome McLovin"
+            android:textSize="18sp"
+            android:fontFamily="monospace"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_profileImgView_rdr" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout_user_rdr"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginStart="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_fullName_tv_rdr">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="2dp"
+                android:src="@mipmap/icon_house_large" />
+
+            <TextView
+                android:id="@+id/user_address_tv_rdr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/home_address_text"
+                android:textColor="@color/colorTextBlack"
+                android:fontFamily="sans-serif"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/gen_info_img"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/gen_info_div"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout_user_rdr" />
+
+        <!--First Name-->
+        <TextView
+            android:id="@+id/fname_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/fname"
+            android:textColor="@color/teal"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.361"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gen_info_img" />
+
+
+        <TextView
+            android:id="@+id/user_fname_tv_rdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="@string/fname_placeholder"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintBottom_toBottomOf="@+id/fname_tv"
+            app:layout_constraintStart_toEndOf="@+id/fname_tv"
+            app:layout_constraintTop_toTopOf="@+id/fname_tv" />
+
+        <!--Last Name-->
+        <TextView
+            android:id="@+id/lname_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lname"
+            android:textColor="@color/teal"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/fname_tv"
+            app:layout_constraintTop_toBottomOf="@+id/fname_tv" />
+
+        <TextView
+            android:id="@+id/user_lname_tv_rdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lname_placeholder"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/user_fname_tv_rdr"
+            app:layout_constraintLeft_toLeftOf="@+id/user_fname_tv_rdr"
+            app:layout_constraintTop_toTopOf="@+id/lname_tv"/>
+
+        <!--Age-->
+        <TextView
+            android:id="@+id/age_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/age"
+            android:textColor="@color/teal"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/lname_tv"
+            app:layout_constraintTop_toBottomOf="@+id/lname_tv" />
+
+        <TextView
+            android:id="@+id/user_age_tv_rdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/age_placeholder"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/user_lname_tv_rdr"
+            app:layout_constraintLeft_toLeftOf="@+id/user_lname_tv_rdr"
+            app:layout_constraintTop_toTopOf="@+id/age_tv"/>
+
+        <!--Email-->
+        <TextView
+            android:id="@+id/email_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_addr_ph"
+            android:textColor="@color/teal"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/age_tv"
+            app:layout_constraintTop_toBottomOf="@+id/age_tv" />
+
+        <TextView
+            android:id="@+id/user_email_tv_rdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_placeholder"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/user_age_tv_rdr"
+            app:layout_constraintLeft_toLeftOf="@+id/user_age_tv_rdr"
+            app:layout_constraintTop_toTopOf="@+id/email_tv"/>
+
+        <!--Phone-->
+        <TextView
+            android:id="@+id/phone_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_ph"
+            android:textColor="@color/teal"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/email_tv"
+            app:layout_constraintTop_toBottomOf="@+id/email_tv" />
+
+        <TextView
+            android:id="@+id/user_phone_tv_rdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_placeholder"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/user_email_tv_rdr"
+            app:layout_constraintLeft_toLeftOf="@+id/user_email_tv_rdr"
+            app:layout_constraintTop_toTopOf="@+id/phone_tv"/>
+
+        <!--Med Info Div-->
+        <ImageView
+            android:id="@+id/med_info_img"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/med_info_div"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phone_tv" />
+
+        <!--Insurance-->
+        <TextView
+            android:id="@+id/insurance_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ins_ph"
+            android:textColor="@color/teal"
+            android:layout_marginTop="10dp"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/phone_tv"
+            app:layout_constraintTop_toBottomOf="@+id/med_info_img" />
+
+        <TextView
+            android:id="@+id/user_ins_tv_rdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ins_placeholder"
+            android:layout_marginStart="12dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/user_email_tv_rdr"
+            app:layout_constraintLeft_toRightOf="@id/insurance_tv"
+            app:layout_constraintTop_toTopOf="@+id/insurance_tv"/>
+
+        <!--Ride Coverage-->
+        <TextView
+            android:id="@+id/coverage_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coverage_ph"
+            android:textColor="@color/teal"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/insurance_tv"
+            app:layout_constraintTop_toBottomOf="@+id/insurance_tv" />
+
+        <TextView
+            android:id="@+id/user_coverage_tv_rdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coverage_placeholder"
+            android:layout_marginStart="12dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintBottom_toBottomOf="@+id/coverage_tv"
+            app:layout_constraintLeft_toRightOf="@id/coverage_tv"
+            app:layout_constraintTop_toTopOf="@+id/coverage_tv"/>
+
+        <!--Doctor-->
+        <TextView
+            android:id="@+id/doctor_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/doctor_ph"
+            android:textColor="@color/teal"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/coverage_tv"
+            app:layout_constraintTop_toBottomOf="@+id/coverage_tv" />
+
+        <TextView
+            android:id="@+id/user_docsname_tv_rdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/docsname_placeholder"
+            android:layout_marginStart="12dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintBottom_toBottomOf="@+id/doctor_tv"
+            app:layout_constraintLeft_toRightOf="@id/doctor_tv"
+            app:layout_constraintTop_toTopOf="@+id/doctor_tv"/>
+
+        <!--Public Prof Div-->
+        <ImageView
+            android:id="@+id/public_prof_img"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/pub_prof_div"
+            app:layout_constraintTop_toBottomOf="@+id/doctor_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!--Name-->
+        <TextView
+            android:id="@+id/username_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/name_ph"
+            android:textColor="@color/teal"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/doctor_tv"
+            app:layout_constraintTop_toBottomOf="@+id/public_prof_img" />
+
+        <TextView
+            android:id="@+id/user_name_tv_rdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/username_placeholder"
+            android:layout_marginStart="12dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintBottom_toBottomOf="@+id/username_tv"
+            app:layout_constraintLeft_toRightOf="@id/username_tv"
+            app:layout_constraintTop_toTopOf="@+id/username_tv"/>
+
+        <!--Wheelchair-->
+        <TextView
+            android:id="@+id/wheelchair_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wheelchair_ph"
+            android:textColor="@color/teal"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@+id/username_tv"
+            app:layout_constraintEnd_toEndOf="@id/username_tv"/>
+
+        <TextView
+            android:id="@+id/user_wheelchair_tv_rdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wheelchair_placeholder"
+            android:layout_marginStart="12dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintBottom_toBottomOf="@+id/wheelchair_tv"
+            app:layout_constraintLeft_toRightOf="@id/wheelchair_tv"
+            app:layout_constraintTop_toTopOf="@+id/wheelchair_tv"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+
+
+
+</ScrollView>
+
+
+
+<!-- Original Layout -->
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@drawable/maincolorgradient"
     tools:context="com.example.awesomeness.designatedride._RiderActivities.RiderProfileActivity">
 
@@ -120,3 +493,6 @@
     </LinearLayout>
 
 </ScrollView>
+
+
+-->

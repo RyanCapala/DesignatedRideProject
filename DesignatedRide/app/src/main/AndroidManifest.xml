@@ -3,10 +3,10 @@
     package="com.example.awesomeness.designatedride">
 
     <supports-screens
-        android:xlargeScreens="true"
         android:largeScreens="true"
         android:normalScreens="true"
-        android:smallScreens="true" />
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -48,9 +48,9 @@
         </activity>
         <activity
             android:name=".activities.RegisterActivity"
-            android:theme="@style/AppTheme"
             android:icon="@drawable/icon_backarrow"
             android:label="@string/register"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.LoginActivity"
@@ -58,25 +58,22 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".activities.ForgotPasswordActivity"
-            android:label="@string/forgot_password"
-            />
-
+            android:label="@string/forgot_password" />
         <activity
             android:name=".activities.ChangePasswordActivity"
-            android:label="@string/change_password"
-            />
+            android:label="@string/change_password" />
 
         <!-- Rider Activities -->
 
-        <!--android:configChanges="orientation|screenSize"-->
+
+        <!-- android:configChanges="orientation|screenSize" -->
         <activity
             android:name="._RiderActivities.RiderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name="._RiderActivities.RiderMapActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/title_activity_rider_map" />
+            android:label="@string/title_activity_rider_map"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="._RiderActivities.RiderProfileActivity"
             android:label="@string/rider_profile"
@@ -86,14 +83,14 @@
             android:label="@string/title_activity_rider_view_profile"
             android:parentActivityName="._RiderActivities.RiderActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name="._RiderActivities.RiderViewAppointmentActivity"
+        <activity
+            android:name="._RiderActivities.RiderViewAppointmentActivity"
             android:label="APPT_VIEW"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name="._RiderActivities.RiderViewAppointmentActivityWrapper" />
-
-        <activity android:name="._RiderActivities.RiderAddAppointmentActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name="._RiderActivities.RiderAddAppointmentActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- Driver Activities -->
         <activity
@@ -111,9 +108,7 @@
             android:label="@string/title_activity_rider_view_profile"
             android:parentActivityName="._DriverActivities.DriverActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity android:name=".util.Pref" />
-
         <activity android:name=".util.SynAck" />
 
         <receiver android:name=".util.Receiver">
@@ -124,8 +119,7 @@
             </intent-filter>
         </receiver>
 
-
+        <activity android:name="._RiderActivities.RiderEditProfileActivity"></activity>
     </application>
 
 </manifest>
-

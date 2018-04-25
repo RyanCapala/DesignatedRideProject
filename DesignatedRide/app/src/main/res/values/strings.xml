@@ -155,6 +155,26 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="register">Register</string>
+    <string name="fname">First Name</string>
+    <string name="lname">Last Name</string>
+    <string name="age">Age</string>
+    <string name="age_placeholder">30</string>
+    <string name="lname_placeholder">Wick</string>
+    <string name="fname_placeholder">John</string>
+    <string name="email_addr_ph">Email Address</string>
+    <string name="email_placeholder">johnwick@continental.com</string>
+    <string name="phone_ph">Phone Number</string>
+    <string name="phone_placeholder">555-555-5555</string>
+    <string name="ins_ph">Insurance</string>
+    <string name="ins_placeholder">State Farm</string>
+    <string name="coverage_ph">Ride Coverage</string>
+    <string name="coverage_placeholder">Full Cost</string>
+    <string name="doctor_ph">Doctor\'s Name</string>
+    <string name="docsname_placeholder">Dr. Dre</string>
+    <string name="name_ph">User Name</string>
+    <string name="wheelchair_ph">Wheelchair Access</string>
+    <string name="wheelchair_placeholder">No</string>
+    <string name="username_placeholder">johnwick</string>
 
 </resources>
 

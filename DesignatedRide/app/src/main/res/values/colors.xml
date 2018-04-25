@@ -38,7 +38,8 @@
     <color name="input_et1">#F88D7B</color>
     <color name="input_et2">#ED6554</color>
 
-    <color name="img_ring_bkg">#e0be7a</color>
+    <color name="img_ring_bkg">#dd595a</color>
+    <color name="teal">#0DA7DF</color>
 
 
 </resources>

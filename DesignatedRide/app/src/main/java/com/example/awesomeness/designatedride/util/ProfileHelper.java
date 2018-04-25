@@ -2,9 +2,11 @@ package com.example.awesomeness.designatedride.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,6 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by awesome on 2/25/18.
@@ -36,6 +40,15 @@ public class ProfileHelper {
 
     private EditText firstNameET, lastNameET, emailET;
 
+    //=========================
+    private TextView fullName_TV, userAddress_TV;
+    private TextView firstName_TV, lastName_TV, age_TV, email_TV, phone_TV;
+    private TextView insurance_TV, coverage_TV, doctorname_TV;
+    private TextView userName_TV, wheelchair_TV;
+    private CircleImageView profileImage;
+    private FloatingActionButton editProfile_fab;
+    //=========================
+
     public ProfileHelper(DatabaseReference mDatabaseReference, FirebaseUser mUser, HashMap<String, String> childMap,Context ctx, EditText firstNameET, EditText lastNameET, EditText emailET) {
         this.mDatabaseReference = mDatabaseReference;
         this.mUser = mUser;
@@ -45,6 +58,42 @@ public class ProfileHelper {
         this.lastNameET = lastNameET;
         this.emailET = emailET;
         mDatabaseReference2 = mDatabaseReference;
+    }
+
+    public ProfileHelper(DatabaseReference mDatabaseReference,
+                         FirebaseUser mUser,
+                         Context ctx,
+                         HashMap<String, String> childMap,
+                         TextView userAddress_TV,
+                         TextView fullName_TV,
+                         TextView firstName_TV,
+                         TextView lastName_TV,
+                         TextView age_TV,
+                         TextView email_TV,
+                         TextView phone_TV,
+                         TextView insurance_TV,
+                         TextView coverage_TV,
+                         TextView doctorname_TV,
+                         TextView userName_TV,
+                         TextView wheelchair_TV,
+                         CircleImageView profileImage) {
+        this.mDatabaseReference = mDatabaseReference;
+        this.mUser = mUser;
+        this.ctx = ctx;
+        this.childMap = childMap;
+        this.fullName_TV = fullName_TV;
+        this.userAddress_TV = userAddress_TV;
+        this.firstName_TV = firstName_TV;
+        this.lastName_TV = lastName_TV;
+        this.age_TV = age_TV;
+        this.email_TV = email_TV;
+        this.phone_TV = phone_TV;
+        this.insurance_TV = insurance_TV;
+        this.coverage_TV = coverage_TV;
+        this.doctorname_TV = doctorname_TV;
+        this.userName_TV = userName_TV;
+        this.wheelchair_TV = wheelchair_TV;
+        this.profileImage = profileImage;
     }
 
     //----------------------------------------------------------------------------------------------
@@ -82,6 +131,42 @@ public class ProfileHelper {
         child_email = mUser.getEmail();
         emailET.setText(child_email);
 
+    }
+
+    public void populateUserInfo1() {
+        mDatabaseReference
+                .child(Constants.USER)
+                .child(mUser.getUid())
+                .child(Constants.PROFILE)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                            String key = d.getKey();
+                            String val = (String) d.getValue();
+                            childMap.put(key, val);
+                        }
+
+                        //set TextView
+                        fullName_TV.setText(childMap.get(Constants.FULLNAME));
+                        firstName_TV.setText(childMap.get(Constants.FIRSTNAME));
+                        lastName_TV.setText(childMap.get(Constants.LASTNAME));
+                        userName_TV.setText(childMap.get(Constants.USERNAME));
+                        userAddress_TV.setText(childMap.get(Constants.ADDRESS));
+                        age_TV.setText(childMap.get(Constants.AGE));
+                        email_TV.setText(childMap.get(Constants.EMAIL));
+                        phone_TV.setText(childMap.get(Constants.PHONE));
+                        insurance_TV.setText(childMap.get(Constants.INSURANCE));
+                        coverage_TV.setText(childMap.get(Constants.COVERAGE));
+                        doctorname_TV.setText(childMap.get(Constants.DOCTORNAME));
+                        wheelchair_TV.setText(childMap.get(Constants.WHEELCHAIR));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     //----------------------------------------------------------------------------------------------

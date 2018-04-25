@@ -20,6 +20,15 @@ public class Constants {
     public static final String USERIMAGE                = "userImage";
     public static final String USEREMAILVERIFIED        = "userEmailVerified";
     public static final String PROFILE_IMAGE            = "profileImage";
+    public static final String ADDRESS                  = "userAddress";
+    public static final String FULLNAME                 = "userFullName";
+    public static final String AGE                      = "userAge";
+    public static final String PHONE                    = "userPhone";
+    public static final String INSURANCE                = "userInsurance";
+    public static final String COVERAGE                 = "userCoverage";
+    public static final String DOCTORNAME               = "userDoctorsName";
+    public static final String USERNAME                 = "userName";
+    public static final String WHEELCHAIR               = "userWheelChair";
 
     public static final String RIDER                    = "Rider";
     public static final String DRIVER                   = "Driver";

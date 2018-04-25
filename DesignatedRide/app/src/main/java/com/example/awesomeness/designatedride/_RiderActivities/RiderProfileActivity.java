@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,6 +62,7 @@ public class RiderProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_profile);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         String userid = intent.getStringExtra(Constants.INTENT_KEY);
@@ -121,6 +123,18 @@ public class RiderProfileActivity extends AppCompatActivity {
 
     }
 
+    // For the Arrow back
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                gotoActivity(RiderActivity.class);
+                return true;
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
 
     //----------------------------------------------------------------------------------------------
 

@@ -63,36 +63,47 @@
             android:name=".activities.ChangePasswordActivity"
             android:label="@string/change_password" />
 
-        <!-- Rider Activities -->
-
-
+        <!-- ==========Rider Activities================== -->
         <!-- android:configChanges="orientation|screenSize" -->
+
+        <!--RiderActivity-->
         <activity
             android:name="._RiderActivities.RiderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--RiderMapActivity-->
         <activity
             android:name="._RiderActivities.RiderMapActivity"
             android:label="@string/title_activity_rider_map"
             android:windowSoftInputMode="adjustPan" />
+
+        <!--RiderProfileActivity-->
         <activity
             android:name="._RiderActivities.RiderProfileActivity"
+            android:icon="@drawable/icon_backarrow"
             android:label="@string/rider_profile"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <!--RiderViewProfileActivity-->
         <activity
             android:name="._RiderActivities.RiderViewProfileActivity"
             android:label="@string/title_activity_rider_view_profile"
             android:parentActivityName="._RiderActivities.RiderActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <!--RiderViewAppointmentActivity-->
         <activity
             android:name="._RiderActivities.RiderViewAppointmentActivity"
             android:label="APPT_VIEW"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name="._RiderActivities.RiderViewAppointmentActivityWrapper" />
+
+        <!--RiderAddAppointmentActivity-->
         <activity
             android:name="._RiderActivities.RiderAddAppointmentActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <!-- Driver Activities -->
+        <!-- ====================Driver Activities==================== -->
         <activity
             android:name="._DriverActivities.DriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />

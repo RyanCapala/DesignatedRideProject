@@ -123,6 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    // For the Arrow back
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

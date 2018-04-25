@@ -91,6 +91,12 @@
             android:parentActivityName="._RiderActivities.RiderActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
+        <!--RiderEditProfileActivity-->
+        <activity
+            android:name="._RiderActivities.RiderEditProfileActivity"
+            android:label="@string/edit_profile"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <!--RiderViewAppointmentActivity-->
         <activity
             android:name="._RiderActivities.RiderViewAppointmentActivity"
@@ -130,7 +136,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name="._RiderActivities.RiderEditProfileActivity"></activity>
+
     </application>
 
 </manifest>

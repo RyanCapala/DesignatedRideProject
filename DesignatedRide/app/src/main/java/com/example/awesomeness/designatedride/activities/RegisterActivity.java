@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -74,6 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDatabase = FirebaseDatabase.getInstance();
         //mDatabaseReference = mDatabase.getReference().child(_User);
@@ -113,12 +115,24 @@ public class RegisterActivity extends AppCompatActivity {
         //    }
         //});
 
-        if (TextUtils.isEmpty(userPwd.getText().toString().trim())) {
-            pwdMessage(true, false);
-        }
+        //I commented this out because it shows the error message on the password section as
+        //soon as the page opens up. --Ryan
+        //if (TextUtils.isEmpty(userPwd.getText().toString().trim())) {
+        //    pwdMessage(true, false);
+        //}
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(this, LoginActivity.class));
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void createNewAccount() {
 

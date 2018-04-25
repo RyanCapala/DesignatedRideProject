@@ -58,7 +58,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         Toast.makeText(ChangePasswordActivity.this,"Temporary Password Revoked, please create a new password.", Toast.LENGTH_LONG).show();
 
-        if(TextUtils.isEmpty(userPwd.getText().toString().trim())) { userPwd.setError("Password must be at least 8 characters " +
+        if(TextUtils.isEmpty(userPwd.getText().toString().trim())) {
+            userPwd.setError("Password must be at least 8 characters " +
                 "containing at least one of each: lower case (a-z), upper case (A-Z), number (0-9)");}
 
         loginBtn.setOnClickListener(new View.OnClickListener() {

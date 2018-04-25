@@ -65,40 +65,51 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference();
 
-        if(TextUtils.isEmpty(userEmailET.getText().toString().trim())) { userEmailET.setError("Enter email address");}
+        // I commented this out and moved it inside the onClick, because it will set the error
+        // message every time this page loads up since the email is empty when the page appears
+
+//        if(TextUtils.isEmpty(userEmailET.getText().toString().trim())) {
+//            userEmailET.setError("Enter email address");
+//        }
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String email = userEmailET.getText().toString().trim();
-                mProgressDialog.setMessage("Sending Password Reset Email ...");
+                if(TextUtils.isEmpty(email)) {
+                    userEmailET.setError("Enter email address");
+                } else {
+                    mProgressDialog.setMessage("Sending Password Reset Email ...");
 
-                if (fieldChecking(email)) {
-                    mProgressDialog.show();
-                    mAuth = FirebaseAuth.getInstance();
-                    mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(ForgotPasswordActivity.this,"Password reset email sent to " + email, Toast.LENGTH_LONG).show();
-                                gotoActivity(LoginActivity.class,true);
-                            }
-                            else {
-                                mProgressDialog.dismiss();
-                                if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-                                    Log.e("Password reset not sent", task.getException().getMessage());
-                                    Toast.makeText(ForgotPasswordActivity.this, "Email address doesn't exist!", Toast.LENGTH_LONG).show();
+                    if (fieldChecking(email)) {
+                        mProgressDialog.show();
+                        mAuth = FirebaseAuth.getInstance();
+                        mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(ForgotPasswordActivity.this,"Password reset email sent to " + email, Toast.LENGTH_LONG).show();
+                                    gotoActivity(LoginActivity.class,true);
                                 }
-                                if (task.getException() instanceof FirebaseTooManyRequestsException) {
-                                    Log.e("Unusual activity.", task.getException().getMessage());
-                                    Toast.makeText(ForgotPasswordActivity.this,"Unusual activity, please try again later.",Toast.LENGTH_LONG).show();
+                                else {
+                                    mProgressDialog.dismiss();
+                                    if (task.getException() instanceof FirebaseAuthInvalidUserException) {
+                                        //Log.e("Password reset not sent", task.getException()
+                                        //        .getMessage());
+                                        Toast.makeText(ForgotPasswordActivity.this, "Email address doesn't exist!", Toast.LENGTH_LONG).show();
+                                    }
+                                    if (task.getException() instanceof FirebaseTooManyRequestsException) {
+                                        //Log.e("Unusual activity.", task.getException()
+                                        //        .getMessage());
+                                        Toast.makeText(ForgotPasswordActivity.this,"Unusual activity, please try again later.",Toast.LENGTH_LONG).show();
+                                    }
+                                    
                                 }
-                                else
-                                    Log.wtf("Password reset not sent",task.getException().getMessage());
                             }
-                        }
-                    });
+                        });
+                    }
                 }
+
             }
         });
 

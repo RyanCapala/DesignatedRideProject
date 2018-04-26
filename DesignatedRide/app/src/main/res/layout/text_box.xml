@@ -13,57 +13,21 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@color/colorPrimary"
-        android:paddingTop="25dp"
+        android:background="@color/colorMainbackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageView
-            android:id="@+id/circle_background"
-            android:layout_width="116dp"
-            android:layout_height="114dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/primary_color_circle_shadow"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/message" />
-
-        <ImageView
-            android:id="@+id/circle"
-            android:layout_width="105dp"
-            android:layout_height="105dp"
-            android:layout_alignBottom="@+id/circle_background"
-            android:layout_alignEnd="@+id/circle_background"
-            android:layout_alignStart="@+id/circle_background"
-            android:layout_alignTop="@+id/circle_background"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/primary_color_circle"
-            app:layout_constraintBottom_toBottomOf="@+id/circle_background"
-            app:layout_constraintEnd_toEndOf="@+id/circle_background"
-            app:layout_constraintStart_toStartOf="@+id/circle_background"
-            app:layout_constraintTop_toTopOf="@+id/circle_background" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profileImgView_driver"
-            android:layout_width="95dp"
-            android:layout_height="95dp"
-            android:layout_alignBottom="@+id/circle"
-            android:layout_alignEnd="@+id/circle"
-            android:layout_alignStart="@+id/circle"
-            android:layout_alignTop="@+id/circle_background"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/profile1xm"
-            app:layout_constraintBottom_toBottomOf="@+id/circle"
-            app:layout_constraintEnd_toEndOf="@+id/circle"
-            app:layout_constraintStart_toStartOf="@+id/circle"
-            app:layout_constraintTop_toTopOf="@+id/circle" />
+        <View
+            android:id="@+id/view1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@+id/relativeLayout"
+            app:layout_constraintLeft_toLeftOf="@id/relativeLayout"
+            app:layout_constraintRight_toRightOf="@id/relativeLayout"
+            app:layout_constraintBottom_toBottomOf="@id/message"
+            android:background="@drawable/maincolorgradient"
+            />
 
         <TextView
             android:id="@+id/message"
@@ -72,26 +36,58 @@
             android:padding="5dp"
             android:text="@string/incoming_request"
             android:textColor="@color/colorTextWhite"
-            android:textSize="26sp"
-            app:layout_constraintHorizontal_bias="0.504"
+            android:textSize="30sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/circle_background"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/primary_color_circle_shadow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view1"
+            app:layout_constraintBottom_toTopOf="@id/acceptButton"
+            app:layout_constraintRight_toLeftOf="@id/rider_name"/>
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImgView_driver"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/profile1xm"
+            app:layout_constraintBottom_toBottomOf="@+id/circle_background"
+            app:layout_constraintEnd_toEndOf="@+id/circle_background"
+            app:layout_constraintStart_toStartOf="@+id/circle_background"
+            app:layout_constraintTop_toTopOf="@+id/circle_background" />
+
         <TextView
             android:id="@+id/rider_name"
-            android:layout_width="174dp"
-            android:layout_height="120dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:text="Bruce Wayne"
             android:textColor="@color/colorTextBlack"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@+id/declineButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/message" />
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintLeft_toRightOf="@id/circle_background"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/circle_background"
+            app:layout_constraintBottom_toTopOf="@id/inc_request_hospital_name"/>
+
+        <TextView
+            android:id="@+id/inc_request_hospital_name"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="HOSPITAL_NAME"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintTop_toBottomOf="@id/rider_name"
+            app:layout_constraintLeft_toLeftOf="@id/rider_name"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/circle_background"
+            android:textSize="20sp"/>
 
         <Button
             android:id="@+id/acceptButton"
@@ -99,13 +95,14 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:layout_marginStart="24dp"
-            android:background="@color/colorAccentWhiteBrown"
             android:padding="5dp"
             android:text="@string/accept"
-            android:textColor="@color/colorTextBlack"
+            android:textColor="@color/colorTextWhite"
             android:textSize="20sp"
+
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/declineButton"/>
 
         <Button
             android:id="@+id/declineButton"
@@ -114,14 +111,13 @@
             android:layout_marginBottom="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:background="@color/colorAccentWhiteBrown"
             android:padding="5dp"
             android:text="@string/decline"
-            android:textColor="@color/colorTextBlack"
+            android:textColor="@color/colorTextWhite"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/acceptButton" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/acceptButton" />
 
     </android.support.constraint.ConstraintLayout>
 

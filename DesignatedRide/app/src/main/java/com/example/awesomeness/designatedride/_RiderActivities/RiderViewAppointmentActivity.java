@@ -1,16 +1,23 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Guideline;
 import android.support.v4.app.ActivityCompat;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +43,8 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
     // Widgets
     private Button reqRideButton;
     private ActionBar actionBar;
+    private ImageButton editPenIB;
+    private Guideline mapInfoSeperator;
     //file
     private String fileName;
 
@@ -51,6 +60,44 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
         //
         initWidgets();
         initializeMap();
+
+        editPenIB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                float defaultPct = 0.36f;
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapInfoSeperator.getLayoutParams();
+                if (params.guidePercent < defaultPct || params.guidePercent > 0.5)
+                    params.guidePercent = defaultPct;
+                else
+                    params.guidePercent = 1.0f;
+                mapInfoSeperator.setLayoutParams(params);
+                Log.d(TAG, "onClick: Set guidepct to:" + params.guidePercent);
+            }
+        });
+        editPenIB.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                    Point p = new Point();
+                    getWindowManager().getDefaultDisplay().getSize(p);
+                    int mScreenHeight = p.y;
+                    float changeHeight;
+                    if (motionEvent.getRawY() > mScreenHeight)
+                        changeHeight = mScreenHeight;
+                    else if (motionEvent.getRawY() < 0)
+                        changeHeight = 0;
+                    else
+                        changeHeight = motionEvent.getRawY();
+
+                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapInfoSeperator.getLayoutParams();
+                    params.guidePercent = changeHeight / mScreenHeight;
+                    mapInfoSeperator.setLayoutParams(params);
+                    Log.d(TAG, "onTouch: Set guidebegin to:" + params.guidePercent);
+                }
+                return true;
+            }
+        });
         runExampleAppt();
         setAppt();
 
@@ -69,7 +116,7 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
         mMap = googleMap;
         mMap.getUiSettings().setMyLocationButtonEnabled(false); // Hides the "locate me" button
         padGoogleMap();
-        
+
         // Zoom on sunrise hospital for example
         LatLng sunriseHosp = new LatLng(36.133137, -115.136258);
 
@@ -172,5 +219,7 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
     private void initWidgets() {
         reqRideButton = findViewById(R.id.viewAppointmentRiderRequestRide_btn);
         actionBar = getActionBar();
+        editPenIB = findViewById(R.id.viewAppointmentRiderDraggableResize_btn);
+        mapInfoSeperator = findViewById(R.id.appointmentViewRiderMapInfo_guideline);
     }
 }

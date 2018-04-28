@@ -28,20 +28,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/update_profile_fab_rdr"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/icon_editpen"
-            android:clickable="true"
-            app:elevation="0dp"
-            app:backgroundTint="@null"
+        <ImageButton
+            android:id="@+id/edit_profile_img_btn_rdr"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/icon_editpen"
             app:layout_constraintBottom_toBottomOf="@+id/user_profileImgView_rdr"
             app:layout_constraintStart_toEndOf="@+id/user_profileImgView_rdr" />
 
+        <!--<android.support.design.widget.FloatingActionButton-->
+            <!--android:id="@+id/update_profile_fab_rdr"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:clickable="true"-->
+            <!--android:src="@drawable/icon_editpen"-->
+            <!--app:backgroundTint="@null"-->
+            <!--app:elevation="0dp"-->
+            <!--tools:layout_editor_absoluteX="345dp"-->
+            <!--tools:layout_editor_absoluteY="16dp" />-->
+
         <TextView
             android:id="@+id/user_fullName_tv_rdr"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
@@ -50,8 +58,9 @@
             android:padding="2dp"
             android:textColor="@android:color/black"
             android:text="Awesome McLovin"
-            android:textSize="18sp"
-            android:fontFamily="monospace"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_profileImgView_rdr" />
@@ -60,12 +69,9 @@
             android:id="@+id/linearLayout_user_rdr"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginTop="2dp"
-            android:layout_marginStart="8dp"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/fname_tv"
             app:layout_constraintTop_toBottomOf="@+id/user_fullName_tv_rdr">
 
             <ImageView
@@ -83,10 +89,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:fontFamily="sans-serif"
                 android:text="@string/home_address_text"
                 android:textColor="@color/colorTextBlack"
-                android:fontFamily="sans-serif"
-                android:textSize="10sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <ImageView
@@ -111,7 +117,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/fname"
             android:textColor="@color/teal"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.361"
             app:layout_constraintStart_toStartOf="parent"
@@ -124,7 +130,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="@string/fname_placeholder"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintBottom_toBottomOf="@+id/fname_tv"
             app:layout_constraintStart_toEndOf="@+id/fname_tv"
@@ -137,7 +143,7 @@
             android:layout_height="wrap_content"
             android:text="@string/lname"
             android:textColor="@color/teal"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/fname_tv"
             app:layout_constraintTop_toBottomOf="@+id/fname_tv" />
 
@@ -146,7 +152,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lname_placeholder"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintTop_toBottomOf="@+id/user_fname_tv_rdr"
             app:layout_constraintLeft_toLeftOf="@+id/user_fname_tv_rdr"
@@ -159,7 +165,7 @@
             android:layout_height="wrap_content"
             android:text="@string/age"
             android:textColor="@color/teal"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/lname_tv"
             app:layout_constraintTop_toBottomOf="@+id/lname_tv" />
 
@@ -168,7 +174,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/age_placeholder"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintTop_toBottomOf="@+id/user_lname_tv_rdr"
             app:layout_constraintLeft_toLeftOf="@+id/user_lname_tv_rdr"
@@ -181,7 +187,7 @@
             android:layout_height="wrap_content"
             android:text="@string/email_addr_ph"
             android:textColor="@color/teal"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/age_tv"
             app:layout_constraintTop_toBottomOf="@+id/age_tv" />
 
@@ -190,7 +196,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/email_placeholder"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintTop_toBottomOf="@+id/user_age_tv_rdr"
             app:layout_constraintLeft_toLeftOf="@+id/user_age_tv_rdr"
@@ -203,7 +209,7 @@
             android:layout_height="wrap_content"
             android:text="@string/phone_ph"
             android:textColor="@color/teal"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/email_tv"
             app:layout_constraintTop_toBottomOf="@+id/email_tv" />
 
@@ -212,7 +218,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/phone_placeholder"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintTop_toBottomOf="@+id/user_email_tv_rdr"
             app:layout_constraintLeft_toLeftOf="@+id/user_email_tv_rdr"
@@ -239,7 +245,7 @@
             android:text="@string/ins_ph"
             android:textColor="@color/teal"
             android:layout_marginTop="10dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/phone_tv"
             app:layout_constraintTop_toBottomOf="@+id/med_info_img" />
 
@@ -262,7 +268,7 @@
             android:layout_height="wrap_content"
             android:text="@string/coverage_ph"
             android:textColor="@color/teal"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/insurance_tv"
             app:layout_constraintTop_toBottomOf="@+id/insurance_tv" />
 
@@ -272,7 +278,7 @@
             android:layout_height="wrap_content"
             android:text="@string/coverage_placeholder"
             android:layout_marginStart="12dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintBottom_toBottomOf="@+id/coverage_tv"
             app:layout_constraintLeft_toRightOf="@id/coverage_tv"
@@ -285,7 +291,7 @@
             android:layout_height="wrap_content"
             android:text="@string/doctor_ph"
             android:textColor="@color/teal"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/coverage_tv"
             app:layout_constraintTop_toBottomOf="@+id/coverage_tv" />
 
@@ -295,7 +301,7 @@
             android:layout_height="wrap_content"
             android:text="@string/docsname_placeholder"
             android:layout_marginStart="12dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintBottom_toBottomOf="@+id/doctor_tv"
             app:layout_constraintLeft_toRightOf="@id/doctor_tv"
@@ -331,7 +337,7 @@
             android:layout_height="wrap_content"
             android:text="@string/username_placeholder"
             android:layout_marginStart="12dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintBottom_toBottomOf="@+id/username_tv"
             app:layout_constraintLeft_toRightOf="@id/username_tv"
@@ -344,7 +350,7 @@
             android:layout_height="wrap_content"
             android:text="@string/wheelchair_ph"
             android:textColor="@color/teal"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@+id/username_tv"
             app:layout_constraintEnd_toEndOf="@id/username_tv"/>
 
@@ -354,7 +360,7 @@
             android:layout_height="wrap_content"
             android:text="@string/wheelchair_placeholder"
             android:layout_marginStart="12dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintBottom_toBottomOf="@+id/wheelchair_tv"
             app:layout_constraintLeft_toRightOf="@id/wheelchair_tv"
@@ -366,8 +372,6 @@
 
 
 </ScrollView>
-
-
 
 <!-- Original Layout -->
 <!--

@@ -147,12 +147,13 @@ public class ProfileHelper {
                             childMap.put(key, val);
                         }
 
+
                         //set TextView
                         fullName_TV.setText(childMap.get(Constants.FULLNAME));
                         firstName_TV.setText(childMap.get(Constants.FIRSTNAME));
                         lastName_TV.setText(childMap.get(Constants.LASTNAME));
                         userName_TV.setText(childMap.get(Constants.USERNAME));
-                        userAddress_TV.setText(childMap.get(Constants.ADDRESS));
+                        userAddress_TV.setText(childMap.get(Constants.FULL_ADDRESS));
                         age_TV.setText(childMap.get(Constants.AGE));
                         email_TV.setText(childMap.get(Constants.EMAIL));
                         phone_TV.setText(childMap.get(Constants.PHONE));

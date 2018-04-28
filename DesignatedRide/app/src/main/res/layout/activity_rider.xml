@@ -69,10 +69,10 @@
         android:id="@+id/viewProfileImgBtn_rider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
-        android:background="@mipmap/view_profile_btn2x"
+        android:background="@mipmap/view_profile_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linlayoutriderview" />
@@ -81,25 +81,33 @@
         android:id="@+id/calendarImgBtn_rider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="15dp"
-        android:background="@mipmap/appt_btn2x"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:background="@mipmap/appt_btn"
+        app:layout_constraintEnd_toEndOf="@+id/viewProfileImgBtn_rider"
+        app:layout_constraintStart_toStartOf="@+id/viewProfileImgBtn_rider"
         app:layout_constraintTop_toBottomOf="@+id/viewProfileImgBtn_rider" />
 
     <ImageButton
         android:id="@+id/requestRideImgBtn_rider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="15dp"
-        android:background="@mipmap/request_ride_btn2x"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:background="@mipmap/request_ride_btn"
+        app:layout_constraintEnd_toEndOf="@+id/calendarImgBtn_rider"
+        app:layout_constraintStart_toStartOf="@+id/calendarImgBtn_rider"
         app:layout_constraintTop_toBottomOf="@+id/calendarImgBtn_rider" />
+
+    <ImageButton
+        android:id="@+id/logoutImgBtn_rider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@mipmap/logout_btn_with_img"
+        app:layout_constraintBottom_toBottomOf="@+id/rider_bkg"
+        app:layout_constraintEnd_toEndOf="@+id/requestRideImgBtn_rider"
+        app:layout_constraintStart_toStartOf="@+id/requestRideImgBtn_rider"
+        app:layout_constraintTop_toBottomOf="@+id/requestRideImgBtn_rider" />
 
     <LinearLayout
         android:id="@+id/rider_activity_addresscontainer_linlay"
@@ -134,6 +142,8 @@
             android:textColor="@color/colorTextBlack"
             android:text="@string/home_address_text" />
     </LinearLayout>
+
+
 
 
 </android.support.constraint.ConstraintLayout>

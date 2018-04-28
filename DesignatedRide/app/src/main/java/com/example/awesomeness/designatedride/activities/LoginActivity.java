@@ -142,7 +142,6 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 mUser = mAuth.getCurrentUser();
                                 uid = mUser.getUid();
-                                Log.d(TAG, "onComplete: <<<< Signed In >>>>");
 
 
                                 //Check user mode if "Rider" or "Driver"
@@ -165,11 +164,34 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getUserData() {
         //get username
+//        mDatabaseReference
+//                .child(Constants.USER)
+//                .child(uid)
+//                .child(Constants.PROFILE)
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        uName = dataSnapshot.child(Constants.FIRSTNAME).getValue(String.class);
+//                        mode = dataSnapshot.child(Constants.USERMODE).getValue(String.class);
+//                        SharedPreferences sp = getSharedPreferences(Constants.SF_UNAME_PREF, Context.MODE_PRIVATE);
+//                        SharedPreferences.Editor spe = sp.edit();
+//                        spe.putString(uid, uName);
+//                        spe.commit();
+//
+//                        Log.d(TAG, "onDataChange: MODE:" + mode + ", NAME:" + uName);
+//                        gotoCorrectView();
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//                        Log.d(TAG, "onCancelled: getUserName was cancelled: " + databaseError.getMessage());
+//                    }
+//                });
         mDatabaseReference
                 .child(Constants.USER)
                 .child(uid)
                 .child(Constants.PROFILE)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         uName = dataSnapshot.child(Constants.FIRSTNAME).getValue(String.class);
@@ -213,7 +235,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, activityClass);
         intent.putExtra(Constants.INTENT_KEY_NAME, uName);
         startActivity(intent);
-        finish();
+        this.finish();
     }
 
     private boolean fieldChecking(String email, String pwd) {

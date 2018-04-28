@@ -11,6 +11,9 @@ import java.util.regex.Pattern;
 public class Checker {
 
     //----------------------------------------------------------------------------------------------
+
+
+    //----------------------------------------------------------------------------------------------
     public boolean fieldChecking(String fname, String lname, String em, String pwd, String vpwd, EditText firstName, EditText lastName, EditText userEmailET, EditText userPwd, EditText verifyPwd){
 
         boolean flag = true;
@@ -127,6 +130,14 @@ public class Checker {
             return false;
         }
 
+    }
+
+    public boolean compareInt(int s1, int s2) {
+        if (s1 == s2) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //----------------------------------------------------------------------------------------------

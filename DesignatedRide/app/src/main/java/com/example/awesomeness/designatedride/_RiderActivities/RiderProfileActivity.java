@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -45,6 +46,7 @@ public class RiderProfileActivity extends AppCompatActivity {
     private TextView userName_TV, wheelchair_TV;
     private CircleImageView profileImage;
     private FloatingActionButton editProfile_fab;
+    private ImageButton editProfile_btn;
 
     private Context context = RiderProfileActivity.this;
 
@@ -62,6 +64,8 @@ public class RiderProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_profile);
+
+        //-- Back Arrow at the ActionBar--//
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
@@ -78,7 +82,7 @@ public class RiderProfileActivity extends AppCompatActivity {
 
         profileHelper.populateUserInfo1();
 
-        editProfile_fab.setOnClickListener(new View.OnClickListener() {
+        editProfile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gotoActivity(RiderEditProfileActivity.class);
@@ -86,37 +90,37 @@ public class RiderProfileActivity extends AppCompatActivity {
         });
 
         //========================================================================================//
-        /*
-        final ProfileHelper profileHelper = new ProfileHelper(mDatabaseReference, mUser, childMap, RiderProfileActivity.this, firstNameET, lastNameET, emailET);
-        //populate EditText fields
-        profileHelper.populateUserInfo();
 
-        updateProfileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profileHelper.updateAccount();
-                profileHelper.hideKeyboard(v);
+//        final ProfileHelper profileHelper = new ProfileHelper(mDatabaseReference, mUser, childMap, RiderProfileActivity.this, firstNameET, lastNameET, emailET);
+//        //populate EditText fields
+//        profileHelper.populateUserInfo();
+//
+//        updateProfileBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                profileHelper.updateAccount();
+//                profileHelper.hideKeyboard(v);
+//
+//            }
+//        });
+//
+//        resetPwdTV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                View view = getLayoutInflater().inflate(R.layout.password_reset_dialog, null);
+//                ProfileDialogHelper dialogHelper = new ProfileDialogHelper(RiderProfileActivity.this, view, mAuth, mUser);
+//                dialogHelper.createResetPwdDialog();
+//            }
+//        });
+//
+//        closeTV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                clearEditTextField();
+//                gotoActivity();
+//            }
+//        });
 
-            }
-        });
-
-        resetPwdTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View view = getLayoutInflater().inflate(R.layout.password_reset_dialog, null);
-                ProfileDialogHelper dialogHelper = new ProfileDialogHelper(RiderProfileActivity.this, view, mAuth, mUser);
-                dialogHelper.createResetPwdDialog();
-            }
-        });
-
-        closeTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearEditTextField();
-                gotoActivity();
-            }
-        });
-         */
         //========================================================================================//
 
 
@@ -153,7 +157,7 @@ public class RiderProfileActivity extends AppCompatActivity {
         userName_TV = (TextView) findViewById(R.id.user_name_tv_rdr);
         wheelchair_TV = (TextView) findViewById(R.id.user_wheelchair_tv_rdr);
         profileImage = (CircleImageView) findViewById(R.id.user_profileImgView_rdr);
-        editProfile_fab = (FloatingActionButton) findViewById(R.id.update_profile_fab_rdr);
+        editProfile_btn = (ImageButton) findViewById(R.id.edit_profile_img_btn_rdr);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -167,28 +171,29 @@ public class RiderProfileActivity extends AppCompatActivity {
 
     //----------------------------------------------------------------------------------------------
     private void gotoActivity(Class activityClass) {
+
         startActivity(new Intent(RiderProfileActivity.this, activityClass));
         finish();
     }
 
     //----------------------------------------------------------------------------------------------
-    /*
-    private void clearEditTextField() {
-        firstNameET.setText("");
-        lastNameET.setText("");
-        emailET.setText("");
-    }
 
-    private void initWidgets() {
-        firstNameET = (EditText) findViewById(R.id.firstNameET_rdUpdate);
-        lastNameET = (EditText) findViewById(R.id.lastNameET_rdUpdate);
-        emailET = (EditText) findViewById(R.id.emailET_rdUpdate);
-        updateProfileBtn = (Button) findViewById(R.id.updateProfileBtn_rdUpdate);
-        resetPwdTV = (TextView) findViewById(R.id.resetPwdTV_rUpdate);
-        closeTV = (TextView) findViewById(R.id.closeTV_rUpdate);
-        scrollView = (ScrollView) findViewById(R.id.scrollView_profile);
-    }
-     */
+//    private void clearEditTextField() {
+//        firstNameET.setText("");
+//        lastNameET.setText("");
+//        emailET.setText("");
+//    }
+//
+//    private void initWidgets() {
+//        firstNameET = (EditText) findViewById(R.id.firstNameET_rdUpdate);
+//        lastNameET = (EditText) findViewById(R.id.lastNameET_rdUpdate);
+//        emailET = (EditText) findViewById(R.id.emailET_rdUpdate);
+//        updateProfileBtn = (Button) findViewById(R.id.updateProfileBtn_rdUpdate);
+//        resetPwdTV = (TextView) findViewById(R.id.resetPwdTV_rUpdate);
+//        closeTV = (TextView) findViewById(R.id.closeTV_rUpdate);
+//        scrollView = (ScrollView) findViewById(R.id.scrollView_profile);
+//    }
+
 
 
 

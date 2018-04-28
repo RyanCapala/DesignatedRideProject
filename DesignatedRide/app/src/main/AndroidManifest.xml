@@ -94,6 +94,8 @@
         <!--RiderEditProfileActivity-->
         <activity
             android:name="._RiderActivities.RiderEditProfileActivity"
+            android:parentActivityName="._RiderActivities.RiderProfileActivity"
+            android:icon="@drawable/icon_backarrow"
             android:label="@string/edit_profile"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 

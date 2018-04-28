@@ -169,6 +169,22 @@ public class RegisterActivity extends AppCompatActivity {
                             //store fname to Shared pref
                             storeFNametoSharedPref(fname, userid);
 
+                            //===Storing default values===//
+                            userInfo.put(Constants.CITYANDSTATE, Constants.DEFAULT_VALUE);
+                            userInfo.put(Constants.BIRTH_DAY_POS, Constants.DEFAULT_POS);
+                            userInfo.put(Constants.FULL_ADDRESS, Constants.DEFAULT_VALUE);
+                            userInfo.put(Constants.BIRTH_MONTH_POS, Constants.DEFAULT_POS);
+                            userInfo.put(Constants.ADDRESS, Constants.DEFAULT_VALUE);
+                            userInfo.put(Constants.AGE, Constants.DEFAULT_POS);
+                            userInfo.put(Constants.DOCTORNAME, Constants.DEFAULT_VALUE);
+                            userInfo.put(Constants.FULLNAME, Constants.DEFAULT_VALUE);
+                            userInfo.put(Constants.INSURANCE, Constants.DEFAULT_VALUE);
+                            userInfo.put(Constants.USERNAME, Constants.DEFAULT_VALUE);
+                            userInfo.put(Constants.PHONE, Constants.DEFAULT_VALUE);
+                            userInfo.put(Constants.WHEELCHAIR, Constants.DEFAULT_RB);
+                            userInfo.put(Constants.BIRTH_YEAR_POS, Constants.DEFAULT_POS);
+                            //============================//
+
                             userInfo.put(Constants.USERID, userid);
                             userInfo.put(Constants.USERMODE, uMode);
                             userInfo.put(Constants.FIRSTNAME, fname);
@@ -320,7 +336,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void gotoActivity(Class activityClass) {
         mProgressDialog.dismiss();
         startActivity(new Intent(RegisterActivity.this, activityClass));
-        finish();
+        this.finish();
     }
 
     private void initWidgets() {

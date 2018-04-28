@@ -100,5 +100,11 @@ public class Constants {
     public static final String SF_UNAME_PREF            = "UserNamePreference";
     public static final String SF_UNAME_KEY             = "unameKey";
 
+
+    //=== Default Values as a place holder =====//
+    public static final String DEFAULT_VALUE            = "NONE";
+    public static final String DEFAULT_POS            = "0";
+    public static final String DEFAULT_RB               = "No";
+
 }
 

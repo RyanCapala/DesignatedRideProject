@@ -176,7 +176,6 @@ public class RiderActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Logout Button", Toast.LENGTH_LONG).show();
                 View confirm_dialog_view = getLayoutInflater().inflate(R.layout
                         .confirmation_dialog, null);
 

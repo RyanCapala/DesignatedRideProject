@@ -166,7 +166,7 @@ public class RiderEditProfileActivity extends AppCompatActivity {
                         setChildValues(childMap);
                         setFields();
                         setRadioButton();
-                        Log.d(TAG, "onDataChange: child radioBtn " + child_wheelchairNeeded );
+
                     }
 
                     @Override
@@ -881,7 +881,9 @@ public class RiderEditProfileActivity extends AppCompatActivity {
     private void setRadioButton() {
         String yes = "Yes";
         String no = "No";
-        if (checker.compareString(child_wheelchairNeeded, yes)) {
+        if (child_wheelchairNeeded == null) {
+            radioGroup.check(R.id.no_radioBtn_editProf);
+        } else if (checker.compareString(child_wheelchairNeeded, yes)) {
             radioGroup.check(R.id.yes_radioBtn_editProf);
         } else {
             radioGroup.check(R.id.no_radioBtn_editProf);

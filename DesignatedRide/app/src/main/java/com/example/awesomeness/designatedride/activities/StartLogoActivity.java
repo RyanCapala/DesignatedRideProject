@@ -146,7 +146,9 @@ public class StartLogoActivity extends AppCompatActivity {
                     }
                 });
                 gotoActivity(DriverActivity.class); break;
-            case Constants.RIDER: gotoActivity(RiderActivity.class); break;
+            case Constants.RIDER:
+                gotoActivity(RiderActivity.class);
+                break;
             default: gotoActivity(LoginActivity.class);
                 Toast.makeText(StartLogoActivity.this,
                         "Credentials Not Valid!", Toast.LENGTH_LONG).show();
@@ -157,7 +159,7 @@ public class StartLogoActivity extends AppCompatActivity {
         //Log.d(TAG, "gotoActivity: " + uName);
         //intent.putExtra(Constants.INTENT_KEY_NAME, uName);
         startActivity(intent);
-        finish();
+        this.finish();
     }
     private void initWidgets(){
         progressBar = findViewById(R.id.startPageLogo_progessbar);

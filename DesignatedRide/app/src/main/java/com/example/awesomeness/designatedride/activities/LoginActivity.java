@@ -235,7 +235,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, activityClass);
         intent.putExtra(Constants.INTENT_KEY_NAME, uName);
         startActivity(intent);
-        this.finish();
+        finish();
     }
 
     private boolean fieldChecking(String email, String pwd) {

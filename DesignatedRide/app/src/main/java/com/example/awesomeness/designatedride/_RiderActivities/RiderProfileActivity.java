@@ -19,8 +19,12 @@ import com.example.awesomeness.designatedride.util.ProfileDialogHelper;
 import com.example.awesomeness.designatedride.util.ProfileHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -52,7 +56,7 @@ public class RiderProfileActivity extends AppCompatActivity {
 
     //--firebase
     private FirebaseDatabase mDatabase;
-    private DatabaseReference mDatabaseReference;
+    private DatabaseReference mDatabaseReference, mDbRef;
     private FirebaseUser mUser;
     private FirebaseAuth mAuth;
 
@@ -88,6 +92,8 @@ public class RiderProfileActivity extends AppCompatActivity {
                 gotoActivity(RiderEditProfileActivity.class);
             }
         });
+
+        getProfileImage();
 
         //========================================================================================//
 
@@ -167,6 +173,7 @@ public class RiderProfileActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference();
         mDatabaseReference.keepSynced(true);
+        mDbRef = mDatabase.getReference();
     }
 
     //----------------------------------------------------------------------------------------------
@@ -174,6 +181,28 @@ public class RiderProfileActivity extends AppCompatActivity {
 
         startActivity(new Intent(RiderProfileActivity.this, activityClass));
         finish();
+    }
+
+    //----------------------------------------------------------------------------------------------
+    private void getProfileImage() {
+        mDbRef.child(Constants.USER)
+                .child(mUser.getUid())
+                .child(Constants.PROFILE)
+                .child(Constants.USERIMAGE)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String imgUrl = dataSnapshot.getValue(String.class);
+                        if (imgUrl != null) {
+                            Picasso.with(RiderProfileActivity.this).load(imgUrl).into(profileImage);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     //----------------------------------------------------------------------------------------------

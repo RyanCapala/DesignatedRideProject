@@ -1,51 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_boder"
+    android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <TextView
+        android:id="@+id/textAlert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/verify_img"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <ImageButton
+        android:id="@+id/no_img_btn"
+        android:background="@mipmap/no_img_btn"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/textAlert"
+        app:layout_constraintStart_toStartOf="@id/textAlert"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <RelativeLayout
-        android:padding="25dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/textAlert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:padding="5dp"
-            android:text="@string/verify"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/noButton"
-            android:layout_below="@+id/textAlert"
-            android:text="@string/no"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp"
-            android:padding="10dp"
-            android:layout_alignParentLeft="true"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/yesButton"
-            android:layout_below="@+id/textAlert"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="15dp"
-            android:padding="10dp"
-            android:layout_alignParentRight="true"
-            android:text="@string/yes"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content" />
-
-    </RelativeLayout>
+    <ImageButton
+        android:id="@+id/yes_img_btn"
+        android:background="@mipmap/yes_img_btn"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/textAlert"
+        app:layout_constraintEnd_toEndOf="@id/textAlert"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </android.support.constraint.ConstraintLayout>

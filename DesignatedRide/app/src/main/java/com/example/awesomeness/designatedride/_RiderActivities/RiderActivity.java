@@ -74,6 +74,7 @@ public class RiderActivity extends AppCompatActivity {
     private ImageButton viewProfileBtn;
     private ImageButton requestrideBtn;
     private ImageButton calendarBtn;
+    private ImageButton logoutBtn;
     private TextView userFirstNameTV;
     private TextView userAddressTV;
 
@@ -84,7 +85,7 @@ public class RiderActivity extends AppCompatActivity {
     //----------
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
-    private Button updateProfileBtn, logoutBtn, yesButton, noButton;
+    private Button updateProfileBtn, yesButton, noButton;
     private TextView cancelTV;
 
     @Override
@@ -100,7 +101,7 @@ public class RiderActivity extends AppCompatActivity {
         mDbRef = mDatabase.getReference();
         mDbRef2 = mDatabase.getReference();
         mUser = mAuth.getCurrentUser();
-        mDbRef.keepSynced(true);
+        //mDbRef.keepSynced(true);
         mStorage = FirebaseStorage.getInstance().getReference().child(Constants.PROFILE_IMAGE);
 
         initWidgets();
@@ -108,6 +109,7 @@ public class RiderActivity extends AppCompatActivity {
         //Intent intent = getIntent();
         //String uname = intent.getStringExtra(Constants.INTENT_KEY_NAME);
         setUserSpecificText();
+        setUserAddress();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -135,13 +137,16 @@ public class RiderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                View profile_dialog_view = getLayoutInflater().inflate(R.layout
-                        .profile_dialog_popup, null);
-                View confirm_dialog_view = getLayoutInflater().inflate(R.layout
-                        .confirmation_dialog, null);
-                ProfileDialogHelper profileDialogHelper = new ProfileDialogHelper(RiderActivity.this, profile_dialog_view, confirm_dialog_view, mAuth, mUser,
-                        RiderProfileActivity.class, LoginActivity.class);
-                profileDialogHelper.createPopupDialog();
+                gotoActivity(RiderProfileActivity.class);
+
+//                View profile_dialog_view = getLayoutInflater().inflate(R.layout
+//                        .profile_dialog_popup, null);
+//                View confirm_dialog_view = getLayoutInflater().inflate(R.layout
+//                        .confirmation_dialog, null);
+//                ProfileDialogHelper profileDialogHelper = new ProfileDialogHelper(RiderActivity.this, profile_dialog_view, confirm_dialog_view, mAuth, mUser,
+//                        RiderProfileActivity.class, LoginActivity.class);
+//                profileDialogHelper.createPopupDialog();
+
 
 //                startActivity(new Intent(RiderActivity.this, RiderViewProfileActivity.class));
 
@@ -165,6 +170,19 @@ public class RiderActivity extends AppCompatActivity {
                 newFragment.show(getFragmentManager(), "");
                 */
                 gotoActivity(RiderViewAppointmentActivityWrapper.class);
+            }
+        });
+
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Logout Button", Toast.LENGTH_LONG).show();
+                View confirm_dialog_view = getLayoutInflater().inflate(R.layout
+                        .confirmation_dialog, null);
+
+                ProfileDialogHelper profileDialogHelper = new ProfileDialogHelper(RiderActivity
+                        .this, confirm_dialog_view, mAuth, mUser);
+                profileDialogHelper.createConfirmationPrompt();
             }
         });
 
@@ -251,12 +269,34 @@ public class RiderActivity extends AppCompatActivity {
     }
 
     //----------------------------------------------------------------------------------------------
+    private void setUserAddress() {
+        mDbRef.child(Constants.USER)
+                .child(mUser.getUid())
+                .child(Constants.PROFILE)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String fullAddress =
+                                (String) dataSnapshot.child(Constants.FULL_ADDRESS).getValue();
+
+                        userAddressTV.setText(fullAddress);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    //----------------------------------------------------------------------------------------------
     private void initWidgets() {
         //profileImage = (ImageView) findViewById(R.id.profileImgView_rider);
         profileImage = (CircleImageView) findViewById(R.id.profileImgView_rider);
         viewProfileBtn = (ImageButton) findViewById(R.id.viewProfileImgBtn_rider);
         requestrideBtn = (ImageButton) findViewById(R.id.requestRideImgBtn_rider);
         calendarBtn = (ImageButton) findViewById(R.id.calendarImgBtn_rider);
+        logoutBtn = (ImageButton) findViewById(R.id.logoutImgBtn_rider);
         mProgress = new ProgressDialog(this);
         parentView = findViewById(R.id.activity_rider_layout);
         userFirstNameTV = findViewById(R.id.riderActivityUserFirstName_tv);
@@ -266,7 +306,7 @@ public class RiderActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
     private void gotoActivity(Class activityClass) {
         startActivity(new Intent(RiderActivity.this, activityClass));
-        finish();
+        //this.finish();
     }
 
     //----------------------------------------------------------------------------------------------

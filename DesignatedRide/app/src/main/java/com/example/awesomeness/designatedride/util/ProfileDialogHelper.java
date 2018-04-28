@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.awesomeness.designatedride.R;
+import com.example.awesomeness.designatedride.activities.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,12 +28,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileDialogHelper {
 
-    private AlertDialog.Builder dialogBuilder, _dialogBuilder, pwdDialogBuilder;
-    private AlertDialog dialog, confirmationDialog, pwdDialog;
+    private AlertDialog.Builder dialogBuilder, _dialogBuilder, pwdDialogBuilder, alertBuilder;
+    private AlertDialog dialog, confirmationDialog, pwdDialog, alertDialog;
     private Button updateProfileBtn, logoutBtn, yesButton, noButton;
     private TextView cancelTV;
     private Context ctx;
-    private View profilePopupView, confirmationView, pwdDialogView;
+    private View profilePopupView, confirmationView, dialogView;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private Class profileActivityClass;
@@ -42,14 +44,18 @@ public class ProfileDialogHelper {
     private TextView resetDialog_closeTV;
     private Button resetDialog_updtPwdBtn;
 
+    private ImageButton yes_img_btn, no_img_btn;
 
 
-    public ProfileDialogHelper(Context ctx, View pwdDialogView, FirebaseAuth mAuth, FirebaseUser mUser) {
+
+    public ProfileDialogHelper(Context ctx, View dialogView, FirebaseAuth mAuth, FirebaseUser mUser) {
         this.ctx = ctx;
-        this.pwdDialogView = pwdDialogView;
+        this.dialogView = dialogView;
         this.mAuth = mAuth;
         this.mUser = mUser;
     }
+
+
 
 
     public ProfileDialogHelper(Context ctx, View profilePopupView, View confirmationView, FirebaseAuth mAuth, FirebaseUser mUser, Class profileActivityClass, Class loginActivityClass) {
@@ -88,7 +94,7 @@ public class ProfileDialogHelper {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                showConfirmationDialog();
+                //showConfirmationDialog();
             }
         });
 
@@ -102,46 +108,89 @@ public class ProfileDialogHelper {
     }
 
     //----------------------------------------------------------------------------------------------
-    private void showConfirmationDialog() {
+    public void createConfirmationPrompt() {
+        alertBuilder = new AlertDialog.Builder(ctx);
+        alertBuilder.setView(dialogView);
+        alertDialog = alertBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));;
+        alertDialog.show();
 
-        _dialogBuilder = new AlertDialog.Builder(ctx);
-        yesButton = (Button) confirmationView.findViewById(R.id.yesButton);
-        noButton = (Button) confirmationView.findViewById(R.id.noButton);
-
-        _dialogBuilder.setView(confirmationView);
-        confirmationDialog = _dialogBuilder.create();
-        confirmationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        confirmationDialog.show();
-
-        yesButton.setOnClickListener(new View.OnClickListener() {
+        yes_img_btn = (ImageButton) dialogView.findViewById(R.id.yes_img_btn);
+        no_img_btn = (ImageButton) dialogView.findViewById(R.id.no_img_btn);
+        yes_img_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmationDialog.dismiss();
-                confirmationDialog = null;
+                //confirmationDialog.dismiss();
+                //confirmationDialog = null;
+                alertDialog.dismiss();
+                alertDialog = null;
                 UserDataHelper.deleteLocalUser(ctx);
-                signOutUser();
+                if (mUser != null && mAuth != null) {
+                    mAuth.signOut();
+                    ((Activity) ctx).finish();
+                    Intent intent = new Intent(ctx, LoginActivity.class);
+                    ctx.startActivity(intent);
+
+
+                }
             }
         });
 
-        noButton.setOnClickListener(new View.OnClickListener() {
+        no_img_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmationDialog.dismiss();
-                confirmationDialog = null;
+                alertDialog.dismiss();
+                alertDialog = null;
             }
         });
 
     }
 
+
+    //----------------------------------------------------------------------------------------------
+//    private void showConfirmationDialog() {
+//
+//        _dialogBuilder = new AlertDialog.Builder(ctx);
+//        //yesButton = (Button) confirmationView.findViewById(R.id.yesButton);
+//        //noButton = (Button) confirmationView.findViewById(R.id.noButton);
+//        yesButton = (Button) dialogView.findViewById(R.id.yesButton);
+//        noButton = (Button) dialogView.findViewById(R.id.noButton);
+//
+//        //_dialogBuilder.setView(confirmationView);
+//        _dialogBuilder.setView(dialogView);
+//        confirmationDialog = _dialogBuilder.create();
+//        confirmationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        confirmationDialog.show();
+//
+//        yesButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                confirmationDialog.dismiss();
+//                confirmationDialog = null;
+//                UserDataHelper.deleteLocalUser(ctx);
+//                signOutUser();
+//            }
+//        });
+//
+//        noButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                confirmationDialog.dismiss();
+//                confirmationDialog = null;
+//            }
+//        });
+//
+//    }
+
     //----------------------------------------------------------------------------------------------
     public void createResetPwdDialog() {
         pwdDialogBuilder = new AlertDialog.Builder(ctx);
-        resetDialog_pwdET = (EditText) pwdDialogView.findViewById(R.id.passworddET_pwdDialog);
-        resetDialog_vpwdET = (EditText) pwdDialogView.findViewById(R.id.verifyPwdET_pwdDialog);
-        resetDialog_updtPwdBtn = (Button) pwdDialogView.findViewById(R.id.updatePwdBtn_pwdDialog);
-        resetDialog_closeTV = (TextView) pwdDialogView.findViewById(R.id.closeTV_pwdDialog);
+        resetDialog_pwdET = (EditText) dialogView.findViewById(R.id.passworddET_pwdDialog);
+        resetDialog_vpwdET = (EditText) dialogView.findViewById(R.id.verifyPwdET_pwdDialog);
+        resetDialog_updtPwdBtn = (Button) dialogView.findViewById(R.id.updatePwdBtn_pwdDialog);
+        resetDialog_closeTV = (TextView) dialogView.findViewById(R.id.closeTV_pwdDialog);
 
-        pwdDialogBuilder.setView(pwdDialogView);
+        pwdDialogBuilder.setView(dialogView);
         pwdDialog = pwdDialogBuilder.create();
         pwdDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         pwdDialog.show();
@@ -174,14 +223,14 @@ public class ProfileDialogHelper {
                     if (checker.checkPwd(pwd) && checker.checkPwd(vpwd)) {
                         mUser.updatePassword(pwd);
                         clearPwdField(pwdET, vpwdET);
-                        Snackbar.make(pwdDialogView, "Updated", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(dialogView, "Updated", Snackbar.LENGTH_LONG).show();
                     } else {
                         checker.pwdMessage(true, true, pwdET, vpwdET);
                     }
                 }
             }
         } else {
-            Snackbar.make(pwdDialogView, "Empty Fields", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(dialogView, "Empty Fields", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -218,7 +267,7 @@ public class ProfileDialogHelper {
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager)ctx.getSystemService(Context
                 .INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(pwdDialogView.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(dialogView.getWindowToken(), 0);
     }
 
 

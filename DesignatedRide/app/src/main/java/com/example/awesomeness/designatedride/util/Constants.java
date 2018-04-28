@@ -20,7 +20,9 @@ public class Constants {
     public static final String USERIMAGE                = "userImage";
     public static final String USEREMAILVERIFIED        = "userEmailVerified";
     public static final String PROFILE_IMAGE            = "profileImage";
+    public static final String FULL_ADDRESS             = "fullAddress";
     public static final String ADDRESS                  = "userAddress";
+    public static final String CITYANDSTATE             = "cityAndState";
     public static final String FULLNAME                 = "userFullName";
     public static final String AGE                      = "userAge";
     public static final String PHONE                    = "userPhone";
@@ -29,6 +31,14 @@ public class Constants {
     public static final String DOCTORNAME               = "userDoctorsName";
     public static final String USERNAME                 = "userName";
     public static final String WHEELCHAIR               = "userWheelChair";
+    public static final String BIRTH_MONTH              = "birthMonth";
+    public static final String BIRTH_DAY                = "birthDay";
+    public static final String BIRTH_YEAR               = "birthYear";
+    public static final String WC_ACCESS                = "wheelChair";
+
+    public static final String BIRTH_MONTH_POS          = "monthPosition";
+    public static final String BIRTH_DAY_POS            = "dayPosition";
+    public static final String BIRTH_YEAR_POS           = "yearPosition";
 
     public static final String RIDER                    = "Rider";
     public static final String DRIVER                   = "Driver";
@@ -77,6 +87,7 @@ public class Constants {
     public static final String ERR_NAME_SPECIALCHAR     = "Name can't include numbers, special " +
                                                           "characters, or spaces.";
     public static final String ERR_EMAIL_PATTERN        = "Incorrect EMAIL pattern";
+    public static final String ERR_EMAIL_MATCH          = "Email doesn't match!";
 
     public static final String FILENAME_MESSAGE         = "filename";
 

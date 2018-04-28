@@ -3,13 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/edit_profile_scrollview"
+    android:id="@+id/rider_edit_profile_scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="._RiderActivities.RiderEditProfileActivity">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/rider_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -90,7 +91,6 @@
 
         <LinearLayout
             android:id="@+id/dob_linear_layout"
-            android:layout_marginTop="5dp"
             android:orientation="horizontal"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
@@ -203,13 +203,23 @@
             app:layout_constraintRight_toRightOf="@+id/address_ctAndState_et_editProf"
             app:layout_constraintTop_toBottomOf="@+id/address_ctAndState_et_editProf" />
 
+        <!--Account Settings DIV-->
+        <ImageView
+            android:id="@+id/account_settings_div_editProf"
+            android:src="@mipmap/act_settings_nbkg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/separator4_editProf"/>
+
         <!--Email-->
         <EditText
             android:id="@+id/email_et_editProf"
             android:inputType="textEmailAddress"
             style="@style/editTextNoLine"
             android:hint="Email Address"
-            android:layout_marginTop="5dp"
             android:background="@color/colorMainbackground"
             android:cursorVisible="true"
             android:paddingEnd="5dp"
@@ -220,7 +230,7 @@
             android:textSize="14sp"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/separator4_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/account_settings_div_editProf"
             app:layout_constraintStart_toStartOf="@id/separator4_editProf"
             app:layout_constraintEnd_toEndOf="@id/separator4_editProf"
             />
@@ -269,6 +279,72 @@
             app:layout_constraintRight_toRightOf="@+id/verify_email_et_editProf"
             app:layout_constraintTop_toBottomOf="@+id/verify_email_et_editProf" />
 
+        <!--Password-->
+        <EditText
+            android:id="@+id/password_et_editProf"
+            android:inputType="textPassword"
+            style="@style/editTextNoLine"
+            android:hint="Password"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:layout_marginTop="5dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/separator6_editProf"
+            app:layout_constraintStart_toStartOf="@id/separator6_editProf"
+            app:layout_constraintEnd_toEndOf="@id/separator6_editProf"
+            />
+
+        <View
+            android:id="@+id/pword_separator_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/password_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/password_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/password_et_editProf" />
+
+        <!--Verify Password-->
+        <EditText
+            android:id="@+id/v_password_et_editProf"
+            android:inputType="textPassword"
+            style="@style/editTextNoLine"
+            android:hint="Verify Password"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:layout_marginTop="5dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/pword_separator_editProf"
+            app:layout_constraintStart_toStartOf="@id/pword_separator_editProf"
+            app:layout_constraintEnd_toEndOf="@id/pword_separator_editProf"
+            />
+
+        <View
+            android:id="@+id/v_pword_separator_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/v_password_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/v_password_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/v_password_et_editProf" />
+
         <!--Phone-->
         <EditText
             android:id="@+id/phone_et_editProf"
@@ -286,9 +362,9 @@
             android:textSize="14sp"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/separator6_editProf"
-            app:layout_constraintStart_toStartOf="@id/separator6_editProf"
-            app:layout_constraintEnd_toEndOf="@id/separator6_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/v_pword_separator_editProf"
+            app:layout_constraintStart_toStartOf="@id/v_pword_separator_editProf"
+            app:layout_constraintEnd_toEndOf="@id/v_pword_separator_editProf"
             />
 
         <View
@@ -466,19 +542,22 @@
         <!--Save Btn-->
         <ImageButton
             android:id="@+id/save_btn_editProf"
-            android:layout_width="150dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="12dp"
+            android:layout_width="130dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
             android:background="@mipmap/save_button"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/wheelchair_title_tv_editProf"
             app:layout_constraintTop_toBottomOf="@+id/wheelchair_title_tv_editProf" />
 
         <!--Cancel Btn-->
         <ImageButton
             android:id="@+id/cancel_btn_editProf"
-            android:layout_width="150dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="130dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="20dp"
             android:background="@mipmap/cancel_btn_colored"
             app:layout_constraintBottom_toBottomOf="@+id/save_btn_editProf"
             app:layout_constraintStart_toEndOf="@+id/save_btn_editProf"

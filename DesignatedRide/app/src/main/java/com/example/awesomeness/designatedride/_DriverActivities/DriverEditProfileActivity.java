@@ -66,6 +66,11 @@ public class DriverEditProfileActivity extends AppCompatActivity {
 
     private String itemsUpdated = "";
 
+    /*
+     * Todo: figuring out why it keeps going to 'DriverActivity' without sending an intent to it.
+     * Ill try to fix it later, but in the mean time, ill be working on CS460 Compilers. FML!!!
+     */
+
 
 
 

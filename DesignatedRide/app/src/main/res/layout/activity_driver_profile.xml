@@ -3,95 +3,482 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView_dProfile"
+    android:id="@+id/scrollView_driverProf"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/maincolorgradient"
     tools:context="com.example.awesomeness.designatedride._DriverActivities.DriverProfileActivity">
 
-    <LinearLayout
-        android:layout_marginTop="50dp"
-        android:orientation="vertical"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/firstNameET_drUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/edittext_borders"
-            android:hint="@string/register_page_first_name_hint"
-            android:inputType="textCapWords"
-            android:padding="15dp"
-            android:cursorVisible="true"
-            android:textCursorDrawable="@drawable/cursor_color"/>
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/driverProf_img"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/profile1xm"
+            app:civ_border_color="@color/img_ring_bkg"
+            app:civ_border_width="5dp"
+            app:civ_fill_color="#E4E6E7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/lastNameET_drUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/edittext_borders"
-            android:hint="@string/register_page_last_name_hint"
-            android:inputType="textCapWords"
-            android:padding="15dp"
-            android:cursorVisible="true"
-            android:textCursorDrawable="@drawable/cursor_color"/>
-
-        <EditText
-            android:id="@+id/emailET_drUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/edittext_borders"
-            android:hint="@string/register_page_email_hint"
-            android:inputType="textCapWords"
-            android:padding="15dp"
-            android:cursorVisible="true"
-            android:textCursorDrawable="@drawable/cursor_color"/>
-
-
-        <Button
-            android:id="@+id/updateProfileBtn_drUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/edittext_borders"
-            android:text="@string/update_profile"
-            android:textAllCaps="false"
-            android:textColor="@color/colorPrimary"
-            android:textSize="24sp"/>
+        <ImageButton
+            android:id="@+id/driverProf_edit_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/icon_editpen"
+            app:layout_constraintBottom_toBottomOf="@+id/driverProf_img"
+            app:layout_constraintStart_toEndOf="@+id/driverProf_img" />
 
         <TextView
-            android:id="@+id/resetPwdTV_dUpdate"
-            android:textAlignment="center"
-            android:padding="10dp"
-            android:text="@string/reset_pwd"
-            android:textSize="24dp"
-            android:textStyle="italic"
+            android:id="@+id/driverProf_fullName_tv"
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:padding="2dp"
+            android:textColor="@android:color/black"
+            android:text="Awesome McLovin"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/driverProf_img" />
+
+        <RatingBar
+            android:id="@+id/driverProf_ratingBar"
+            style="?android:attr/ratingBarStyleIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:numStars="5"
+            android:rating="4.5"
+            android:stepSize=".5"
+            android:isIndicator="true"
+            app:layout_constraintTop_toBottomOf="@id/driverProf_fullName_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
-            android:id="@+id/closeTV_dUpdate"
-            android:text="@string/close"
-            android:textAlignment="center"
-            android:textSize="24dp"
-            android:padding="10dp"
-            android:textStyle="italic"
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:id="@+id/driverProf_rating_tv"
+            android:text="0.0"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:textSize="14sp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driverProf_ratingBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    </LinearLayout>
+        <!--<LinearLayout-->
+            <!--android:id="@+id/driverProf_linlay"-->
+            <!--android:layout_width="200dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--app:layout_constraintStart_toStartOf="@+id/driverProf_fname_title"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/driverProf_fullName_tv">-->
+
+            <!--<ImageView-->
+                <!--android:layout_width="20dp"-->
+                <!--android:layout_height="20dp"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_marginBottom="2dp"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:layout_marginRight="5dp"-->
+                <!--android:layout_marginTop="2dp"-->
+                <!--android:src="@mipmap/icon_house_large" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/driverProf_fullAddress_title"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:fontFamily="sans-serif"-->
+                <!--android:text="@string/home_address_text"-->
+                <!--android:textColor="@color/colorTextBlack"-->
+                <!--android:textSize="14sp" />-->
+        <!--</LinearLayout>-->
+
+        <ImageView
+            android:id="@+id/gen_info_img"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/gen_info_div"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/driverProf_rating_tv" />
+
+        <!--First Name-->
+        <TextView
+            android:id="@+id/driverProf_fname_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/fname"
+            android:textColor="@color/teal"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.361"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gen_info_img" />
+
+        <TextView
+            android:id="@+id/driverProf_fname_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="@string/fname_placeholder"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintBottom_toBottomOf="@+id/driverProf_fname_title"
+            app:layout_constraintStart_toEndOf="@+id/driverProf_fname_title"
+            app:layout_constraintTop_toTopOf="@+id/driverProf_fname_title" />
+
+        <!--Last Name-->
+        <TextView
+            android:id="@+id/lname_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lname"
+            android:textColor="@color/teal"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/driverProf_fname_title"
+            app:layout_constraintTop_toBottomOf="@+id/driverProf_fname_title" />
+
+        <TextView
+            android:id="@+id/driverProf_lname_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lname_placeholder"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/driverProf_fname_tv"
+            app:layout_constraintLeft_toLeftOf="@+id/driverProf_fname_tv"
+            app:layout_constraintTop_toTopOf="@+id/lname_title"/>
+
+        <!--Age-->
+        <TextView
+            android:id="@+id/age_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/age"
+            android:textColor="@color/teal"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/lname_title"
+            app:layout_constraintTop_toBottomOf="@+id/lname_title" />
+
+        <TextView
+            android:id="@+id/driverProf_age_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/age_placeholder"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/driverProf_lname_tv"
+            app:layout_constraintLeft_toLeftOf="@+id/driverProf_lname_tv"
+            app:layout_constraintTop_toTopOf="@+id/age_title"/>
+
+        <!--Email-->
+        <TextView
+            android:id="@+id/email_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_addr_ph"
+            android:textColor="@color/teal"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/age_title"
+            app:layout_constraintTop_toBottomOf="@+id/age_title" />
+
+        <TextView
+            android:id="@+id/driverProf_email_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_placeholder"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/driverProf_age_tv"
+            app:layout_constraintLeft_toLeftOf="@+id/driverProf_age_tv"
+            app:layout_constraintTop_toTopOf="@+id/email_title"/>
+
+        <!--Phone-->
+        <TextView
+            android:id="@+id/phone_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_ph"
+            android:textColor="@color/teal"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/email_title"
+            app:layout_constraintTop_toBottomOf="@+id/email_title" />
+
+        <TextView
+            android:id="@+id/driverProf_phone_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_placeholder"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/driverProf_email_tv"
+            app:layout_constraintLeft_toLeftOf="@+id/driverProf_email_tv"
+            app:layout_constraintTop_toTopOf="@+id/phone_title"/>
+
+        <!--Vehicle Info Div-->
+        <ImageView
+            android:id="@+id/med_info_img"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/vehicle_info_div"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phone_title" />
+
+        <!--Car Make-->
+        <TextView
+            android:id="@+id/carmake_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Car Make"
+            android:textColor="@color/teal"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/phone_title"
+            app:layout_constraintTop_toBottomOf="@+id/med_info_img" />
+
+        <TextView
+            android:id="@+id/driverProf_carmake_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Audi"
+            android:layout_marginStart="12dp"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintTop_toBottomOf="@+id/carmake_title"
+            app:layout_constraintLeft_toRightOf="@id/carmake_title"
+            app:layout_constraintTop_toTopOf="@+id/carmake_title"/>
+
+        <!--Car Model-->
+        <TextView
+            android:id="@+id/carmodel_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Car Model"
+            android:textColor="@color/teal"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/carmake_title"
+            app:layout_constraintTop_toBottomOf="@+id/carmake_title" />
+
+        <TextView
+            android:id="@+id/driverProf_carmodel_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Q7"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="@id/carmodel_title"
+            app:layout_constraintBottom_toBottomOf="@+id/carmodel_title"
+            app:layout_constraintStart_toStartOf="@id/driverProf_carmake_tv"
+            />
+
+        <!--Car Year-->
+        <TextView
+            android:id="@+id/caryear_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Year"
+            android:textColor="@color/teal"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/carmodel_title"
+            app:layout_constraintTop_toBottomOf="@+id/carmodel_title" />
+
+        <TextView
+            android:id="@+id/driverProf_caryear_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2018"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="@id/caryear_title"
+            app:layout_constraintBottom_toBottomOf="@+id/caryear_title"
+            app:layout_constraintStart_toStartOf="@id/driverProf_carmodel_tv"/>
+
+        <!--Wheelchair-->
+        <TextView
+            android:id="@+id/wheelchair_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wheelchair_ph"
+            android:textColor="@color/teal"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@+id/caryear_title"
+            app:layout_constraintEnd_toEndOf="@id/caryear_title"/>
+
+        <TextView
+            android:id="@+id/driverProf_wheelchair_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wheelchair_placeholder"
+            android:layout_marginStart="12dp"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintBottom_toBottomOf="@+id/wheelchair_title"
+            app:layout_constraintLeft_toRightOf="@id/wheelchair_title"
+            app:layout_constraintTop_toTopOf="@+id/wheelchair_title"/>
+
+        <!--Public Prof Div-->
+        <ImageView
+            android:id="@+id/public_prof_img"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/pub_prof_div"
+            app:layout_constraintTop_toBottomOf="@+id/wheelchair_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!--Name-->
+        <TextView
+            android:id="@+id/username_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/name_ph"
+            android:textColor="@color/teal"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/wheelchair_title"
+            app:layout_constraintTop_toBottomOf="@+id/public_prof_img" />
+
+        <TextView
+            android:id="@+id/driverProf_username_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/username_placeholder"
+            android:layout_marginStart="12dp"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintBottom_toBottomOf="@+id/username_title"
+            app:layout_constraintLeft_toRightOf="@id/username_title"
+            app:layout_constraintTop_toTopOf="@+id/username_title"/>
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
 
 </ScrollView>
+
+
+<!--<ScrollView-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:id="@+id/scrollView_dProfile"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical"-->
+    <!--android:background="@drawable/maincolorgradient"-->
+    <!--tools:context="com.example.awesomeness.designatedride._DriverActivities.DriverProfileActivity">-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_marginTop="50dp"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/firstNameET_drUpdate"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_marginEnd="15dp"-->
+            <!--android:layout_marginStart="15dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:background="@drawable/edittext_borders"-->
+            <!--android:hint="@string/register_page_first_name_hint"-->
+            <!--android:inputType="textCapWords"-->
+            <!--android:padding="15dp"-->
+            <!--android:cursorVisible="true"-->
+            <!--android:textCursorDrawable="@drawable/cursor_color"/>-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/lastNameET_drUpdate"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_marginEnd="15dp"-->
+            <!--android:layout_marginStart="15dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:background="@drawable/edittext_borders"-->
+            <!--android:hint="@string/register_page_last_name_hint"-->
+            <!--android:inputType="textCapWords"-->
+            <!--android:padding="15dp"-->
+            <!--android:cursorVisible="true"-->
+            <!--android:textCursorDrawable="@drawable/cursor_color"/>-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/emailET_drUpdate"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_marginEnd="15dp"-->
+            <!--android:layout_marginStart="15dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:background="@drawable/edittext_borders"-->
+            <!--android:hint="@string/register_page_email_hint"-->
+            <!--android:inputType="textCapWords"-->
+            <!--android:padding="15dp"-->
+            <!--android:cursorVisible="true"-->
+            <!--android:textCursorDrawable="@drawable/cursor_color"/>-->
+
+
+        <!--<Button-->
+            <!--android:id="@+id/updateProfileBtn_drUpdate"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_marginEnd="15dp"-->
+            <!--android:layout_marginStart="15dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:background="@drawable/edittext_borders"-->
+            <!--android:text="@string/update_profile"-->
+            <!--android:textAllCaps="false"-->
+            <!--android:textColor="@color/colorPrimary"-->
+            <!--android:textSize="24sp"/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/resetPwdTV_dUpdate"-->
+            <!--android:textAlignment="center"-->
+            <!--android:padding="10dp"-->
+            <!--android:text="@string/reset_pwd"-->
+            <!--android:textSize="24dp"-->
+            <!--android:textStyle="italic"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/closeTV_dUpdate"-->
+            <!--android:text="@string/close"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textSize="24dp"-->
+            <!--android:padding="10dp"-->
+            <!--android:textStyle="italic"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp" />-->
+
+    <!--</LinearLayout>-->
+
+<!--</ScrollView>-->

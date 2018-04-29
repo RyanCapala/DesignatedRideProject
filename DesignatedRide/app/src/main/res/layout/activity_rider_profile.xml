@@ -255,7 +255,7 @@
             android:layout_height="wrap_content"
             android:text="@string/ins_placeholder"
             android:layout_marginStart="12dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintTop_toBottomOf="@+id/user_email_tv_rdr"
             app:layout_constraintLeft_toRightOf="@id/insurance_tv"

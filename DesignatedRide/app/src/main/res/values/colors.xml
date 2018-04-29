@@ -40,6 +40,7 @@
 
     <color name="img_ring_bkg">#dd595a</color>
     <color name="teal">#0DA7DF</color>
+    <color name="dialog_text">#df7251</color>
 
 
 </resources>

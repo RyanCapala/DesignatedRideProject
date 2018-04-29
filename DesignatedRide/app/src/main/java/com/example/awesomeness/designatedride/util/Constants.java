@@ -102,9 +102,16 @@ public class Constants {
 
 
     //=== Default Values as a place holder =====//
-    public static final String DEFAULT_VALUE            = "NONE";
-    public static final String DEFAULT_POS            = "0";
+    public static final String DEFAULT_VALUE            = "";
+    public static final String DEFAULT_POS              = "0";
     public static final String DEFAULT_RB               = "No";
+    public static final String DEFAULT_RATING           = "4.5";
+
+    //=== Driver
+    public static final String RATING                   = "rating";
+    public static final String CAR_MAKE                 = "carMake";
+    public static final String CAR_MODEL                = "carModel";
+    public static final String CAR_YEAR                 = "carYear";
 
 }
 

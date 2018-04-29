@@ -11,8 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.awesomeness.designatedride._RiderActivities.RiderActivity;
 import com.example.awesomeness.designatedride.activities.LoginActivity;
 import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.util.Constants;
@@ -24,6 +26,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.w3c.dom.Text;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DriverActivity extends AppCompatActivity {
@@ -34,12 +38,20 @@ public class DriverActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReference;
     private FirebaseDatabase mDatabase;
 
+    private Context context;
 
-    //---
+
+    //---Old widget variables--//
+    //private CircleImageView profileImage;
+    //private ImageButton profileBtn;
+    //private ImageButton pickupRiderBtn;
+    //private ImageButton settingsBtn;
+
+    //---New widgets---//
     private CircleImageView profileImage;
-    private ImageButton profileBtn;
-    private ImageButton pickupRiderBtn;
-    private ImageButton settingsBtn;
+    private ImageButton viewProfile_btn, viewAvailability_btn, viewSchedule_btn, viewMap_btn;
+    private ImageButton logout_btn, make_available_btn;
+    private TextView driverName;
     private View parentView;    //for snackbar
 
     private static final int ERROR_DIALOG_REQUEST = 9001;
@@ -60,10 +72,10 @@ public class DriverActivity extends AppCompatActivity {
         mDatabaseReference = mDatabase.getReference();
         mDatabaseReference.keepSynced(true);
 
-        //Intent intent = getIntent();
-        //String uname = intent.getStringExtra(Constants.INTENT_KEY_NAME);
+
         String uname = getFNameFromShrPref(mUser.getUid());
         Snackbar.make(parentView, "Welcome " + uname + "!", Snackbar.LENGTH_LONG).show();
+        setUserSpecificName();
 
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,34 +85,70 @@ public class DriverActivity extends AppCompatActivity {
         });
 
         //------------------------
-        profileBtn.setOnClickListener(new View.OnClickListener() {
+        viewProfile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //createPopupDialog();
-                View profile_dialog_view = getLayoutInflater().inflate(R.layout.profile_dialog_popup, null);
-                View confirm_dialog_view = getLayoutInflater().inflate(R.layout.confirmation_dialog, null);
-                ProfileDialogHelper profileDialogHelper = new ProfileDialogHelper(DriverActivity.this, profile_dialog_view, confirm_dialog_view, mAuth, mUser, DriverProfileActivity.class, LoginActivity.class);
-                profileDialogHelper.createPopupDialog();
+                //Toast.makeText(context, "Profile", Toast.LENGTH_SHORT).show();
+                gotoActivity(DriverProfileActivity.class);
             }
         });
 
         //------------------------
-        pickupRiderBtn.setOnClickListener(new View.OnClickListener() {
+        viewAvailability_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (isServicesOk()) {
-                    gotoActivityWithArrowBack(DriverMapActivity.class);
-                }
+            public void onClick(View v) {
+                Toast.makeText(context, "Availability", Toast.LENGTH_SHORT).show();
             }
         });
 
         //------------------------
-        settingsBtn.setOnClickListener(new View.OnClickListener() {
+        viewSchedule_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //Todo: implement settings activity
+            public void onClick(View v) {
+                Toast.makeText(context, "Schedule", Toast.LENGTH_SHORT).show();
             }
         });
+
+        //------------------------
+        viewMap_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "View Map", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        //------------------------
+        logout_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View confirm_dialog_view = getLayoutInflater().inflate(R.layout
+                        .confirmation_dialog, null);
+                ProfileDialogHelper profileDialogHelper = new ProfileDialogHelper(DriverActivity
+                        .this, confirm_dialog_view, mAuth, mUser);
+                profileDialogHelper.createConfirmationPrompt();
+            }
+        });
+
+        //------------------------
+        make_available_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DriverActivity.this, "Make Available clicked", Toast
+                        .LENGTH_SHORT).show();
+            }
+        });
+
+
+//        pickupRiderBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (isServicesOk()) {
+//                    gotoActivityWithArrowBack(DriverMapActivity.class);
+//                }
+//            }
+//        });
+
 
 
     }//End of onCreate
@@ -119,11 +167,21 @@ public class DriverActivity extends AppCompatActivity {
 
     //----------------------------------------------------------------------------------------------
     private void initWidgets() {
-        profileImage = (CircleImageView) findViewById(R.id.profileImgView_driver);
-        profileBtn = (ImageButton) findViewById(R.id.viewProfileImgBtn_driver);
-        pickupRiderBtn = (ImageButton) findViewById(R.id.pickupRiderImgBtn_driver);
-        settingsBtn = (ImageButton) findViewById(R.id.settingsImgBtn_driver);
+        profileImage = (CircleImageView) findViewById(R.id.driverAct_img);
+//        profileBtn = (ImageButton) findViewById(R.id.viewProfileImgBtn_driver);
+//        pickupRiderBtn = (ImageButton) findViewById(R.id.pickupRiderImgBtn_driver);
+//        settingsBtn = (ImageButton) findViewById(R.id.settingsImgBtn_driver);
+
+        viewProfile_btn = (ImageButton) findViewById(R.id.driverAct_view_prof_btn);
+        viewAvailability_btn = (ImageButton) findViewById(R.id.driverAct_availability_btn);
+        viewSchedule_btn = (ImageButton) findViewById(R.id.driverAct_schedule_btn);
+        viewMap_btn = (ImageButton) findViewById(R.id.driverAct_view_map_btn);
+        logout_btn = (ImageButton) findViewById(R.id.driverAct_logout_btn);
+        make_available_btn = (ImageButton) findViewById(R.id.driverAct_available_btn);
+        driverName = (TextView) findViewById(R.id.driverAct_name);
         parentView = findViewById(R.id.activity_driver_layout);
+
+        context = DriverActivity.this;
     }
 
     //----------------------------------------------------------------------------------------------
@@ -162,6 +220,13 @@ public class DriverActivity extends AppCompatActivity {
         *       But, for new user, it will store its first name to shared pref when they register.
         *
          */
+    }
+
+    private void setUserSpecificName() {
+        String name = getFNameFromShrPref(mUser.getUid());
+        if (name != null && name.length() > 0) {
+            driverName.setText(name + "!");
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,10 @@ public class ProfileHelper {
     private TextView userName_TV, wheelchair_TV;
     private CircleImageView profileImage;
     private FloatingActionButton editProfile_fab;
+
+    private TextView rating_TV, carModel_TV, carYear_TV, carMake_TV;
+    private Vehicle vehicle;
+    private RatingBar ratingBar;
     //=========================
 
     public ProfileHelper(DatabaseReference mDatabaseReference, FirebaseUser mUser, HashMap<String, String> childMap,Context ctx, EditText firstNameET, EditText lastNameET, EditText emailET) {
@@ -94,6 +99,40 @@ public class ProfileHelper {
         this.userName_TV = userName_TV;
         this.wheelchair_TV = wheelchair_TV;
         this.profileImage = profileImage;
+    }
+
+    public ProfileHelper(DatabaseReference mDatabaseReference,
+                         FirebaseUser mUser,
+                         Context ctx,
+                         HashMap<String, String> childMap,
+                         TextView fullName_TV,
+                         TextView firstName_TV,
+                         TextView lastName_TV,
+                         TextView age_TV,
+                         TextView email_TV,
+                         TextView phone_TV,
+                         TextView userName_TV,
+                         TextView rating_TV,
+                         TextView wheelchair_TV,
+                         CircleImageView profileImage,
+                         Vehicle vehicle,
+                         RatingBar ratingBar) {
+        this.mDatabaseReference = mDatabaseReference;
+        this.mUser = mUser;
+        this.ctx = ctx;
+        this.childMap = childMap;
+        this.fullName_TV = fullName_TV;
+        this.firstName_TV = firstName_TV;
+        this.lastName_TV = lastName_TV;
+        this.age_TV = age_TV;
+        this.email_TV = email_TV;
+        this.phone_TV = phone_TV;
+        this.userName_TV = userName_TV;
+        this.profileImage = profileImage;
+        this.rating_TV = rating_TV;
+        this.wheelchair_TV = wheelchair_TV;
+        this.vehicle = vehicle;
+        this.ratingBar = ratingBar;
     }
 
     //----------------------------------------------------------------------------------------------
@@ -161,6 +200,46 @@ public class ProfileHelper {
                         coverage_TV.setText(childMap.get(Constants.COVERAGE));
                         doctorname_TV.setText(childMap.get(Constants.DOCTORNAME));
                         wheelchair_TV.setText(childMap.get(Constants.WHEELCHAIR));
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    public void populateDriverInfo() {
+        mDatabaseReference
+                .child(Constants.USER)
+                .child(mUser.getUid())
+                .child(Constants.PROFILE)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                            String key = d.getKey();
+                            String value = (String) d.getValue();
+                            childMap.put(key, value);
+                        }
+
+                        //Set textView
+                        fullName_TV.setText(childMap.get(Constants.FULLNAME));
+                        rating_TV.setText(childMap.get(Constants.RATING));
+                        firstName_TV.setText(childMap.get(Constants.FIRSTNAME));
+                        lastName_TV.setText(childMap.get(Constants.LASTNAME));
+                        age_TV.setText(childMap.get(Constants.AGE));
+                        email_TV.setText(childMap.get(Constants.EMAIL));
+                        phone_TV.setText(childMap.get(Constants.PHONE));
+                        vehicle.getCar_make().setText(childMap.get(Constants.CAR_MAKE));
+                        vehicle.getCar_model().setText(childMap.get(Constants.CAR_MODEL));
+                        vehicle.getCar_year().setText(childMap.get(Constants.CAR_YEAR));
+                        wheelchair_TV.setText(childMap.get(Constants.WHEELCHAIR));
+                        userName_TV.setText(childMap.get(Constants.USERNAME));
+
+                        //set Driver's rating bar
+                        ratingBar.setRating(Float.valueOf(childMap.get(Constants.RATING)));
                     }
 
                     @Override

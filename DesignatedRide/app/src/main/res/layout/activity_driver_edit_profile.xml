@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/driver_edit_profile_scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="._DriverActivities.DriverEditProfileActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/driver_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- driver_ -->
+
+        <!--First Name-->
+        <EditText
+            android:id="@+id/driver_fname_et_editProf"
+            android:inputType="textPersonName"
+            android:hint="@string/fname"
+            style="@style/editTextNoLine"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <View
+            android:id="@+id/driver_separator1_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_fname_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_fname_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_fname_et_editProf" />
+
+        <!--Last Name-->
+        <EditText
+            android:id="@+id/driver_lname_et_editProf"
+            android:inputType="textPersonName"
+            style="@style/editTextNoLine"
+            android:hint="@string/lname"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_separator1_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_separator1_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_separator1_editProf"/>
+
+        <View
+            android:id="@+id/driver_separator2_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_lname_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_lname_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_lname_et_editProf" />
+
+        <!--DOB-->
+        <TextView
+            android:id="@+id/driver_dob_title"
+            android:text="@string/dob"
+            android:textSize="10sp"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/driver_separator2_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_separator2_editProf"/>
+
+        <LinearLayout
+            android:id="@+id/driver_dob_linear_layout"
+            android:orientation="horizontal"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/driver_separator2_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_dob_title"
+            app:layout_constraintTop_toBottomOf="@+id/driver_dob_title">
+
+            <Spinner
+                android:id="@+id/driver_month_spinner_editProf"
+                android:entries="@array/month"
+                android:layout_margin="2dp"
+                android:textAlignment="center"
+                android:layout_weight=".6"
+                android:padding="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Spinner
+                android:id="@+id/driver_day_spinner_editProf"
+                android:entries="@array/day"
+                android:layout_margin="2dp"
+                android:layout_weight=".2"
+                android:padding="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Spinner
+                android:id="@+id/driver_year_spinner_editProf"
+                android:entries="@array/year"
+                android:layout_margin="2dp"
+                android:textAlignment="center"
+                android:padding="2dp"
+                android:layout_weight=".3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!--Address Div-->
+        <ImageView
+            android:id="@+id/driver_default_address_div_editProf"
+            android:src="@mipmap/set_default_address_ep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/driver_dob_linear_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!--Address-->
+        <EditText
+            android:id="@+id/driver_address_st_et_editProf"
+            android:inputType="textCapWords"
+            style="@style/editTextNoLine"
+            android:hint="@string/address_street"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_default_address_div_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_separator2_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_separator2_editProf"
+            />
+
+        <View
+            android:id="@+id/driver_separator3_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_address_st_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_address_st_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_address_st_et_editProf" />
+
+        <EditText
+            android:id="@+id/driver_address_ctAndState_et_editProf"
+            android:inputType="textCapWords"
+            style="@style/editTextNoLine"
+            android:hint="@string/address_ctAndState"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_separator3_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_separator3_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_separator3_editProf"
+            />
+
+        <View
+            android:id="@+id/driver_separator4_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_address_ctAndState_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_address_ctAndState_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_address_ctAndState_et_editProf" />
+
+        <!--Account Settings DIV-->
+        <ImageView
+            android:id="@+id/driver_account_settings_div_editProf"
+            android:src="@mipmap/act_settings_nbkg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/driver_separator4_editProf"/>
+
+        <!--Email-->
+        <EditText
+            android:id="@+id/driver_email_et_editProf"
+            android:inputType="textEmailAddress"
+            style="@style/editTextNoLine"
+            android:hint="Email Address"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_account_settings_div_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_separator4_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_separator4_editProf"
+            />
+
+        <View
+            android:id="@+id/driver_separator5_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_email_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_email_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_email_et_editProf" />
+
+        <!--Verify Email-->
+        <EditText
+            android:id="@+id/driver_verify_email_et_editProf"
+            android:inputType="textEmailAddress"
+            style="@style/editTextNoLine"
+            android:hint="Verify Email Address"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_separator5_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_separator5_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_separator5_editProf"
+            />
+
+        <View
+            android:id="@+id/driver_separator6_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_verify_email_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_verify_email_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_verify_email_et_editProf" />
+
+        <!--Password-->
+        <EditText
+            android:id="@+id/driver_password_et_editProf"
+            android:inputType="textPassword"
+            style="@style/editTextNoLine"
+            android:hint="Password"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:layout_marginTop="5dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_separator6_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_separator6_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_separator6_editProf"
+            />
+
+        <View
+            android:id="@+id/driver_pword_separator_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_password_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_password_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_password_et_editProf" />
+
+        <!--Verify Password-->
+        <EditText
+            android:id="@+id/driver_v_password_et_editProf"
+            android:inputType="textPassword"
+            style="@style/editTextNoLine"
+            android:hint="Verify Password"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:layout_marginTop="5dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_pword_separator_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_pword_separator_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_pword_separator_editProf"
+            />
+
+        <View
+            android:id="@+id/driver_v_pword_separator_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_v_password_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_v_password_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_v_password_et_editProf" />
+
+        <!--Phone-->
+        <EditText
+            android:id="@+id/driver_phone_et_editProf"
+            android:inputType="textPhonetic"
+            style="@style/editTextNoLine"
+            android:hint="Phone"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_v_pword_separator_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_v_pword_separator_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_v_pword_separator_editProf"
+            />
+
+        <View
+            android:id="@+id/driver_separator7_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_phone_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_phone_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_phone_et_editProf" />
+
+        <!--Medical Info Div-->
+        <ImageView
+            android:id="@+id/driver_med_info_div_editProf"
+            android:src="@mipmap/vehicle_info_div_ep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/driver_separator7_editProf"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!--Car Make-->
+        <EditText
+            android:id="@+id/driver_carmake_et_editProf"
+            android:inputType="textCapWords"
+            style="@style/editTextNoLine"
+            android:hint="Car Make"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_marginTop="5dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_med_info_div_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_separator6_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_separator6_editProf"
+            />
+
+        <View
+            android:id="@+id/driver_separator8_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_carmake_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_carmake_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_carmake_et_editProf" />
+
+        <!--Car Model-->
+        <EditText
+            android:id="@+id/driver_carmodel_et_editProf"
+            android:inputType="textCapWords"
+            style="@style/editTextNoLine"
+            android:hint="Car Model"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_separator8_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_separator8_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_separator8_editProf"
+            />
+
+        <View
+            android:id="@+id/driver_separator9_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_carmodel_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_carmodel_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_carmodel_et_editProf" />
+
+        <!--Car Model-->
+        <EditText
+            android:id="@+id/driver_caryear_et_editProf"
+            android:inputType="textCapWords"
+            style="@style/editTextNoLine"
+            android:hint="Car Year"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_separator9_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_separator9_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_separator9_editProf"
+            />
+
+        <View
+            android:id="@+id/driver_separator10_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_caryear_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_caryear_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_caryear_et_editProf" />
+
+        <!--Wheelchair-->
+        <TextView
+            android:id="@+id/driver_wheelchair_title_tv_editProf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorAccentDark"
+            android:textSize="14sp"
+            android:text="Wheelchair Access"
+            app:layout_constraintStart_toStartOf="@+id/driver_caryear_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_separator10_editProf" />
+
+        <RadioGroup
+            android:id="@+id/driver_wheelchair_radiogroup_editProf"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/driver_wheelchair_title_tv_editProf"
+            app:layout_constraintTop_toTopOf="@+id/driver_wheelchair_title_tv_editProf"
+            app:layout_constraintBottom_toBottomOf="@+id/driver_wheelchair_title_tv_editProf">
+
+            <RadioButton
+                android:id="@+id/driver_no_radioBtn_editProf"
+                android:text="No"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/teal"
+                android:textSize="12sp"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:id="@+id/driver_yes_radioBtn_editProf"
+                android:text="Yes"
+                android:textColor="@color/teal"
+                android:textSize="12sp"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RadioGroup>
+
+
+        <!--Public Info Div-->
+        <ImageView
+            android:id="@+id/driver_public_prof_div_editProf"
+            android:src="@mipmap/public_prov_div_ep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/driver_wheelchair_title_tv_editProf"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!--User Name-->
+        <EditText
+            android:id="@+id/driver_username_et_editProf"
+            android:inputType="text"
+            style="@style/editTextNoLine"
+            android:hint="Username"
+            android:background="@color/colorMainbackground"
+            android:cursorVisible="true"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/teal"
+            android:textColorHint="@color/teal"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/driver_public_prof_div_editProf"
+            app:layout_constraintStart_toStartOf="@id/driver_separator10_editProf"
+            app:layout_constraintEnd_toEndOf="@id/driver_separator10_editProf"
+            />
+
+        <View
+            android:id="@+id/driver_separator11_editProf"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/colorAccentDark"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            app:layout_constraintLeft_toLeftOf="@+id/driver_username_et_editProf"
+            app:layout_constraintRight_toRightOf="@+id/driver_username_et_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_username_et_editProf" />
+
+
+        <!--Save Btn-->
+        <ImageButton
+            android:id="@+id/driver_save_btn_editProf"
+            android:layout_width="130dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:background="@mipmap/save_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/driver_separator11_editProf"
+            app:layout_constraintTop_toBottomOf="@+id/driver_separator11_editProf" />
+
+        <!--Cancel Btn-->
+        <ImageButton
+            android:id="@+id/driver_cancel_btn_editProf"
+            android:layout_width="130dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="20dp"
+            android:background="@mipmap/cancel_btn_colored"
+            app:layout_constraintBottom_toBottomOf="@+id/driver_save_btn_editProf"
+            app:layout_constraintStart_toEndOf="@+id/driver_save_btn_editProf"
+            app:layout_constraintTop_toTopOf="@+id/driver_save_btn_editProf" />
+
+
+        <!-- driver_ -->
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

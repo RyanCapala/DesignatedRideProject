@@ -5,7 +5,7 @@
         android:width="2dp"
         android:color="@color/colorPrimaryDark"/>
     <solid android:color="@color/textBoxBackground"/>
-    <corners
-        android:radius="10dp"/>
+    <!--<corners-->
+        <!--android:radius="10dp"/>-->
 
 </shape>

@@ -142,6 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
         final String em = userEmailET.getText().toString().trim();
         final String pwd = userPwd.getText().toString().trim();
         String vPwd = verifyPwd.getText().toString().trim();
+        final String full_name = fname + " " + lname;
 
         if (fieldChecking(fname, lname, em, pwd, vPwd)) {
             if (!checkPwd(pwd)) {
@@ -169,26 +170,37 @@ public class RegisterActivity extends AppCompatActivity {
                             //store fname to Shared pref
                             storeFNametoSharedPref(fname, userid);
 
-                            //===Storing default values===//
+                            //Check if Rider or Driver, then set Default values
+                            if (uMode.equals(Constants.RIDER)) {
+                                userInfo.put(Constants.DOCTORNAME, Constants.DEFAULT_VALUE);
+                                userInfo.put(Constants.INSURANCE, Constants.DEFAULT_VALUE);
+
+                            } else if (uMode.equals(Constants.DRIVER)) {
+                                userInfo.put(Constants.CAR_MAKE, Constants.DEFAULT_VALUE);
+                                userInfo.put(Constants.CAR_MODEL, Constants.DEFAULT_VALUE);
+                                userInfo.put(Constants.CAR_YEAR, Constants.DEFAULT_VALUE);
+                                userInfo.put(Constants.RATING, Constants.DEFAULT_RATING);
+
+                            }
+
+
+
+                            userInfo.put(Constants.ADDRESS, Constants.DEFAULT_VALUE);
                             userInfo.put(Constants.CITYANDSTATE, Constants.DEFAULT_VALUE);
-                            userInfo.put(Constants.BIRTH_DAY_POS, Constants.DEFAULT_POS);
                             userInfo.put(Constants.FULL_ADDRESS, Constants.DEFAULT_VALUE);
                             userInfo.put(Constants.BIRTH_MONTH_POS, Constants.DEFAULT_POS);
-                            userInfo.put(Constants.ADDRESS, Constants.DEFAULT_VALUE);
+                            userInfo.put(Constants.BIRTH_DAY_POS, Constants.DEFAULT_POS);
+                            userInfo.put(Constants.BIRTH_YEAR_POS, Constants.DEFAULT_POS);
                             userInfo.put(Constants.AGE, Constants.DEFAULT_POS);
-                            userInfo.put(Constants.DOCTORNAME, Constants.DEFAULT_VALUE);
-                            userInfo.put(Constants.FULLNAME, Constants.DEFAULT_VALUE);
-                            userInfo.put(Constants.INSURANCE, Constants.DEFAULT_VALUE);
                             userInfo.put(Constants.USERNAME, Constants.DEFAULT_VALUE);
                             userInfo.put(Constants.PHONE, Constants.DEFAULT_VALUE);
                             userInfo.put(Constants.WHEELCHAIR, Constants.DEFAULT_RB);
-                            userInfo.put(Constants.BIRTH_YEAR_POS, Constants.DEFAULT_POS);
-                            //============================//
 
                             userInfo.put(Constants.USERID, userid);
                             userInfo.put(Constants.USERMODE, uMode);
                             userInfo.put(Constants.FIRSTNAME, fname);
                             userInfo.put(Constants.LASTNAME, lname);
+                            userInfo.put(Constants.FULLNAME, full_name);
                             userInfo.put(Constants.EMAIL, em);
                             userInfo.put(Constants.USEREMAILVERIFIED, String.valueOf
                                     (user.isEmailVerified()));

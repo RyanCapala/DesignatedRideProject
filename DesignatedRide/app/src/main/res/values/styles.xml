@@ -126,4 +126,9 @@
         <item name="android:height">28dp</item>
     </style>
 
+    <style name="MyRatingBar" parent="Widget.AppCompat.RatingBar.Indicator">
+        <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="android:colorControlNormal">#f6d086</item>
+    </style>
+
 </resources>

@@ -106,7 +106,7 @@ public class StartLogoActivity extends AppCompatActivity {
                 .child(Constants.USER)
                 .child(uid)
                 .child(Constants.PROFILE)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 uName = dataSnapshot.child(Constants.FIRSTNAME).getValue(String.class);

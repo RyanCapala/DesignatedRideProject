@@ -66,68 +66,85 @@
         <!-- ==========Rider Activities================== -->
         <!-- android:configChanges="orientation|screenSize" -->
 
-        <!--RiderActivity-->
+
+        <!-- RiderActivity -->
         <activity
             android:name="._RiderActivities.RiderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <!--RiderMapActivity-->
+        <!-- RiderMapActivity -->
         <activity
             android:name="._RiderActivities.RiderMapActivity"
             android:label="@string/title_activity_rider_map"
             android:windowSoftInputMode="adjustPan" />
 
-        <!--RiderProfileActivity-->
+        <!-- RiderProfileActivity -->
         <activity
             android:name="._RiderActivities.RiderProfileActivity"
             android:icon="@drawable/icon_backarrow"
             android:label="@string/rider_profile"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <!--RiderViewProfileActivity-->
+        <!-- RiderViewProfileActivity -->
         <activity
             android:name="._RiderActivities.RiderViewProfileActivity"
             android:label="@string/title_activity_rider_view_profile"
             android:parentActivityName="._RiderActivities.RiderActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <!--RiderEditProfileActivity-->
+        <!-- RiderEditProfileActivity -->
         <activity
             android:name="._RiderActivities.RiderEditProfileActivity"
-            android:parentActivityName="._RiderActivities.RiderProfileActivity"
             android:icon="@drawable/icon_backarrow"
             android:label="@string/edit_profile"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:parentActivityName="._RiderActivities.RiderProfileActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <!--RiderViewAppointmentActivity-->
+        <!-- RiderViewAppointmentActivity -->
         <activity
             android:name="._RiderActivities.RiderViewAppointmentActivity"
             android:label="APPT_VIEW"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name="._RiderActivities.RiderViewAppointmentActivityWrapper" />
 
-        <!--RiderAddAppointmentActivity-->
+        <!-- RiderAddAppointmentActivity -->
         <activity
             android:name="._RiderActivities.RiderAddAppointmentActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- ====================Driver Activities==================== -->
+
+        <!-- DriverActivity -->
         <activity
             android:name="._DriverActivities.DriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- DriverProfileActivity -->
+        <activity
+            android:name="._DriverActivities.DriverProfileActivity"
+            android:icon="@drawable/icon_backarrow"
+            android:label="@string/driver_profile"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <!-- DriverEditProfileActivity -->
+        <activity
+            android:name="._DriverActivities.DriverEditProfileActivity"
+            android:icon="@drawable/icon_backarrow"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:label="@string/driver_edit_profile"/>
+
+        <!-- DriverMapActivity -->
         <activity
             android:name="._DriverActivities.DriverMapActivity"
             android:label="@string/title_activity_driver_map" />
-        <activity
-            android:name="._DriverActivities.DriverProfileActivity"
-            android:label="@string/driver_profile"
-            android:icon="@drawable/icon_backarrow"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+
         <activity
             android:name="._DriverActivities.DriverViewProfileActivity"
             android:label="@string/title_activity_rider_view_profile"
             android:parentActivityName="._DriverActivities.DriverActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+
         <activity android:name=".util.Pref" />
         <activity android:name=".util.SynAck" />
 

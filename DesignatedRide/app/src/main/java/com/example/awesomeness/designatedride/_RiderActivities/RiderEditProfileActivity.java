@@ -45,13 +45,11 @@ public class RiderEditProfileActivity extends AppCompatActivity {
     private EditText streetAddress_et, cityAndState_et;
     private EditText email_et, v_email_et, password_et, v_password_et, phone_et;
     private EditText insurance_et, doctorsname_et, username_et;
-    private String wheelChairAccess;
     private ImageButton saveBtn, cancelBtn;
     private RadioGroup radioGroup;
     private RadioButton yes_radioBtn, no_radioBtn, radioButton;
     private Spinner monthSpinner, daySpinner, yearSpinner;
 
-    private String[] monthArray, dayArray, yearArray;
 
     //Firebase
     private DatabaseReference mDdatabaseRef, mDbRef_gv, mDbRef_sv;
@@ -61,7 +59,10 @@ public class RiderEditProfileActivity extends AppCompatActivity {
 
     //================
     private HashMap<String, String> childMap;
+    private String[] monthArray, dayArray, yearArray;
+    private String wheelChairAccess;
     private String new_selected_radio_btn;
+
     private int monthPosition, dayPosition, yearPosition;
 
     private Checker checker;

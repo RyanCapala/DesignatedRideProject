@@ -135,6 +135,10 @@ public class ProfileHelper {
         this.ratingBar = ratingBar;
     }
 
+    public HashMap<String, String> getChildMap() {
+        return childMap;
+    }
+
     //----------------------------------------------------------------------------------------------
     public void populateUserInfo() {
 

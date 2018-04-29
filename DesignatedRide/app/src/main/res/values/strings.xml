@@ -180,6 +180,7 @@
     <string name="address_line">Street</string>
     <string name="address_street">Street</string>
     <string name="address_ctAndState">City, State, Zip</string>
+    <string name="driver_edit_profile">Driver Edit Profile</string>
 
 
     <!--Month-->

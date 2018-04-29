@@ -112,6 +112,7 @@ public class Constants {
     public static final String CAR_MAKE                 = "carMake";
     public static final String CAR_MODEL                = "carModel";
     public static final String CAR_YEAR                 = "carYear";
+    public static final String DR_CHILDMAP_KEY          = "driver_childMapKey";
 
 }
 

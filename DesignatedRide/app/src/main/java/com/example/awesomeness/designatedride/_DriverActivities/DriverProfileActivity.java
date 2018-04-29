@@ -56,6 +56,8 @@ public class DriverProfileActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private Context context;
 
+    ProfileHelper profileHelper;
+
     private String _userId;
     private HashMap<String, String> childMap;
 
@@ -78,7 +80,7 @@ public class DriverProfileActivity extends AppCompatActivity {
 
         vehicle = new Vehicle(carMake_TV, carModel_TV, carYear_TV);
 
-        ProfileHelper profileHelper = new ProfileHelper(mDatabaseReference, mUser, context,
+        profileHelper = new ProfileHelper(mDatabaseReference, mUser, context,
                 childMap, fullName_TV, firstName_TV, lastName_TV, age_TV, email_TV, phone_TV,
                 userName_TV, rating_TV, wheelchair_TV, profileImage, vehicle, ratingBar);
         profileHelper.populateDriverInfo();
@@ -104,6 +106,7 @@ public class DriverProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Edit profile.", Toast.LENGTH_SHORT).show();
+                gotoActivity(DriverEditProfileActivity.class);
             }
         });
 
@@ -192,7 +195,10 @@ public class DriverProfileActivity extends AppCompatActivity {
 
     //----------------------------------------------------------------------------------------------
     private void gotoActivity(Class activityClass) {
-        startActivity(new Intent(DriverProfileActivity.this, activityClass));
+        //startActivity(new Intent(DriverProfileActivity.this, activityClass));
+        Intent intent = new Intent(DriverProfileActivity.this, activityClass);
+        intent.putExtra(Constants.DR_CHILDMAP_KEY, profileHelper.getChildMap());
+        startActivity(intent);
         finish();
     }
 

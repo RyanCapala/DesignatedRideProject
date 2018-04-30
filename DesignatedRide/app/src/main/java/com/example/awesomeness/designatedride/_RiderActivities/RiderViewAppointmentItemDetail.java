@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.awesomeness.designatedride.R;
+import com.example.awesomeness.designatedride.util.HandleFileReadWrite;
+import com.example.awesomeness.designatedride.util.MonthInterpreter;
 
 public class RiderViewAppointmentItemDetail extends ArrayAdapter<String> {
 
@@ -23,7 +25,7 @@ public class RiderViewAppointmentItemDetail extends ArrayAdapter<String> {
     }
 
     static class ViewHolder {
-        TextView circleImage;
+        TextView circleTextView;
         TextView name;
         TextView location;
         TextView note;
@@ -42,10 +44,10 @@ public class RiderViewAppointmentItemDetail extends ArrayAdapter<String> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.fragment_rider_appointmentview_item_detail, parent, false);
 
-            viewHolder.circleImage = (TextView) convertView.findViewById(R.id.imageView8);
+            viewHolder.circleTextView = (TextView) convertView.findViewById(R.id.imageView8);
             viewHolder.name = (TextView) convertView.findViewById(R.id.appointmentNameTextView);
             viewHolder.location = (TextView) convertView.findViewById(R.id.appointmentLocationTextView);
-            viewHolder.note = (TextView) convertView.findViewById(R.id.viewAppointmentRiderNotesText_tv);
+            viewHolder.note = (TextView) convertView.findViewById(R.id.apointmentNoteTextView);
             viewHolder.arrowImage = (ImageView) convertView.findViewById(R.id.imageView9);
 
             convertView.setTag(viewHolder);
@@ -54,11 +56,49 @@ public class RiderViewAppointmentItemDetail extends ArrayAdapter<String> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        String fileName = getItem(position);
+
+        String name = "";
+        String address = "";
+        String location = "";
+        String addresstwo = "";
+        String time = "";
+        String date = "";
+        String status = "";
+        String notes = "";
+        String dateMonth;
+        String dateDate;
+
+
+        HandleFileReadWrite reader = new HandleFileReadWrite();
+        reader.open(getContext(), fileName);
+        if (reader.isExist()) {
+            name = reader.readLine();
+            location = reader.readLine();
+            address = reader.readLine();
+            addresstwo = reader.readLine();
+            time = reader.readLine();
+            date = reader.readLine();
+            //status = reader.readLine();
+            notes = reader.readLine();
+            StringBuilder stringBuilder = new StringBuilder();
+            while (notes != null) {
+                stringBuilder.append(notes);
+                stringBuilder.append("\n");
+                notes = reader.readLine();
+            }
+            notes = stringBuilder.toString();
+        }
+
+        String token[] = date.split("-");
+        dateDate = token[0];
+        dateMonth = MonthInterpreter.shortName(token[1]);
+
         //
-     //   viewHolder.circleImage.setImageResource(R.drawable.appointment_date_circle);
-        viewHolder.name.setText("TESTING");
-        viewHolder.location.setText("HOSPITAL LOCATION");
-        //viewHolder.note.setText("Some Notes");
+        viewHolder.circleTextView.setText(getContext().getResources().getString(R.string.appt_list_rider_date, dateMonth, dateDate));
+        viewHolder.name.setText(name);
+        viewHolder.location.setText(address);
+        viewHolder.note.setText(notes);
         viewHolder.arrowImage.setImageResource(R.mipmap.rider_appointments_icon_arrow);
 
         return convertView;

@@ -17,6 +17,7 @@ import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.util.Constants;
 import com.example.awesomeness.designatedride.util.HandleFileReadWrite;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,10 +70,6 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
         }
         reader.close();
 
-        for (int i=0; i<5; i++) {
-            sList.add("0x" + i);
-        }
-
         /*apmtListView = (ListView) findViewById(R.id.appointmentsListView);
         ListAdapter displayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, buildString(sList));
         apmtListView.setAdapter(displayAdapter);*/
@@ -107,6 +104,11 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
                     for (int k=0; k<sList.size(); k++) {
                         if (sList.get(k).equals(fileName)) {
                             sList.remove(k);
+
+                            File fileToDelete = new File(getApplicationContext().getFilesDir(), fileName);
+                            if (fileToDelete.exists()) {
+                                fileToDelete.delete();
+                            }
                             break;
                         }
                     }
@@ -132,10 +134,11 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
         for (int i=0; i<sList.size(); i++) {
             list[i] = sList.get(i);
         }
-        if (sList.size() == 0) {
+
+        /*if (sList.size() == 0) {
             list = new String[1];
             list[0] = NO_APPOINTMENT_MESSAGE;
-        }
+        }*/
         return list;
     }
 }

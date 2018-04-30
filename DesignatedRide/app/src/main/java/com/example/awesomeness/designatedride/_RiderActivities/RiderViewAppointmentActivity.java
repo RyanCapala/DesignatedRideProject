@@ -158,8 +158,10 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
     private void setAppt() {
         //open file
 
-        String name = "";
-        String address = "";
+        String apptName = "";
+        String locationName = "";
+        String locationAddress = "";
+        String locationAddressTwo = ""; //city, state, zip code
         String time = "";
         String date = "";
         String status = "";
@@ -168,11 +170,13 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
         HandleFileReadWrite reader = new HandleFileReadWrite();
         reader.open(this, fileName);
         if (reader.isExist()) {
-            name = reader.readLine();
-            address = reader.readLine();
+            apptName = reader.readLine();
+            locationName = reader.readLine();
+            locationAddress = reader.readLine();
+            locationAddressTwo = reader.readLine();
             time = reader.readLine();
             date = reader.readLine();
-            status = reader.readLine();
+            //status = reader.readLine();
             notes = reader.readLine();
             StringBuilder stringBuilder = new StringBuilder();
             while (notes != null) {
@@ -183,7 +187,7 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
             notes = stringBuilder.toString();
         }
 
-        setHospitalInfo(name, address);
+        setHospitalInfo(locationName, locationAddress);
         setTimeInfo(time, date);
         setAdvancedBookingInfo(status, (status.equals("yes")) ? "Advanced booking available" : "Advanced booking not available");
         setNotesInfo(notes);

@@ -78,6 +78,7 @@
 
     <!--Rider Appointment List-->
     <string name="appt_list_rider_default_date">Feb\n30</string>
+    <string name="appt_list_rider_date">%1$s\n%2$s</string>
     <string name="appt_list_rider_default_name_line">APPOINTMENT_LINE_1</string>
     <string name="appt_list_rider_default_time_hospname_line">TIME, HOSPITAL_NAME</string>
     <string name="appt_list_rider_default_notes_line">NOTES - NOTES - NOTES - NOTES - NOTES -

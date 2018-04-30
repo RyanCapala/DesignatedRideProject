@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,8 +46,8 @@ public class RiderAddAppointmentActivity extends AppCompatActivity  implements
     private static final String TAG = "RiderAddAppt";
     private final static String metaFile = "appointments_metadata.txt";
     private final static String FILENAME_POSTFIX = ".txt";
-    private static String time;
-    private static String date;
+    private String time;
+    private String date;
 
 
     // Widgets
@@ -85,9 +86,30 @@ public class RiderAddAppointmentActivity extends AppCompatActivity  implements
 
                 String notes = notesET.getText().toString().trim();
 
-                if (apptName.equals("") || name.equals("") || address.equals("") ||
-                        addressTwo.equals("") || date.equals("") || time.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Field(s) is empty", Toast.LENGTH_SHORT).show();
+                if (apptName.equals("")) {
+                    Toast.makeText(getApplicationContext(), "Appointment Title", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (name.equals("")) {
+                    Toast.makeText(getApplicationContext(), "DestinationName", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (address.equals("")) {
+                    Toast.makeText(getApplicationContext(), "DestinationAddress", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (addressTwo.equals("")) {
+                    Toast.makeText(getApplicationContext(), "DestinationAddressTwo", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (date.equals("")) {
+                    Toast.makeText(getApplicationContext(), "date", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (time.equals("")) {
+                    Toast.makeText(getApplicationContext(), "time", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -109,14 +131,16 @@ public class RiderAddAppointmentActivity extends AppCompatActivity  implements
                 writer.writeLine(notes);
                 writer.close();
 
-                finish();
+                gotoActivity(RiderViewAppointmentActivityWrapper.class);
+
+
             }
         });
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                gotoActivity(RiderViewAppointmentActivityWrapper.class);
             }
         });
     }
@@ -137,12 +161,14 @@ public class RiderAddAppointmentActivity extends AppCompatActivity  implements
       dateDay.setText(dateSplit[0]);
       dateMonth.setText(dateSplit[1]);
       dateYear.setText(dateSplit[2]);
+      this.date = date;
   }
 
   @Override
   public void onTimePicked(String time) {
       dateTime.setText(time);
      // timeView.setText(time);
+      this.time = time;
   }
 
     private void initWidgets() {
@@ -160,4 +186,11 @@ public class RiderAddAppointmentActivity extends AppCompatActivity  implements
         confirmButton = findViewById(R.id.apptEditSave_btn);
         cancelButton = findViewById(R.id.apptEditCancel_btn);
     }
+
+    //----------------------------------------------------------------------------------------------
+    private void gotoActivity(Class activityClass) {
+        startActivity(new Intent(RiderAddAppointmentActivity.this, activityClass));
+        this.finish();
+    }
+
 }

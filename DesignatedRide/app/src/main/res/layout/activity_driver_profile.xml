@@ -59,7 +59,6 @@
             style="?android:attr/ratingBarStyleIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:numStars="5"
             android:rating="4.5"
             android:stepSize=".5"
@@ -71,7 +70,6 @@
         <TextView
             android:id="@+id/driverProf_rating_tv"
             android:text="0.0"
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:textSize="14sp"
             android:layout_height="wrap_content"

@@ -23,7 +23,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!--android:roundIcon="@mipmap/ic_launcher_round"-->
+        <!-- android:roundIcon="@mipmap/ic_launcher_round" -->
+
 
         <!--
      The API key for Google Maps-based APIs is defined as a string resource.
@@ -109,9 +110,9 @@
 
         <!-- RiderViewAppointMentActivityWrapper -->
         <activity
-            android:label="@string/appts"
+            android:name="._RiderActivities.RiderViewAppointmentActivityWrapper"
             android:icon="@drawable/icon_backarrow"
-            android:name="._RiderActivities.RiderViewAppointmentActivityWrapper" />
+            android:label="@string/appts" />
 
         <!-- RiderAddAppointmentActivity -->
         <activity
@@ -119,6 +120,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- ====================Driver Activities==================== -->
+
 
         <!-- DriverActivity -->
         <activity
@@ -136,19 +138,24 @@
         <activity
             android:name="._DriverActivities.DriverEditProfileActivity"
             android:icon="@drawable/icon_backarrow"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:label="@string/driver_edit_profile"/>
+            android:label="@string/driver_edit_profile"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <!-- DriverMapActivity -->
         <activity
             android:name="._DriverActivities.DriverMapActivity"
             android:label="@string/title_activity_driver_map" />
-
         <activity
             android:name="._DriverActivities.DriverViewProfileActivity"
             android:label="@string/title_activity_rider_view_profile"
             android:parentActivityName="._DriverActivities.DriverActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <!-- DriverAvailableActivity -->
+        <activity
+            android:label="@string/view_availability"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="._DriverActivities.DriverAvailableActivity"/>
 
 
         <activity android:name=".util.Pref" />
@@ -161,7 +168,6 @@
                 <action android:name="PREF" />
             </intent-filter>
         </receiver>
-
 
     </application>
 

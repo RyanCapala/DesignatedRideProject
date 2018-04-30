@@ -183,6 +183,8 @@
     <string name="address_ctAndState">City, State, Zip</string>
     <string name="driver_edit_profile">Driver Edit Profile</string>
     <string name="appts">Appointments</string>
+    <string name="on_switch">On</string>
+    <string name="off_switch">Off</string>
 
 
     <!--Month-->

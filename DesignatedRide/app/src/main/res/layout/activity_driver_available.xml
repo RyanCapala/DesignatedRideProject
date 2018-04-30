@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="._DriverActivities.DriverAvailableActivity">
+
+    <TextView
+        android:id="@+id/title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/teal"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
+        android:text="Available for\nRides"
+        android:textAlignment="viewEnd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.125"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout_1"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        app:layout_constraintStart_toEndOf="@id/title1"
+        app:layout_constraintBottom_toBottomOf="@id/title1"
+        app:layout_constraintTop_toTopOf="@+id/title1">
+
+        <TextView
+            android:text="@string/on_switch"
+            android:layout_weight=".3"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/drvAvl_toggle_available"
+            android:layout_weight=".4"
+            android:layout_width="70dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:theme="@style/ThemeSwitch"
+            app:switchMinWidth="70dp" />
+
+        <TextView
+            android:text="@string/off_switch"
+            android:layout_weight=".3"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/title2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/teal"
+        android:layout_marginTop="20dp"
+        android:text="Accept Rides\nwithin"
+        android:textAlignment="viewEnd"
+        app:layout_constraintEnd_toEndOf="@id/title1"
+        app:layout_constraintHorizontal_bias="0.175"
+        app:layout_constraintStart_toStartOf="@id/title1"
+        app:layout_constraintTop_toBottomOf="@id/title1" />
+
+
+    <EditText
+        android:id="@+id/drvAvl_radius_ET"
+        android:hint="0"
+        android:inputType="number"
+        style="@style/editTextNoLine"
+        android:textColor="@android:color/black"
+        android:textAlignment="center"
+        android:paddingTop="4dp"
+        android:textSize="18sp"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/linearLayout_1"
+        app:layout_constraintTop_toTopOf="@id/title2"
+        app:layout_constraintBottom_toBottomOf="@id/title2"/>
+
+    <TextView
+        android:id="@+id/title3"
+        android:text="miles of location"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:textAlignment="center"
+        android:padding="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/drvAvl_radius_ET"
+        app:layout_constraintTop_toTopOf="@id/drvAvl_radius_ET"
+        app:layout_constraintBottom_toBottomOf="@id/drvAvl_radius_ET"/>
+
+    <View
+        android:id="@+id/separator_1"
+        android:layout_width="180dp"
+        android:layout_height="2dp"
+        android:background="@color/colorAccentDark"
+        app:layout_constraintTop_toBottomOf="@id/title3"
+        app:layout_constraintStart_toStartOf="@id/drvAvl_radius_ET"
+        app:layout_constraintEnd_toEndOf="@id/title3"/>
+
+    <ImageView
+        android:id="@+id/div_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
+        android:background="@mipmap/booking_options_div"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title2" />
+
+
+    <TextView
+        android:id="@+id/title4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/teal"
+        android:layout_marginTop="40dp"
+        android:text="Accept Booking\nRequest"
+        android:textAlignment="viewEnd"
+        app:layout_constraintEnd_toEndOf="@id/title2"
+        app:layout_constraintTop_toBottomOf="@id/div_1" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout_2"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        app:layout_constraintStart_toEndOf="@id/title4"
+        app:layout_constraintBottom_toBottomOf="@id/title4"
+        app:layout_constraintTop_toTopOf="@+id/title4">
+
+        <TextView
+            android:text="@string/on_switch"
+            android:layout_weight=".3"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/drvAvl_toggle_accept"
+            android:layout_weight=".4"
+            android:layout_width="70dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:theme="@style/ThemeSwitch"
+            app:switchMinWidth="70dp" />
+
+        <TextView
+            android:text="@string/off_switch"
+            android:layout_weight=".3"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/title5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/teal"
+        android:layout_marginTop="20dp"
+        android:text="Accept within\nthese times"
+        android:textAlignment="viewEnd"
+        app:layout_constraintEnd_toEndOf="@id/title4"
+        app:layout_constraintTop_toBottomOf="@id/title4"
+         />
+
+    <ImageButton
+        android:id="@+id/drvAvl_set_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@mipmap/set_btn"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/title5"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout_2"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout_2"
+        app:layout_constraintTop_toTopOf="@+id/title5" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title5">
+
+        <!--Save Btn-->
+        <ImageButton
+            android:id="@+id/drvAvl_save_btn"
+            android:layout_width="130dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:background="@mipmap/save_button" />
+
+        <!--Cancel Btn-->
+        <ImageButton
+            android:id="@+id/drvAvl_cancel_btn"
+            android:layout_width="130dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="10dp"
+            android:background="@mipmap/cancel_btn_colored" />
+
+    </LinearLayout>
+
+
+
+
+
+
+</android.support.constraint.ConstraintLayout>

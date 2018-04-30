@@ -97,7 +97,7 @@ public class DriverActivity extends AppCompatActivity {
         viewAvailability_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Availability", Toast.LENGTH_SHORT).show();
+                gotoActivity(DriverAvailableActivity.class);
             }
         });
 

@@ -105,7 +105,12 @@
             android:name="._RiderActivities.RiderViewAppointmentActivity"
             android:label="APPT_VIEW"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name="._RiderActivities.RiderViewAppointmentActivityWrapper" />
+
+        <!-- RiderViewAppointMentActivityWrapper -->
+        <activity
+            android:label="@string/appts"
+            android:icon="@drawable/icon_backarrow"
+            android:name="._RiderActivities.RiderViewAppointmentActivityWrapper" />
 
         <!-- RiderAddAppointmentActivity -->
         <activity

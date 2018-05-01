@@ -1,35 +1,42 @@
 package com.example.awesomeness.designatedride._DriverActivities;
 
+import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride._RiderActivities.RiderEditProfileActivity;
 import com.example.awesomeness.designatedride.util.Checker;
 import com.example.awesomeness.designatedride.util.Constants;
+import com.example.awesomeness.designatedride.util.Widgets.DatePickerFragmentHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DriverEditProfileActivity extends AppCompatActivity {
+public class DriverEditProfileActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     private static final String TAG = "DrvrEditProfActivity";
 
     private Context context = DriverEditProfileActivity.this;
@@ -40,6 +47,13 @@ public class DriverEditProfileActivity extends AppCompatActivity {
     private FirebaseDatabase mDataBase;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
+
+    //----Date Picker------//
+    private String dob_str;
+    private Calendar calendar;
+    private int monthPosition_dp, dayPosition_dp, yearPosition_dp;
+    private TextView dob_TV;
+    private String child_dob;
 
     //----Widgets------//
     private EditText fname_ET, lname_ET, street_ET, ctAndSt_ET;
@@ -87,8 +101,8 @@ public class DriverEditProfileActivity extends AppCompatActivity {
         initWidgets();
         setChildValues();
         setFields();
-        setStringArrayForSpinnerUse();
-        getSpinnerValues();
+        //setStringArrayForSpinnerUse();
+        //getSpinnerValues();
         new_selected_radio_btn = getSelectedRB();
 
 
@@ -100,7 +114,38 @@ public class DriverEditProfileActivity extends AppCompatActivity {
             }
         });
 
+        dob_TV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment datePicker = new DatePickerFragmentHelper();
+                datePicker.show(getFragmentManager(), "DriverDatePicker");
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoActivity(drvrProfAct);
+            }
+        });
+
     }// End of onCreate
+
+    //--------------------------------------------------------------------------------------------//
+    // for date picker
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        dob_str = DateFormat.getDateInstance().format(calendar.getTime());
+        dob_TV.setText(dob_str);
+        monthPosition_dp = month;
+        dayPosition_dp = dayOfMonth;
+        yearPosition_dp = year;
+    }
 
     //--------------------------------------------------------------------------------------------//
     // for the back Arrow
@@ -140,26 +185,28 @@ public class DriverEditProfileActivity extends AppCompatActivity {
         saveBtn = (ImageButton) findViewById(R.id.driver_save_btn_editProf);
         cancelBtn = (ImageButton) findViewById(R.id.driver_cancel_btn_editProf);
         radioGroup = (RadioGroup) findViewById(R.id.driver_wheelchair_radiogroup_editProf);
-        m_Spinner = (Spinner) findViewById(R.id.driver_month_spinner_editProf);
-        d_Spinner = (Spinner) findViewById(R.id.driver_day_spinner_editProf);
-        y_Spinner = (Spinner) findViewById(R.id.driver_year_spinner_editProf);
+//        m_Spinner = (Spinner) findViewById(R.id.driver_month_spinner_editProf);
+//        d_Spinner = (Spinner) findViewById(R.id.driver_day_spinner_editProf);
+//        y_Spinner = (Spinner) findViewById(R.id.driver_year_spinner_editProf);
+
+        dob_TV = (TextView) findViewById(R.id.driver_dob_tv);
 
         checker = new Checker();
 
-        ArrayAdapter<CharSequence> monthAdapter = ArrayAdapter.createFromResource(context, R.array
-                        .month, R.layout.spinner_layout);
-        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        m_Spinner.setAdapter(monthAdapter);
-
-        ArrayAdapter<CharSequence> dayAdapter = ArrayAdapter.createFromResource(context, R.array.day,
-                R.layout.spinner_layout);
-        dayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        d_Spinner.setAdapter(dayAdapter);
-
-        ArrayAdapter<CharSequence> yearAdapter = ArrayAdapter.createFromResource(context, R.array.year,
-                R.layout.spinner_layout);
-        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        y_Spinner.setAdapter(yearAdapter);
+//        ArrayAdapter<CharSequence> monthAdapter = ArrayAdapter.createFromResource(context, R.array
+//                        .month, R.layout.spinner_layout);
+//        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        m_Spinner.setAdapter(monthAdapter);
+//
+//        ArrayAdapter<CharSequence> dayAdapter = ArrayAdapter.createFromResource(context, R.array.day,
+//                R.layout.spinner_layout);
+//        dayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        d_Spinner.setAdapter(dayAdapter);
+//
+//        ArrayAdapter<CharSequence> yearAdapter = ArrayAdapter.createFromResource(context, R.array.year,
+//                R.layout.spinner_layout);
+//        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        y_Spinner.setAdapter(yearAdapter);
     }
 
     //--------------------------------------------------------------------------------------------//
@@ -199,9 +246,10 @@ public class DriverEditProfileActivity extends AppCompatActivity {
         child_mode = cMap.get(Constants.USERMODE);
         child_fullAddress = cMap.get(Constants.FULL_ADDRESS);
         child_age = cMap.get(Constants.AGE);
+        child_dob = cMap.get(Constants.DOB);
 
-        setLocationOfSpinnerFromDataPos(Integer.valueOf(child_month_pos), Integer.valueOf
-                (child_day_pos), Integer.valueOf(child_year_pos));
+//        setLocationOfSpinnerFromDataPos(Integer.valueOf(child_month_pos), Integer.valueOf
+//                (child_day_pos), Integer.valueOf(child_year_pos));
 
 
     }
@@ -219,6 +267,7 @@ public class DriverEditProfileActivity extends AppCompatActivity {
         cModel_ET.setText(child_cModel);
         cYear_ET.setText(child_cYear);
         uName_ET.setText(child_uName);
+        dob_TV.setText(child_dob);
 
         setRadioBtn();
 
@@ -283,7 +332,7 @@ public class DriverEditProfileActivity extends AppCompatActivity {
         Map profile = new HashMap();
         new_selected_radio_btn = getSelectedRB();
 
-        String age_str = getAge(mPos_int, dPos_int, yPos_int);
+        String age_str = getAge(monthPosition_dp, dayPosition_dp, yearPosition_dp);
         String fname = fname_ET.getText().toString().trim();
         String lname = lname_ET.getText().toString().trim();
         String street = street_ET.getText().toString().trim();
@@ -399,6 +448,7 @@ public class DriverEditProfileActivity extends AppCompatActivity {
                 }
             }
 
+            /*
             if (!checker.compareString(m_pos, child_month_pos)) {
                 profile.put(Constants.BIRTH_MONTH_POS, m_pos);
                 updateStr("Month");
@@ -411,13 +461,29 @@ public class DriverEditProfileActivity extends AppCompatActivity {
                 profile.put(Constants.BIRTH_YEAR_POS, y_pos);
                 updateStr("Year");
             }
+            */
 
-            if (!age_str.isEmpty()) {
+            if (dob_str != null) {
+                if (!checker.compareString(dob_str, child_dob)) {
+                    profile.put(Constants.BIRTH_YEAR_POS, y_pos);
+                    profile.put(Constants.BIRTH_MONTH_POS, m_pos);
+                    profile.put(Constants.BIRTH_DAY_POS, d_pos);
+                    profile.put(Constants.DOB, dob_str);
+                    updateStr(Constants.DOB);
+                }
+
                 if (!checker.compareString(age_str, child_age)) {
                     profile.put(Constants.AGE, age_str);
                     updateStr(age_str);
                 }
             }
+
+//            if (!age_str.isEmpty()) {
+//                if (!checker.compareString(age_str, child_age)) {
+//                    profile.put(Constants.AGE, age_str);
+//                    updateStr(age_str);
+//                }
+//            }
 
             if (!whlChr_access.isEmpty()) {
                 if (!checker.compareString(whlChr_access, child_wheelchair_needed)) {
@@ -464,20 +530,33 @@ public class DriverEditProfileActivity extends AppCompatActivity {
     }
 
     //--------------------------------------------------------------------------------------------//
-    private String getAge (int mpos, int dpos, int ypos) {
-        int actualYear = Integer.valueOf(yearArray[ypos]);
+//    private String getAge (int mpos, int dpos, int ypos) {
+//        int actualYear = Integer.valueOf(yearArray[ypos]);
+//
+//        Calendar dob = Calendar.getInstance();
+//        Calendar today = Calendar.getInstance();
+//        dob.set(actualYear, mpos, dpos);
+//        int yourAge = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+//        dob.add(Calendar.YEAR, yourAge);
+//        if (today.before(dob)) {
+//            yourAge--;
+//        }
+//
+//        return String.valueOf(yourAge);
+//
+//    }
 
+    //--------------------------------------------------------------------------------------------//
+    private String getAge(int m, int d, int y) {
         Calendar dob = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
-        dob.set(actualYear, mpos, dpos);
-        int yourAge = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-        dob.add(Calendar.YEAR, yourAge);
+        dob.set(y, m, d);
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+        dob.add(Calendar.YEAR, age);
         if (today.before(dob)) {
-            yourAge--;
+            age--;
         }
-
-        return String.valueOf(yourAge);
-
+        return String.valueOf(age);
     }
 
     //--------------------------------------------------------------------------------------------//
@@ -556,5 +635,6 @@ public class DriverEditProfileActivity extends AppCompatActivity {
             radioGroup.check(R.id.driver_no_radioBtn_editProf);
         }
     }
+
 
 }

@@ -105,7 +105,6 @@ public class DriverProfileActivity extends AppCompatActivity {
         editProfile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Edit profile.", Toast.LENGTH_SHORT).show();
                 gotoActivity(DriverEditProfileActivity.class);
             }
         });

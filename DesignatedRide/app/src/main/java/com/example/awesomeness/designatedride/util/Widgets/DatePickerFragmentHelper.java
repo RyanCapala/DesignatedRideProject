@@ -9,7 +9,7 @@ import com.example.awesomeness.designatedride.R;
 
 import java.util.Calendar;
 
-public class RiderDatePickerFragment extends DialogFragment {
+public class DatePickerFragmentHelper extends DialogFragment {
     private Calendar calendar;
     private int month, day, year;
 

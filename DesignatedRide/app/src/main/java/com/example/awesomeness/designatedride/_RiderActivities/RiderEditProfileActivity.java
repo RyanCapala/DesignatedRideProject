@@ -4,32 +4,27 @@ import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.util.Checker;
 import com.example.awesomeness.designatedride.util.Constants;
-import com.example.awesomeness.designatedride.util.Widgets.RiderDatePickerFragment;
+import com.example.awesomeness.designatedride.util.Widgets.DatePickerFragmentHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,7 +46,6 @@ public class RiderEditProfileActivity extends AppCompatActivity implements DateP
     private EditText streetAddress_et, cityAndState_et;
     private EditText email_et, v_email_et, password_et, v_password_et, phone_et;
     private EditText insurance_et, doctorsname_et, username_et;
-    private TextView dob_TV;
     private ImageButton saveBtn, cancelBtn;
     private RadioGroup radioGroup;
     private RadioButton yes_radioBtn, no_radioBtn, radioButton;
@@ -62,7 +55,7 @@ public class RiderEditProfileActivity extends AppCompatActivity implements DateP
     private String dob_str;
     private Calendar calendar;
     private int monthPosition_dp, dayPosition_dp, yearPosition_dp;
-
+    private TextView dob_TV;
 
     //Firebase
     private DatabaseReference mDdatabaseRef, mDbRef_gv, mDbRef_sv;
@@ -151,7 +144,7 @@ public class RiderEditProfileActivity extends AppCompatActivity implements DateP
         dob_TV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment datePicker = new RiderDatePickerFragment();
+                DialogFragment datePicker = new DatePickerFragmentHelper();
                 datePicker.show(getFragmentManager(), "RiderDatePicker");
             }
         });
@@ -170,6 +163,7 @@ public class RiderEditProfileActivity extends AppCompatActivity implements DateP
 
         dob_str = DateFormat.getDateInstance().format(calendar.getTime());
         dob_TV.setText(dob_str);
+        Log.d(TAG, "onDateSet: dob_str " + dob_str);
         monthPosition_dp = month;
         dayPosition_dp = dayOfMonth;
         yearPosition_dp = year;

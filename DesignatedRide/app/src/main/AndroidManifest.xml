@@ -18,11 +18,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/app_launch_bg_ic"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- android:roundIcon="@mipmap/ic_launcher_round" -->
+
 
         <!--
      The API key for Google Maps-based APIs is defined as a string resource.
@@ -105,7 +107,12 @@
             android:name="._RiderActivities.RiderViewAppointmentActivity"
             android:label="APPT_VIEW"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name="._RiderActivities.RiderViewAppointmentActivityWrapper" />
+
+        <!-- RiderViewAppointMentActivityWrapper -->
+        <activity
+            android:name="._RiderActivities.RiderViewAppointmentActivityWrapper"
+            android:icon="@drawable/icon_backarrow"
+            android:label="@string/appts" />
 
         <!-- RiderAddAppointmentActivity -->
         <activity
@@ -113,6 +120,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- ====================Driver Activities==================== -->
+
 
         <!-- DriverActivity -->
         <activity
@@ -130,19 +138,24 @@
         <activity
             android:name="._DriverActivities.DriverEditProfileActivity"
             android:icon="@drawable/icon_backarrow"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:label="@string/driver_edit_profile"/>
+            android:label="@string/driver_edit_profile"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <!-- DriverMapActivity -->
         <activity
             android:name="._DriverActivities.DriverMapActivity"
             android:label="@string/title_activity_driver_map" />
-
         <activity
             android:name="._DriverActivities.DriverViewProfileActivity"
             android:label="@string/title_activity_rider_view_profile"
             android:parentActivityName="._DriverActivities.DriverActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <!-- DriverAvailableActivity -->
+        <activity
+            android:label="@string/view_availability"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:name="._DriverActivities.DriverAvailableActivity"/>
 
 
         <activity android:name=".util.Pref" />
@@ -155,7 +168,6 @@
                 <action android:name="PREF" />
             </intent-filter>
         </receiver>
-
 
     </application>
 

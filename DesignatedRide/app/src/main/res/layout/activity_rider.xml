@@ -92,7 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@mipmap/request_ride_btn"
+        android:background="@mipmap/req_ride_btn"
         app:layout_constraintEnd_toEndOf="@+id/calendarImgBtn_rider"
         app:layout_constraintStart_toStartOf="@+id/calendarImgBtn_rider"
         app:layout_constraintTop_toBottomOf="@+id/calendarImgBtn_rider" />

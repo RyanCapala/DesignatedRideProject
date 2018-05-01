@@ -35,6 +35,7 @@ public class Constants {
     public static final String BIRTH_DAY                = "birthDay";
     public static final String BIRTH_YEAR               = "birthYear";
     public static final String WC_ACCESS                = "wheelChair";
+    public static final String DOB                      = "dob";
 
     public static final String BIRTH_MONTH_POS          = "monthPosition";
     public static final String BIRTH_DAY_POS            = "dayPosition";

@@ -152,11 +152,12 @@
             android:layout_width="250dp"
             android:layout_height="40dp"
             android:layout_marginTop="40dp"
-            android:background="@drawable/buttonborderstyleselector"
-            android:text="@string/login_page_login_button_text"
+            android:background="@mipmap/drlogin_button"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/userPassET_log" />
+
+        <!--android:background="@drawable/buttonborderstyleselector"-->
 
 
         <!--HELP TEXT-->

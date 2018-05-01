@@ -16,34 +16,32 @@ import android.widget.Toast;
 import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.util.Constants;
 import com.example.awesomeness.designatedride.util.HandleFileReadWrite;
+import com.example.awesomeness.designatedride.util.SwitchActivity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.example.awesomeness.designatedride.util.Constants.NO_APPOINTMENT_MESSAGE;
 
 public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
 
-    private final static String metaFile = "appointments_metadata.txt";
-    private final static String FILENAME_POSTFIX = ".txt";
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_view_appointment_wrapper);
 
-
-        //
-        //
-
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.appointmentsfloatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent nextActivity = new Intent(getApplicationContext(), RiderAddAppointmentActivity.class);
+                /*Intent nextActivity = new Intent(getApplicationContext(), RiderAddAppointmentActivity.class);
                 startActivity(nextActivity);
-                finish();
+                finish();*/
+                SwitchActivity.gotoActivity(RiderViewAppointmentActivityWrapper.this, RiderAddAppointmentActivity.class, true);
             }
         });
 
@@ -53,7 +51,7 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
         //
 
         HandleFileReadWrite reader = new HandleFileReadWrite();
-        reader.open(this, metaFile, HandleFileReadWrite.fileOperator.OPEN_READ);
+        reader.open(this, Constants.METAFILE_NAME, HandleFileReadWrite.fileOperator.OPEN_READ);
 
         int fileCount = 0;
         String appointments[];
@@ -70,14 +68,13 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
         }
         reader.close();
 
-        /*apmtListView = (ListView) findViewById(R.id.appointmentsListView);
-        ListAdapter displayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, buildString(sList));
-        apmtListView.setAdapter(displayAdapter);*/
+        String[] fileList = buildString(sList);
+        ArrayList<String> arrayFileList = new ArrayList<>(Arrays.asList(fileList));
+        adapter = new RiderViewAppointmentItemDetail(this, arrayFileList);
 
-        ListAdapter listAdapter = new RiderViewAppointmentItemDetail(this, buildString(sList));
         final ListView apmtListView = (ListView) findViewById(R.id.appointmentsListView);
 
-        apmtListView.setAdapter(listAdapter);
+        apmtListView.setAdapter(adapter);
 
 
         apmtListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -113,14 +110,15 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
                         }
                     }
                     HandleFileReadWrite writer = new HandleFileReadWrite();
-                    writer.open(RiderViewAppointmentActivityWrapper.this, metaFile, HandleFileReadWrite.fileOperator.OPEN_WRITE);
+                    writer.open(RiderViewAppointmentActivityWrapper.this, Constants.METAFILE_NAME, HandleFileReadWrite.fileOperator.OPEN_WRITE);
                     for (String line : sList) {
                         //Log.i("RIDER WRAPPER", line);
                         writer.writeLine(line);
                     }
                     writer.close();
-                    ListAdapter displayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, buildString(sList));
-                    apmtListView.setAdapter(displayAdapter);
+
+                    adapter.remove(fileName);
+                    adapter.notifyDataSetChanged();
                 }
                 return true;
             }
@@ -135,10 +133,6 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
             list[i] = sList.get(i);
         }
 
-        /*if (sList.size() == 0) {
-            list = new String[1];
-            list[0] = NO_APPOINTMENT_MESSAGE;
-        }*/
         return list;
     }
 }

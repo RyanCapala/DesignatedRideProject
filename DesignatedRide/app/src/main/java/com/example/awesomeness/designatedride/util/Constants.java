@@ -114,5 +114,8 @@ public class Constants {
     public static final String CAR_YEAR                 = "carYear";
     public static final String DR_CHILDMAP_KEY          = "driver_childMapKey";
 
+    //=== Rider
+    public static final String METAFILE_NAME           = "appointments_metadata.txt";
+    public final static String FILENAME_POSTFIX        = ".txt";
 }
 

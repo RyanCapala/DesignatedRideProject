@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.util.Constants;
 import com.example.awesomeness.designatedride.util.HandleFileReadWrite;
+import com.example.awesomeness.designatedride.util.SwitchActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -64,6 +65,7 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
         editPenIB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*
                 float defaultPct = 0.36f;
                 ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapInfoSeperator.getLayoutParams();
                 if (params.guidePercent < defaultPct || params.guidePercent > 0.5)
@@ -71,9 +73,19 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
                 else
                     params.guidePercent = 1.0f;
                 mapInfoSeperator.setLayoutParams(params);
-                Log.d(TAG, "onClick: Set guidepct to:" + params.guidePercent);
+                */
+
+                Intent intent = new Intent(RiderViewAppointmentActivity.this, RiderAddAppointmentActivity.class);
+                intent.putExtra(Constants.FILENAME_MESSAGE, fileName);
+                startActivity(intent);
+
+                //SwitchActivity.gotoActivity(RiderViewAppointmentActivity.this, RiderAddAppointmentActivity.class, false);
+
+                //Log.d(TAG, "onClick: Set guidepct to:" + params.guidePercent);
             }
         });
+
+        /*
         editPenIB.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
@@ -98,6 +110,9 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
                 return true;
             }
         });
+        */
+
+
         runExampleAppt();
         setAppt();
 

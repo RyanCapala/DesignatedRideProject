@@ -28,24 +28,20 @@ import com.example.awesomeness.designatedride.util.AppointmentInformation;
 import com.example.awesomeness.designatedride.util.Constants;
 import com.example.awesomeness.designatedride.util.HandleFileReadWrite;
 import com.example.awesomeness.designatedride.util.MonthInterpreter;
+import com.example.awesomeness.designatedride.util.SwitchActivity;
 import com.example.awesomeness.designatedride.util.Widgets.TimePickerFragment;
 import com.example.awesomeness.designatedride.util.Widgets.DatePickerFragment;
 
-import org.w3c.dom.Text;
-
-import java.sql.Time;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class RiderAddAppointmentActivity extends AppCompatActivity  implements
         DatePickerFragment.DatePickedListener, TimePickerFragment.TimePickedListener {
     private static final String TAG = "RiderAddAppt";
-    private final static String metaFile = "appointments_metadata.txt";
-    private final static String FILENAME_POSTFIX = ".txt";
+    //private final static String metaFile = "appointments_metadata.txt";
+
     private String time;
     private String date;
 
@@ -63,20 +59,72 @@ public class RiderAddAppointmentActivity extends AppCompatActivity  implements
     private Button confirmButton;
     private Button cancelButton;
 
+    private String fileName = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_add_appointment);
 
+
+        String apptName = "";
+        String locationName = "";
+        String locationAddress = "";
+        String locationAddressTwo = ""; //city, state, zip code
+        //String time = "";
+        //String date = "";
+        String status = "";
+        String notes = "";
+
+        Intent getDataIntent = getIntent();
+        Bundle dataFromIntent = getDataIntent.getExtras();
+        if (dataFromIntent != null && !dataFromIntent.isEmpty()) {
+            fileName = dataFromIntent.getString(Constants.FILENAME_MESSAGE);
+
+            HandleFileReadWrite reader = new HandleFileReadWrite();
+            reader.open(this, fileName);
+            if (reader.isExist()) {
+                apptName = reader.readLine();
+                locationName = reader.readLine();
+                locationAddress = reader.readLine();
+                locationAddressTwo = reader.readLine();
+                time = reader.readLine();
+                date = reader.readLine();
+                //status = reader.readLine();
+                notes = reader.readLine();
+                StringBuilder stringBuilder = new StringBuilder();
+                while (notes != null) {
+                    stringBuilder.append(notes);
+                    stringBuilder.append("\n");
+                    notes = reader.readLine();
+                }
+                notes = stringBuilder.toString();
+            }
+
+
+        }
+
         initWidgets();
 
-        time = "";
-        date = "";
+        if (!fileName.equals("")) {
+            appointmentName.setText(apptName);
+            destinationName.setText(locationName);
+            destinationAddress.setText(locationAddress);
+            destinationAddrLineTwo.setText(locationAddressTwo);
+            String[] dateSplit = date.split("-");
+            dateDay.setText(dateSplit[0]);
+            dateMonth.setText(dateSplit[1]);
+            dateYear.setText(dateSplit[2]);
+            dateTime.setText(time);
+            notesET.setText(notes);
+        }
+
+        //time = "";
+        //date = "";
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
 
                 int fileCount = 0;
                 String apptName = appointmentName.getText().toString().trim();
@@ -108,18 +156,20 @@ public class RiderAddAppointmentActivity extends AppCompatActivity  implements
                     return;
                 }
 
+                System.out.println("HGUEGHIUHGEIUHGIUAEHUIG: '" + time + "'");
                 if (time.equals("")) {
                     Toast.makeText(getApplicationContext(), "time", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                String fileName = new SimpleDateFormat("yyyy_dd_MM_HH_mm_ss", Locale.US).format(new Date()) + FILENAME_POSTFIX;
-
                 HandleFileReadWrite writer = new HandleFileReadWrite();
-                //write to file name to metadata
-                writer.open(RiderAddAppointmentActivity.this, metaFile, HandleFileReadWrite.fileOperator.OPEN_APPEND);
-                writer.writeLine(fileName);
-                writer.close();
+                if (fileName.equals("")) {
+                    fileName = new SimpleDateFormat("yyyy_dd_MM_HH_mm_ss", Locale.US).format(new Date()) + Constants.FILENAME_POSTFIX;
+                    //write to file name to metadata
+                    writer.open(RiderAddAppointmentActivity.this, Constants.METAFILE_NAME, HandleFileReadWrite.fileOperator.OPEN_APPEND);
+                    writer.writeLine(fileName);
+                    writer.close();
+                }
 
                 writer.open(RiderAddAppointmentActivity.this, fileName, HandleFileReadWrite.fileOperator.OPEN_WRITE);
                 writer.writeLine(apptName);
@@ -131,16 +181,14 @@ public class RiderAddAppointmentActivity extends AppCompatActivity  implements
                 writer.writeLine(notes);
                 writer.close();
 
-                gotoActivity(RiderViewAppointmentActivityWrapper.class);
-
-
+                SwitchActivity.gotoActivity(RiderAddAppointmentActivity.this, RiderViewAppointmentActivityWrapper.class, true);
             }
         });
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gotoActivity(RiderViewAppointmentActivityWrapper.class);
+                SwitchActivity.gotoActivity(RiderAddAppointmentActivity.this, RiderViewAppointmentActivityWrapper.class, true);
             }
         });
     }
@@ -186,11 +234,4 @@ public class RiderAddAppointmentActivity extends AppCompatActivity  implements
         confirmButton = findViewById(R.id.apptEditSave_btn);
         cancelButton = findViewById(R.id.apptEditCancel_btn);
     }
-
-    //----------------------------------------------------------------------------------------------
-    private void gotoActivity(Class activityClass) {
-        startActivity(new Intent(RiderAddAppointmentActivity.this, activityClass));
-        this.finish();
-    }
-
 }

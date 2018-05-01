@@ -15,11 +15,13 @@ import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.util.HandleFileReadWrite;
 import com.example.awesomeness.designatedride.util.MonthInterpreter;
 
+import java.util.ArrayList;
+
 public class RiderViewAppointmentItemDetail extends ArrayAdapter<String> {
 
     private ViewHolder viewHolder = new ViewHolder();
 
-    public RiderViewAppointmentItemDetail(Context context, String[] fileList) {
+    public RiderViewAppointmentItemDetail(Context context, ArrayList<String> fileList) {
         super(context, R.layout.fragment_rider_appointmentview_item_detail, fileList);
 
     }

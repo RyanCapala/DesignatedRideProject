@@ -191,6 +191,7 @@ public class RegisterActivity extends AppCompatActivity {
                             userInfo.put(Constants.BIRTH_MONTH_POS, Constants.DEFAULT_POS);
                             userInfo.put(Constants.BIRTH_DAY_POS, Constants.DEFAULT_POS);
                             userInfo.put(Constants.BIRTH_YEAR_POS, Constants.DEFAULT_POS);
+                            userInfo.put(Constants.DOB, Constants.DEFAULT_VALUE);
                             userInfo.put(Constants.AGE, Constants.DEFAULT_POS);
                             userInfo.put(Constants.USERNAME, Constants.DEFAULT_VALUE);
                             userInfo.put(Constants.PHONE, Constants.DEFAULT_VALUE);

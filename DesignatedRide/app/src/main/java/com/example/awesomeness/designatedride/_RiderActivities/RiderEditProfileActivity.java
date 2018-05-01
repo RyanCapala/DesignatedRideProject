@@ -1,5 +1,7 @@
 package com.example.awesomeness.designatedride._RiderActivities;
 
+import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -11,17 +13,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.awesomeness.designatedride.R;
 import com.example.awesomeness.designatedride.util.Checker;
 import com.example.awesomeness.designatedride.util.Constants;
+import com.example.awesomeness.designatedride.util.Widgets.RiderDatePickerFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -31,12 +36,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RiderEditProfileActivity extends AppCompatActivity {
+public class RiderEditProfileActivity extends AppCompatActivity implements DatePickerDialog
+        .OnDateSetListener {
     private static final String TAG = "EditProfileActivity";
 
     private Context ctx = RiderEditProfileActivity.this;
@@ -45,10 +52,16 @@ public class RiderEditProfileActivity extends AppCompatActivity {
     private EditText streetAddress_et, cityAndState_et;
     private EditText email_et, v_email_et, password_et, v_password_et, phone_et;
     private EditText insurance_et, doctorsname_et, username_et;
+    private TextView dob_TV;
     private ImageButton saveBtn, cancelBtn;
     private RadioGroup radioGroup;
     private RadioButton yes_radioBtn, no_radioBtn, radioButton;
     private Spinner monthSpinner, daySpinner, yearSpinner;
+
+    //DatePicker
+    private String dob_str;
+    private Calendar calendar;
+    private int monthPosition_dp, dayPosition_dp, yearPosition_dp;
 
 
     //Firebase
@@ -85,7 +98,7 @@ public class RiderEditProfileActivity extends AppCompatActivity {
     private String child_username;
     private String child_mode;
     private int child_bMonth_pos, child_bDay_pos, child_bYear_pos;
-    private String strchild_bMonth_pos, strchild_bDay_pos, strchild_bYear_pos;
+    private String strchild_bMonth_pos, strchild_bDay_pos, strchild_bYear_pos, child_dob;
 
     private String child_age;
     private String child_wheelchairNeeded;
@@ -119,7 +132,7 @@ public class RiderEditProfileActivity extends AppCompatActivity {
         monthArray = getResources().getStringArray(R.array.month);
         dayArray = getResources().getStringArray(R.array.day);
         yearArray = getResources().getStringArray(R.array.year);
-        getSpinnerValues();
+        //getSpinnerValues();
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,8 +148,33 @@ public class RiderEditProfileActivity extends AppCompatActivity {
             }
         });
 
+        dob_TV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment datePicker = new RiderDatePickerFragment();
+                datePicker.show(getFragmentManager(), "RiderDatePicker");
+            }
+        });
+
 
     }//End onCreate
+
+    //===== For Date Picker ======//
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        dob_str = DateFormat.getDateInstance().format(calendar.getTime());
+        dob_TV.setText(dob_str);
+        monthPosition_dp = month;
+        dayPosition_dp = dayOfMonth;
+        yearPosition_dp = year;
+
+    }
 
 
 
@@ -223,9 +261,11 @@ public class RiderEditProfileActivity extends AppCompatActivity {
         strchild_bMonth_pos = childMap.get(Constants.BIRTH_MONTH_POS);
         strchild_bDay_pos = childMap.get(Constants.BIRTH_DAY_POS);
         strchild_bYear_pos = childMap.get(Constants.BIRTH_YEAR_POS);
+        child_dob = childMap.get(Constants.DOB);
 
-        setLocationOfSpinnerFromDataPos(convertToInt(strchild_bMonth_pos), convertToInt
-                (strchild_bDay_pos), convertToInt(strchild_bYear_pos));
+
+//        setLocationOfSpinnerFromDataPos(convertToInt(strchild_bMonth_pos), convertToInt
+//                (strchild_bDay_pos), convertToInt(strchild_bYear_pos));
 
 
     }
@@ -241,6 +281,7 @@ public class RiderEditProfileActivity extends AppCompatActivity {
         insurance_et.setText(child_insurance);
         doctorsname_et.setText(child_doctor);
         username_et.setText(child_username);
+        dob_TV.setText(child_dob);
 
     }
 
@@ -453,8 +494,9 @@ public class RiderEditProfileActivity extends AppCompatActivity {
         new_selected_radio_btn = getSelectedRB();
         Log.d(TAG, "saveUpdatedInfo: new_selected_RB = " + new_selected_radio_btn);
 
-        str_age = getAge(String.valueOf(monthPosition), String.valueOf(dayPosition),
-                String.valueOf(yearPosition));
+//        str_age = getAge(String.valueOf(monthPosition), String.valueOf(dayPosition),
+//                String.valueOf(yearPosition));
+        str_age = getAge(monthPosition_dp, dayPosition_dp, yearPosition_dp);
 
         //Get Strings
         String fname = fname_et.getText().toString().trim();
@@ -612,6 +654,7 @@ public class RiderEditProfileActivity extends AppCompatActivity {
             }
         }
 
+        /*
         //=== Update DOB spinner values ===//
         if (!checker.compareString(str_bMonth_pos, strchild_bMonth_pos)) {
             //dbref.child(Constants.BIRTH_MONTH_POS).setValue(str_bMonth_pos);
@@ -630,15 +673,34 @@ public class RiderEditProfileActivity extends AppCompatActivity {
             profile.put(Constants.BIRTH_YEAR_POS, str_bYear_pos);
             itemsUpdated = itemsUpdated + "\nYear";
         }
+        */
 
-        //=== Store Age ===//
-        if (!str_age.isEmpty()) {
+        //=== Store DOB ===//
+        if (dob_str != null) {
+            if (!checker.compareString(dob_str, child_dob)) {
+                profile.put(Constants.DOB, dob_str);
+                profile.put(Constants.BIRTH_YEAR_POS, String.valueOf(yearPosition_dp));
+                profile.put(Constants.BIRTH_MONTH_POS, String.valueOf(monthPosition_dp));
+                profile.put(Constants.BIRTH_DAY_POS, String.valueOf(dayPosition_dp));
+                itemsUpdated = itemsUpdated + "\n" + Constants.DOB;
+            }
+
             if (!checker.compareString(str_age, child_age)) {
                 //dbref.child(Constants.AGE).setValue(str_age);
                 profile.put(Constants.AGE, str_age);
                 itemsUpdated = itemsUpdated + "\n" + Constants.AGE;
             }
         }
+
+
+        //=== Store Age ===//
+//        if (!str_age.isEmpty()) {
+//            if (!checker.compareString(str_age, child_age)) {
+//                //dbref.child(Constants.AGE).setValue(str_age);
+//                profile.put(Constants.AGE, str_age);
+//                itemsUpdated = itemsUpdated + "\n" + Constants.AGE;
+//            }
+//        }
 
         //=== Store Wheelchair access ===//
         if (!wheelChairAccess.isEmpty()) {
@@ -788,30 +850,32 @@ public class RiderEditProfileActivity extends AppCompatActivity {
         radioGroup = (RadioGroup) findViewById(R.id.wheelchair_radiogroup_editProf);
         yes_radioBtn = (RadioButton) findViewById(R.id.yes_radioBtn_editProf);
         no_radioBtn = (RadioButton) findViewById(R.id.no_radioBtn_editProf);
-        monthSpinner = (Spinner) findViewById(R.id.month_spinner_editProf);
-        daySpinner = (Spinner) findViewById(R.id.day_spinner_editProf);
-        yearSpinner = (Spinner) findViewById(R.id.year_spinner_editProf);
+//        monthSpinner = (Spinner) findViewById(R.id.month_spinner_editProf);
+//        daySpinner = (Spinner) findViewById(R.id.day_spinner_editProf);
+//        yearSpinner = (Spinner) findViewById(R.id.year_spinner_editProf);
+
+        dob_TV = (TextView) findViewById(R.id.dob_tv_editProf);
 
         parentView = findViewById(R.id.rider_view);
 
         checker = new Checker();
         childMap = new HashMap<>();
 
-        ArrayAdapter<CharSequence> monthAdapter = ArrayAdapter.createFromResource(ctx, R.array
-                        .month,
-                R.layout.spinner_layout);
-        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        monthSpinner.setAdapter(monthAdapter);
-
-        ArrayAdapter<CharSequence> dayAdapter = ArrayAdapter.createFromResource(ctx, R.array.day,
-                R.layout.spinner_layout);
-        dayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        daySpinner.setAdapter(dayAdapter);
-
-        ArrayAdapter<CharSequence> yearAdapter = ArrayAdapter.createFromResource(ctx, R.array.year,
-                R.layout.spinner_layout);
-        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        yearSpinner.setAdapter(yearAdapter);
+//        ArrayAdapter<CharSequence> monthAdapter = ArrayAdapter.createFromResource(ctx, R.array
+//                        .month,
+//                R.layout.spinner_layout);
+//        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        monthSpinner.setAdapter(monthAdapter);
+//
+//        ArrayAdapter<CharSequence> dayAdapter = ArrayAdapter.createFromResource(ctx, R.array.day,
+//                R.layout.spinner_layout);
+//        dayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        daySpinner.setAdapter(dayAdapter);
+//
+//        ArrayAdapter<CharSequence> yearAdapter = ArrayAdapter.createFromResource(ctx, R.array.year,
+//                R.layout.spinner_layout);
+//        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        yearSpinner.setAdapter(yearAdapter);
 
 
 
@@ -879,6 +943,18 @@ public class RiderEditProfileActivity extends AppCompatActivity {
         return String.valueOf(yourAge);
     }
 
+    private String getAge(int m, int d, int y) {
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+        dob.set(y, m, d);
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+        dob.add(Calendar.YEAR, age);
+        if (today.before(dob)) {
+            age--;
+        }
+        return String.valueOf(age);
+    }
+
     private void setRadioButton() {
         String yes = "Yes";
         String no = "No";
@@ -891,5 +967,6 @@ public class RiderEditProfileActivity extends AppCompatActivity {
         }
 
     }
+
 
 }

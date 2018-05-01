@@ -130,5 +130,9 @@
         <item name="android:colorAccent">@color/colorPrimary</item>
         <item name="android:colorControlNormal">#f6d086</item>
     </style>
+    
+    <style name="datepicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorDatePicker</item>
+    </style>
 
 </resources>

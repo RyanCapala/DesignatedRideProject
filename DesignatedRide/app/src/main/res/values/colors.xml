@@ -42,5 +42,7 @@
     <color name="teal">#0DA7DF</color>
     <color name="dialog_text">#df7251</color>
 
+    <color name="colorDatePicker">#e67255</color>
+
 
 </resources>

@@ -112,9 +112,11 @@ public class RiderAddAppointmentActivity extends AppCompatActivity  implements
             destinationAddress.setText(locationAddress);
             destinationAddrLineTwo.setText(locationAddressTwo);
             String[] dateSplit = date.split("-");
-            dateDay.setText(dateSplit[0]);
-            dateMonth.setText(dateSplit[1]);
-            dateYear.setText(dateSplit[2]);
+            if(dateSplit.length == 2) {
+                dateDay.setText(dateSplit[0]);
+                dateMonth.setText(dateSplit[1]);
+                dateYear.setText(dateSplit[2]);
+            }
             dateTime.setText(time);
             notesET.setText(notes);
         }

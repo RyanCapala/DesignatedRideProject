@@ -33,9 +33,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.GeocodingApiRequest;
+import com.google.maps.model.GeocodingResult;
 
 public class RiderViewAppointmentActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final String TAG = "RiderViewAppointmentAct";
+    private static final String API_KEY = "AIzaSyBQGYYk0KmrijL1JHdn8iu8X_lXWp9IPh4";
+
     // Maps
     private Boolean mapLocationPermissionsGranted = false;
     private GoogleMap mMap;
@@ -48,11 +54,18 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
     private Guideline mapInfoSeperator;
     //file
     private String fileName;
+    // Google api
+    private GeocodingApiRequest geocodingApiRequestDestination;
+    private GeocodingResult geocodingLocationResult[];
+    private GeoApiContext context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_appointment);
+
+        //
+        context = new GeoApiContext.Builder().apiKey(API_KEY).build();
 
         //
         Intent intent = getIntent();
@@ -113,9 +126,6 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
         */
 
 
-        runExampleAppt();
-        setAppt();
-
         reqRideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,14 +142,11 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
         mMap.getUiSettings().setMyLocationButtonEnabled(false); // Hides the "locate me" button
         padGoogleMap();
 
-        // Zoom on sunrise hospital for example
-        LatLng sunriseHosp = new LatLng(36.133137, -115.136258);
+        runExampleAppt();
+        setAppt();
 
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(sunriseHosp).title("Sunrise Hospital");
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_red));
-        mMap.addMarker(markerOptions);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sunriseHosp, 15));
+        // Zoom on sunrise hospital for example
+        //LatLng sunriseHosp = new LatLng(36.133137, -115.136258);
 
         mMap.getUiSettings().setScrollGesturesEnabled(false); // Just disables zoom for example
     }
@@ -188,6 +195,22 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
             apptName = reader.readLine();
             locationName = reader.readLine();
             locationAddress = reader.readLine();
+
+            geocodingApiRequestDestination = GeocodingApi.newRequest(context);
+            geocodingApiRequestDestination.address(locationAddress);
+            geocodingLocationResult = geocodingApiRequestDestination.awaitIgnoreError();
+
+            if (checkAddress(geocodingLocationResult, locationAddress)) {
+                if (mMap != null) {
+                    LatLng location = new LatLng(geocodingLocationResult[0].geometry.location.lat, geocodingLocationResult[0].geometry.location.lng);
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(location).title(locationName);
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_location_red));
+                    mMap.addMarker(markerOptions);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+                }
+            }
+
             locationAddressTwo = reader.readLine();
             time = reader.readLine();
             date = reader.readLine();
@@ -240,5 +263,18 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
         actionBar = getActionBar();
         editPenIB = findViewById(R.id.viewAppointmentRiderDraggableResize_btn);
         mapInfoSeperator = findViewById(R.id.appointmentViewRiderMapInfo_guideline);
+    }
+
+    private boolean checkAddress(GeocodingResult[] address, String addressLocation){
+
+        if((address == null || address.length == 0) && !addressLocation.isEmpty()){
+            Toast.makeText(RiderViewAppointmentActivity.this,addressLocation + " is not a valid address",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(addressLocation.isEmpty())
+            return false;
+
+        return true;
     }
 }

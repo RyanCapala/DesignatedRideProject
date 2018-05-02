@@ -68,8 +68,8 @@ public class RiderViewAppointmentItemDetail extends ArrayAdapter<String> {
         String date = "";
         String status = "";
         String notes = "";
-        String dateMonth;
-        String dateDate;
+        String dateMonth = "";
+        String dateDate = "";
 
 
         HandleFileReadWrite reader = new HandleFileReadWrite();
@@ -93,8 +93,10 @@ public class RiderViewAppointmentItemDetail extends ArrayAdapter<String> {
         }
 
         String token[] = date.split("-");
-        dateDate = token[0];
-        dateMonth = MonthInterpreter.shortName(token[1]);
+        if(token.length == 2) {
+            dateDate = token[0];
+            dateMonth = MonthInterpreter.shortName(token[1]);
+        }
 
         //
         viewHolder.circleTextView.setText(getContext().getResources().getString(R.string.appt_list_rider_date, dateMonth, dateDate));

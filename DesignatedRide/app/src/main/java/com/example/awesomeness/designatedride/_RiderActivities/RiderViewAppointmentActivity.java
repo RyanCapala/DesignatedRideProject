@@ -48,7 +48,8 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
     private Marker marker;
 
     // Widgets
-    private Button reqRideButton;
+    //private Button reqRideButton;
+    private ImageButton reqRideButton;
     private ActionBar actionBar;
     private ImageButton editPenIB;
     private Guideline mapInfoSeperator;

@@ -178,17 +178,24 @@
 
             </android.support.constraint.ConstraintLayout>
             <!-- Request Ride Button -->
-            <Button
+            <!--<Button-->
+                <!--android:id="@+id/viewAppointmentRiderRequestRide_btn"-->
+                <!--android:layout_width="250dp"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--android:text="@string/view_appt_rider_request_ride_btn_text" />-->
+            <!--<android.support.v4.widget.Space-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="10dp" />-->
+            <ImageButton
                 android:id="@+id/viewAppointmentRiderRequestRide_btn"
-                android:layout_width="250dp"
-                android:layout_height="40dp"
+                android:background="@mipmap/req_ride_no_img"
                 android:layout_marginTop="15dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/view_appt_rider_request_ride_btn_text" />
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" />
+
         </LinearLayout>
 
     </ScrollView>

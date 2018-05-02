@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.awesomeness.designatedride._RiderActivities.RiderViewAppointmentActivityWrapper">
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/appointmentsfloatingActionButton"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:background="@null"-->
+        <!--android:clickable="true"-->
+        <!--android:focusable="true"-->
+        <!--app:borderWidth="0dp"-->
+        <!--app:elevation="6dp"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:pressedTranslationZ="0dp"-->
+        <!--app:srcCompat="@mipmap/rider_appointments_icon_addappt" />-->
+
+    <ImageButton
         android:id="@+id/appointmentsfloatingActionButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@null"
-        android:clickable="true"
-        android:focusable="true"
-        app:borderWidth="0dp"
-        app:elevation="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/rider_appointment_add_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:pressedTranslationZ="0dp"
-        app:srcCompat="@mipmap/rider_appointments_icon_addappt" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/appointmentsListView"

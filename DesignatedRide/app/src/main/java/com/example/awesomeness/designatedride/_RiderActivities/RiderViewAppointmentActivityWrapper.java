@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -43,8 +44,20 @@ public class RiderViewAppointmentActivityWrapper extends AppCompatActivity {
         //
         //
 
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.appointmentsfloatingActionButton);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+//        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.appointmentsfloatingActionButton);
+//        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                /*Intent nextActivity = new Intent(getApplicationContext(), RiderAddAppointmentActivity.class);
+//                startActivity(nextActivity);
+//                finish();*/
+//                SwitchActivity.gotoActivity(RiderViewAppointmentActivityWrapper.this, RiderAddAppointmentActivity.class, true);
+//            }
+//        });
+
+        ImageButton addAppointmentBtn = (ImageButton) findViewById(R.id
+                .appointmentsfloatingActionButton);
+        addAppointmentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 /*Intent nextActivity = new Intent(getApplicationContext(), RiderAddAppointmentActivity.class);

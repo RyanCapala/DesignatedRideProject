@@ -58,6 +58,8 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
     private GeocodingApiRequest geocodingApiRequestDestination;
     private GeocodingResult geocodingLocationResult[];
     private GeoApiContext context;
+    //
+    private boolean movement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +77,10 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
         initWidgets();
         initializeMap();
 
-        editPenIB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
+      //  editPenIB.setOnClickListener(new View.OnClickListener() {
+           // @Override
+            //public void onClick(View view) {
                 /*
                 float defaultPct = 0.36f;
                 ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapInfoSeperator.getLayoutParams();
@@ -88,22 +91,27 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
                 mapInfoSeperator.setLayoutParams(params);
                 */
 
-                Intent intent = new Intent(RiderViewAppointmentActivity.this, RiderAddAppointmentActivity.class);
-                intent.putExtra(Constants.FILENAME_MESSAGE, fileName);
-                startActivity(intent);
+                //Intent intent = new Intent(RiderViewAppointmentActivity.this, RiderAddAppointmentActivity.class);
+                //intent.putExtra(Constants.FILENAME_MESSAGE, fileName);
+               // startActivity(intent);
 
                 //SwitchActivity.gotoActivity(RiderViewAppointmentActivity.this, RiderAddAppointmentActivity.class, false);
 
                 //Log.d(TAG, "onClick: Set guidepct to:" + params.guidePercent);
-            }
-        });
+          //  }
+      //  });
 
-        /*
-        editPenIB.setOnTouchListener(new View.OnTouchListener() {
+
+         editPenIB.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                    movement = false;
+                }
+
+                else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                    movement = true;
                     Point p = new Point();
                     getWindowManager().getDefaultDisplay().getSize(p);
                     int mScreenHeight = p.y;
@@ -118,12 +126,19 @@ public class RiderViewAppointmentActivity extends AppCompatActivity implements O
                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapInfoSeperator.getLayoutParams();
                     params.guidePercent = changeHeight / mScreenHeight;
                     mapInfoSeperator.setLayoutParams(params);
-                    Log.d(TAG, "onTouch: Set guidebegin to:" + params.guidePercent);
+                    Log.d(TAG, "onTouch: Set guide begin to:" + params.guidePercent);
                 }
+
+
+                else if(motionEvent.getAction() == MotionEvent.ACTION_UP && !movement) {
+                    Intent intent = new Intent(RiderViewAppointmentActivity.this, RiderAddAppointmentActivity.class);
+                    intent.putExtra(Constants.FILENAME_MESSAGE, fileName);
+                    startActivity(intent);
+                }
+
                 return true;
             }
         });
-        */
 
 
         reqRideButton.setOnClickListener(new View.OnClickListener() {

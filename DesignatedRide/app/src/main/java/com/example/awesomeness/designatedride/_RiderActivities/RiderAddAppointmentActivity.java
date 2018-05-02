@@ -151,13 +151,13 @@ public class RiderAddAppointmentActivity extends AppCompatActivity  implements
                     return;
                 }
 
-                if (date.equals("")) {
+                if (date == null || date.equals("")) {
                     Toast.makeText(getApplicationContext(), "date", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 System.out.println("HGUEGHIUHGEIUHGIUAEHUIG: '" + time + "'");
-                if (time.equals("")) {
+                if (time == null || time.equals("")) {
                     Toast.makeText(getApplicationContext(), "time", Toast.LENGTH_SHORT).show();
                     return;
                 }

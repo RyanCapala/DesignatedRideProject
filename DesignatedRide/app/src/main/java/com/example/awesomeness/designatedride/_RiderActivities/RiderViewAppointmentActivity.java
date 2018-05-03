@@ -40,7 +40,7 @@ import com.google.maps.model.GeocodingResult;
 
 public class RiderViewAppointmentActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final String TAG = "RiderViewAppointmentAct";
-    private static final String API_KEY = "AIzaSyBQGYYk0KmrijL1JHdn8iu8X_lXWp9IPh4";
+    private static final String API_KEY = "AIzaSyDqp67Rkd-AF7hKIFNEm4wFIVnKgxY9KdE";
 
     // Maps
     private Boolean mapLocationPermissionsGranted = false;

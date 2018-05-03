@@ -99,7 +99,7 @@ import java.util.Timer;
 public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "RiderMapActivity";
-    private static final String API_KEY = "AIzaSyBQGYYk0KmrijL1JHdn8iu8X_lXWp9IPh4";
+    private static final String API_KEY = "AIzaSyDqp67Rkd-AF7hKIFNEm4wFIVnKgxY9KdE";
     private static final long DES_TIME = 10000; //milliseconds
     private static final long EXP_TIME = 5000;
     private static final Double radius = 900.0;

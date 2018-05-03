@@ -122,6 +122,8 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     Button acceptButton;
     Button declineButton;
     TextView txt;
+    TextView title;
+    TextView name;
     View text_box;
     EditText time;
     EditText destination;
@@ -291,7 +293,6 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                         geocodingPickUpResult = geocodingApiRequestPickUp.awaitIgnoreError();
 
                         if (checkAddress(geocodingDestinationResult,destinationLocation) && checkTime(timeItOccurs)) {
-
                             Toast.makeText(RiderMapActivity.this, "Requested A Ride!", Toast.LENGTH_SHORT).show();
 
                             Longitude = geocodingDestinationResult[0].geometry.location.lng;
@@ -310,6 +311,8 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                                     key = dataSnapshot.getValue(String.class);
+                                    if(mPushKey != null)
+                                        wipeAllText();
 
                                     obtainRating = mDatabaseReference.child(Constants.RIDER).child(userid).child(Constants.USER_RATING);
                                     obtainRating.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -320,6 +323,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
                                             mPushKey = FirebaseDatabase.getInstance().getReference(Constants.TEXT_BOX + "/").push().getKey();
                                             mDatabaseReference.child(Constants.TEXT_BOX).child(mPushKey).child(Constants.USER_RATING).setValue(riderRating);
+                                            mDatabaseReference.child(Constants.TEXT_BOX).child(mPushKey).child(Constants.LOCATION).setValue(destinationLocation);
                                             mDatabaseReference.child(Constants.PAIR).child(mPushKey).child(Constants.RIDER_KEY).setValue(key);
                                             mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY).setValue(mPushKey);
                                             mDatabaseReference.child(Constants.PAIR).child(mPushKey).child(Constants.IS_ADVANCED_BOOKING).setValue("false");
@@ -436,8 +440,12 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                                                             driverRating = dataSnapshot.getValue(String.class);
-                                                            String message = driverRating + "\n" + "Choose this Driver?";
+                                                            String message = driverRating;
                                                             txt.setText(message);
+                                                            message = "Choose This Driver?";
+                                                            title.setText(message);
+                                                            message = "";
+                                                            name.setText(message);
                                                             confirmation.setView(text_box);
                                                             dialogBox = confirmation.create();
                                                             dialogBox.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -480,6 +488,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
 
                                                                                 } else if (seqAck == 3) {
                                                                                     saveText();
+                                                                                    removeFields();
 
                                                                                     mDatabaseReference.child(Constants.PAIR).child(mPushKey).child(Constants.DRIVER_KEY).setValue(driverKey);
 
@@ -660,8 +669,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
                             intent.putExtra("name", placeDetails.name);
                             intent.putExtra("address",geocodingDestinationResult[0].formattedAddress);
                             intent.putExtra("time",timeItOccurs);
-                            intent.putExtra("date",appointmentDate);
-                            intent.putExtra("month",appointmentMonth);
+                            intent.putExtra("date",appointmentDate + "-" + appointmentMonth);
                             intent.putExtra("status","yes");
                             intent.putExtra("notes","no additional notes");
                             sendBroadcast(intent);
@@ -1543,6 +1551,8 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         acceptButton = (Button) text_box.findViewById(R.id.acceptButton);
         declineButton = (Button) text_box.findViewById(R.id.declineButton);
         txt = (TextView) text_box.findViewById(R.id.rider_name);
+        title = (TextView) text_box.findViewById(R.id.message);
+        name = (TextView) text_box.findViewById(R.id.inc_request_hospital_name);
         destination = findViewById(R.id.destination);
         time = findViewById(R.id.time);
         pickUp = findViewById(R.id.pickUp);
@@ -1704,6 +1714,7 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     private boolean checkTime(String time){
         if(time.length() == 6) {
 
+            /*
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hhmmaa", Locale.ENGLISH);
 
             try {
@@ -1744,7 +1755,9 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
         }else{
             Toast.makeText(RiderMapActivity.this,"Time format entered incorrectly",Toast.LENGTH_LONG).show();
             return false;
+            */
         }
+        return true;
     }
 
     private boolean checkAddress(GeocodingResult[] address, String addressLocation){
@@ -1771,6 +1784,14 @@ public class RiderMapActivity extends AppCompatActivity implements OnMapReadyCal
     private void killRaceCondition(){
         mDatabaseReference.child(Constants.PACKET).child(driverKey).removeEventListener(childEventListener);
         mDatabaseReference.child(Constants.PAIR).child(driverKey).removeValue();
+    }
+
+    private void wipeAllText(){
+        mDatabaseReference.child(Constants.TEXT_BOX).child(mPushKey).removeValue();
+        mDatabaseReference.child(Constants.PAIR).child(mPushKey).removeValue();
+        mDatabaseReference.child(Constants.PAIR).child(key).child(Constants.PAIR_KEY).removeValue();
+        mDatabaseReference.child(Constants.GEO_LOCATION).child(mPushKey).removeValue();
+        mDatabaseReference.child(Constants.GEO_LOCATION).child(key).removeValue();
     }
 
     private void wipeText(){

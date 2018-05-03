@@ -36,6 +36,7 @@ public class SynAck extends AppCompatActivity {
     private Button acceptButton;
     private Button declineButton;
     private TextView riderName;
+    private TextView locationName;
     private View text_box;
 
     private Timer timer;
@@ -49,6 +50,7 @@ public class SynAck extends AppCompatActivity {
     private String pairKey;
     private String riderRating;
     private String message;
+    private String hospitalName;
     private Query obtainKey;
     private Query obtainRiderRating;
     private Query obtainPairKey;
@@ -78,14 +80,23 @@ public class SynAck extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         pairKey = dataSnapshot.getValue(String.class);
-                        obtainRiderRating = mDatabaseReference.child(Constants.TEXT_BOX).child(pairKey).child(Constants.USER_RATING);
+                        obtainRiderRating = mDatabaseReference.child(Constants.TEXT_BOX).child(pairKey);
                         obtainRiderRating.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                                    if (childDataSnapshot.getKey().equals(Constants.USER_RATING)) {
+                                        riderRating = childDataSnapshot.getValue(String.class);
+                                    } else if (childDataSnapshot.getKey().equals(Constants.LOCATION)) {
+                                        hospitalName = childDataSnapshot.getValue(String.class);
+
+                                    }
+                                }
                                 riderRating = dataSnapshot.getValue(String.class);
                                 time = Calendar.getInstance().getTime();
-                                message = riderRating + "\n" + time.toString();
+                                message = riderRating;
                                 riderName.setText(message);
+                                locationName.setText(hospitalName);
                             }
 
                             @Override
@@ -161,6 +172,7 @@ public class SynAck extends AppCompatActivity {
         acceptButton = (Button)text_box.findViewById(R.id.acceptButton);
         declineButton = (Button)text_box.findViewById(R.id.declineButton);
         riderName = (TextView)text_box.findViewById(R.id.rider_name);
+        locationName = (TextView)text_box.findViewById(R.id.inc_request_hospital_name);
     }
 }
 

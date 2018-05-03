@@ -113,7 +113,8 @@ public class DriverActivity extends AppCompatActivity {
         viewMap_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "View Map", Toast.LENGTH_SHORT).show();
+                 gotoActivity(DriverMapActivity.class);
+                //Toast.makeText(context, "View Map", Toast.LENGTH_SHORT).show();
 
             }
         });
